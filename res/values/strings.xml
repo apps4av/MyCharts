@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">MyCharts</string>
+    <string name="title_map">Map</string>
+    <string name="load">Load</string>
+    <string name="choosemap">Choose a map picture</string>
+    <string name="up">Up</string>
+    <string name="action_settings">Settings</string>
+
+</resources>
