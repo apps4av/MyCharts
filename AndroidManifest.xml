@@ -38,7 +38,6 @@ Redistribution and use in source and binary forms, with or without modification,
             </intent-filter>
         </activity>
         <service android:name="org.apps4av.mycharts.StorageService"/>
-        <activity android:name="org.apps4av.mycharts.FileExplorerActivity"></activity>
         
     </application>
 
