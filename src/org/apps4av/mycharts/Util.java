@@ -21,6 +21,8 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -50,6 +52,36 @@ public class Util {
 
         // Send a address search string like 105 wood
         List<Address> list = new ArrayList<Address>();
+        
+		/*
+		 * See if it is GPS coordinates
+		 */
+		String regex = "[+-]?\\d+\\.?\\d+\\s*,\\s*[+-]?\\d+\\.?\\d+";
+        Pattern ptn = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = ptn.matcher(address);
+        if(matcher.find()) {
+        	String tokens[] = address.replaceAll("\\s+", "").split(",");
+        	if(tokens.length == 2) {
+        		try {
+        			/*
+        			 * This does look like a GPS coordinate. Add verbatim to top.
+        			 */
+            		double lat = Double.parseDouble(tokens[0]);
+            		double lon = Double.parseDouble(tokens[1]);
+    	            Address a = new Address(Locale.getDefault());
+    	            a.setLongitude(lon);
+    	            a.setLatitude(lat);
+    	            a.setAddressLine(0, address);
+    	            list.add(a);        			
+        		}
+        		catch (Exception e) {
+        			/*
+        			 * Number format exception
+        			 */
+        		}
+        	}
+        }       
+        
         String addr;
         try {
             addr =  URLEncoder.encode(address, "UTF-8");
