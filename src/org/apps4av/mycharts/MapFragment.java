@@ -16,8 +16,12 @@ package org.apps4av.mycharts;
 import java.util.ArrayList;
 
 import org.apps4av.mycharts.R;
+import org.apps4av.mycharts.gps.GpsInterface;
+import org.apps4av.mycharts.gps.GpsParams;
 
 import android.app.AlertDialog;
+import android.location.GpsStatus;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.LayoutInflater;
@@ -44,9 +48,54 @@ public class MapFragment extends FragmentWrapper {
 	private ProgressBar mProgressLoading;
 	private String mPath;
 	
+	
+
     public MapFragment() {
     }
+
+    /*
+     * Gets GPS location
+     */
     
+    private GpsInterface mGpsInfc = new GpsInterface() {
+
+        @Override
+        public void statusCallback(GpsStatus gpsStatus) {
+        }
+
+        @Override
+        public void locationCallback(Location location) {
+            if(location != null) {
+
+                /*
+                 * Called by GPS. Update everything driven by GPS.
+                 */
+                mMapView.setGpsParams(new GpsParams(location));               
+            }
+        }
+
+        @Override
+        public void timeoutCallback(boolean timeout) {
+            /*
+             *  No GPS signal
+             *  Tell location view to show GPS status
+             */
+            if(null == getService()) {
+            }
+            else if(timeout) {
+            }
+            else {
+                /*
+                 *  GPS kicking.
+                 */
+            }           
+        }
+
+        @Override
+        public void enabledCallback(boolean enabled) {
+        }
+    };
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
@@ -90,7 +139,8 @@ public class MapFragment extends FragmentWrapper {
 			}
         	
         });
-
+        
+        getService().registerGpsListener(mGpsInfc);
         
         return rootView;
     }
@@ -149,4 +199,11 @@ public class MapFragment extends FragmentWrapper {
 		alertDialog.show();
 
     }
+    
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        getService().unregisterGpsListener(mGpsInfc);
+    }
+
 }

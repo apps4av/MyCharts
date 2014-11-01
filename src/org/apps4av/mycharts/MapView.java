@@ -13,6 +13,8 @@ Redistribution and use in source and binary forms, with or without modification,
 package org.apps4av.mycharts;
 
 
+import org.apps4av.mycharts.gps.GpsParams;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
@@ -71,6 +73,14 @@ public class MapView extends MappingView implements OnTouchListener {
     @Override
     public void onDraw(Canvas canvas) {
     	super.onDraw(canvas);
+    }
+    
+    /**
+     * 
+     * @param g
+     */
+    public void setGpsParams(GpsParams g) {
+    	
     }
 }
 

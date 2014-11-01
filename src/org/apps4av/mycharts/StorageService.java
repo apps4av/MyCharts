@@ -11,11 +11,22 @@ Redistribution and use in source and binary forms, with or without modification,
 */
 package org.apps4av.mycharts;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import org.apps4av.mycharts.gps.Gps;
+import org.apps4av.mycharts.gps.GpsInterface;
+
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.location.GpsStatus;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Handler;
@@ -52,8 +63,26 @@ public class StorageService extends Service {
     ImageThread                 	 mImageThread;
     private ImageCallback			 mICallback;
 
-
+    private boolean mIsGpsOn;
     
+    private int mCounter;
+
+    /**
+     * For performing periodic activities.
+     */
+    private Timer mTimer;
+    
+
+    /*
+     * A list of GPS listeners
+     */
+    private LinkedList<GpsInterface> mGpsCallbacks;
+
+    /**
+     * GPS
+     */
+    private Gps mGps;
+
     /**
      * @author zkhan
      *
@@ -104,6 +133,16 @@ public class StorageService extends Service {
         display.getSize(size);
         mWidth = size.x;
         mHeight = size.y;
+        
+        mGpsCallbacks = new LinkedList<GpsInterface>();
+        mTimer = new Timer();
+        TimerTask gpsTime = new UpdateTask();
+        mIsGpsOn = false;
+
+        /*
+         * Monitor TFR every hour.
+         */
+        mTimer.scheduleAtFixedRate(gpsTime, 0, 60 * 1000);
 
         /*
          * Our image thread
@@ -111,6 +150,93 @@ public class StorageService extends Service {
         mImageThread = new ImageThread();
         mThread = new Thread(mImageThread);
         mThread.start();
+        
+        
+        /*
+         * Start GPS, and call all activities registered to listen to GPS
+         */
+        GpsInterface intf = new GpsInterface() {
+
+            /**
+             * 
+             * @return
+             */
+            private LinkedList<GpsInterface> extracted() {
+                return (LinkedList<GpsInterface>)mGpsCallbacks.clone();
+            }
+
+            /*
+             * (non-Javadoc)
+             * @see com.ds.avare.GpsInterface#statusCallback(android.location.GpsStatus)
+             */            
+            @Override
+            public void statusCallback(GpsStatus gpsStatus) {
+                LinkedList<GpsInterface> list = extracted();
+                Iterator<GpsInterface> it = list.iterator();
+                while (it.hasNext()) {
+                    GpsInterface infc = it.next();
+                    infc.statusCallback(gpsStatus);
+                }
+            }
+
+            /*
+             * (non-Javadoc)
+             * @see com.ds.avare.GpsInterface#locationCallback(android.location.Location)
+             */
+            @Override
+            public void locationCallback(Location location) {                
+                LinkedList<GpsInterface> list = extracted();
+                Iterator<GpsInterface> it = list.iterator();
+                while (it.hasNext()) {
+                    GpsInterface infc = it.next();
+                    infc.locationCallback(location);
+                }
+                
+                /*
+                 * Update the service objects with location
+                 */
+                if(null != location) {
+                    if(!location.getProvider().equals(LocationManager.GPS_PROVIDER)) {
+                        /*
+                         * Getting location from somewhere other than built in GPS.
+                         * Update timeout so we do not timeout on GPS timer.
+                         */
+                        mGps.updateTimeout();
+                    }
+                }
+            }
+
+            /*
+             * (non-Javadoc)
+             * @see com.ds.avare.GpsInterface#timeoutCallback(boolean)
+             */
+            @Override
+            public void timeoutCallback(boolean timeout) {
+                LinkedList<GpsInterface> list = extracted();
+                Iterator<GpsInterface> it = list.iterator();
+                while (it.hasNext()) {
+                    GpsInterface infc = it.next();
+                    infc.timeoutCallback(timeout);
+                }                
+            }
+
+            @Override
+            public void enabledCallback(boolean enabled) {
+                LinkedList<GpsInterface> list = extracted();
+                Iterator<GpsInterface> it = list.iterator();
+                while (it.hasNext()) {
+                    GpsInterface infc = it.next();
+                    infc.enabledCallback(enabled);
+                }
+                if(enabled) {
+                    if(!mGpsCallbacks.isEmpty()) {
+                        mGps.start();
+                    }
+                }
+            }
+        };
+        mGps = new Gps(this, intf);
+
     }
         
     /* (non-Javadoc)
@@ -126,7 +252,14 @@ public class StorageService extends Service {
     	catch(Exception e) {
     		
     	}
-        
+
+        if(mTimer != null) {
+            mTimer.cancel();
+        }
+        if(mGps != null) {
+            mGps.stop();
+        }
+
         System.gc();
 
         super.onDestroy();
@@ -135,7 +268,48 @@ public class StorageService extends Service {
         System.exit(0);
     }
 
-  
+
+    /**
+     * 
+     * @param gps
+     */
+    public void registerGpsListener(GpsInterface gps) {
+        /*
+         * If first listener, start GPS
+         */
+        mGps.start();
+        synchronized(this) {
+            mIsGpsOn = true;
+        }
+        synchronized(mGpsCallbacks) {
+            mGpsCallbacks.add(gps);
+        }
+    }
+
+    /**
+     * 
+     * @param gps
+     */
+    public void unregisterGpsListener(GpsInterface gps) {
+        
+        boolean isempty = false;
+        
+        synchronized(mGpsCallbacks) {
+            mGpsCallbacks.remove(gps);
+            isempty = mGpsCallbacks.isEmpty();
+        }
+        
+        /*
+         * If no listener, relinquish GPS control
+         */
+        if(isempty) {
+            synchronized(this) {
+                mCounter = 0;
+                mIsGpsOn = false;                
+            }            
+        }
+    }
+
     /**
      * 
      */
@@ -292,4 +466,31 @@ public class StorageService extends Service {
             }
         };
 	}
+	
+	
+    /**
+     * @author zkhan
+     *
+     */
+    private class UpdateTask extends TimerTask {
+        
+        /* (non-Javadoc)
+         * @see java.util.TimerTask#run()
+         */
+        public void run() {
+
+            /*
+             * Stop the GPS delayed by 1 to 2 minutes if no other activity is registered 
+             * to it for 1 to 2 minutes.
+             */
+            synchronized(this) {
+                mCounter++;
+                if((!mIsGpsOn) && (mGps != null) && (mCounter >= 2)) {
+                    mGps.stop();
+                }
+            }
+
+        }
+    }
+
 }

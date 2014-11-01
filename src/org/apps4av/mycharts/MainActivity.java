@@ -15,6 +15,7 @@ package org.apps4av.mycharts;
 
 
 import org.apps4av.mycharts.R;
+import org.apps4av.mycharts.gps.Gps;
 
 import android.app.Activity;
 import android.app.ActionBar;
@@ -73,6 +74,7 @@ public class MainActivity extends Activity implements
                 getString(R.string.title_map),
                 getString(R.string.title_tag),
                 }), this);
+                
     }
 
 
@@ -113,12 +115,10 @@ public class MainActivity extends Activity implements
     	mFragments[position].setService(mService);
     
     	FragmentTransaction f = getFragmentManager().beginTransaction();
-    	f.addToBackStack(null);
         f.replace(R.id.container, mFragments[position]).commit();
         
         return true;
     }
-
 
     
     /** Defines callbacks for service binding, passed to bindService() */
@@ -141,6 +141,37 @@ public class MainActivity extends Activity implements
             StorageService.LocalBinder binder = (StorageService.LocalBinder)service;
             mService = binder.getService();
             
+            
+            /**
+             * Warn about GPS disabled
+             */
+            if(Gps.isGpsDisabled(getApplicationContext())) {
+                AlertDialog gps = new AlertDialog.Builder(MainActivity.this).create();
+                gps.setTitle(getString(R.string.gps_enable));
+                gps.setCancelable(false);
+                gps.setCanceledOnTouchOutside(false);
+                gps.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.yes), new DialogInterface.OnClickListener() {
+                    /* (non-Javadoc)
+                     * @see android.content.DialogInterface.OnClickListener#onClick(android.content.DialogInterface, int)
+                     */
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        Intent i = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivity(i);
+                    }
+                });
+                gps.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.no), new DialogInterface.OnClickListener() {
+                    /* (non-Javadoc)
+                     * @see android.content.DialogInterface.OnClickListener#onClick(android.content.DialogInterface, int)
+                     */
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                gps.show(); 
+            }
+
+
         }
 
         /* (non-Javadoc)
@@ -156,8 +187,8 @@ public class MainActivity extends Activity implements
      * @see android.app.Activity#onPause()
      */
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onDestroy() {
+        super.onDestroy();
         
         /*
          * Clean up on pause that was started in on resume
@@ -202,7 +233,10 @@ public class MainActivity extends Activity implements
                  * Go to background
                  */
                 dialog.dismiss();
-                finish();
+                /*
+                 * Go to background
+                 */
+                MainActivity.super.onBackPressed();
             }
         });
         exit.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.no), new DialogInterface.OnClickListener() {

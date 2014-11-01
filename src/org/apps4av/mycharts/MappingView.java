@@ -70,6 +70,7 @@ public class MappingView extends View implements MultiTouchObjectCanvas<Object> 
         mPaint = new Paint();
     }
 
+
     /**
      * 
      * @param view
@@ -198,11 +199,11 @@ public class MappingView extends View implements MultiTouchObjectCanvas<Object> 
     	mService = service;
     } 
     
-    
     /**
      * 
      */
     public Paint getPaint() {
     	return mPaint;
     }
+    
 }

@@ -181,7 +181,7 @@ public class TagFragment extends FragmentWrapper {
 	     		    	mAddressResolver.get(getActivity(), s.toString());
 	     		    }
 	     		    else {
-	     		    	mList.setVisibility(View.INVISIBLE);
+	     		    	mList.setAdapter(null);
 	     		    }
 	     	    }
 	         });
@@ -218,4 +218,9 @@ public class TagFragment extends FragmentWrapper {
     	
     }
     
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
+
 }

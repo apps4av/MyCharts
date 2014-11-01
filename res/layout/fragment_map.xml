@@ -35,7 +35,6 @@ Redistribution and use in source and binary forms, with or without modification,
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:alpha="1.0"
-        android:background="#00000000"
         android:src="@+drawable/load"
         android:contentDescription="@+string/load"
         android:layout_alignParentBottom="true"/>

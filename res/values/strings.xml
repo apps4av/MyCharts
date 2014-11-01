@@ -4,13 +4,15 @@
     <string name="app_name">MyCharts</string>
     <string name="title_map">Map</string>
     <string name="load">Load</string>
-    <string name="choosemap">Choose a map picture</string>
+    <string name="choosemap">Choose a map picture to load</string>
     <string name="up">Up</string>
     <string name="exit">Do you want to exit?</string>
+    <string name="gps_enable">GPS is disabled on this device. Do you want to enable it for navigation?</string>
     <string name="no">No</string>
     <string name="yes">Yes</string>
     <string name="title_tag">Tag</string>
-    <string name="search">Search for a place</string>
+    <string name="search">Describe the place under the cross hair, then select one of the presented options to tag it</string>
     <string name="action_settings">Settings</string>
 
 </resources>
+ 
