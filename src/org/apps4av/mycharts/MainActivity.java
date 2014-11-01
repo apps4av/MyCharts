@@ -54,6 +54,12 @@ public class MainActivity extends Activity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
+        /*
+         * Start service now, bind later. This will be no-op if service is already running
+         */
+        Intent intent = new Intent(this, StorageService.class);
+        startService(intent);
 
         // Set up the action bar to show a dropdown list.
         final ActionBar actionBar = getActionBar();

@@ -20,7 +20,7 @@ Redistribution and use in source and binary forms, with or without modification,
         android:layout_alignParentTop="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="@string/choosemap"/>
+        android:contentDescription="@string/choose_map"/>
     
     <TextView
          android:id="@+id/file_list_info"

@@ -159,7 +159,7 @@ public class MapFragment extends FragmentWrapper {
 		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
  
 		// set title
-		alertDialogBuilder.setTitle(getString(R.string.choosemap));
+		alertDialogBuilder.setTitle(getString(R.string.choose_map));
 		// set dialog message
 		alertDialogBuilder.setView(list);
 

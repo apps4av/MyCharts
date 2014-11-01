@@ -40,8 +40,15 @@ public class Helper {
 				public boolean accept(File dir, String filename) {
 					File sel = new File(dir, filename);
 					// Filters based on whether the file is hidden or not and can be read
-					return (sel.isFile() || sel.isDirectory())
-							&& !sel.isHidden() && sel.canRead();
+					if(sel.isDirectory() && (!sel.isHidden()) && sel.canRead()) {
+						return true;
+					}
+					if(sel.isFile() && (!sel.isHidden()) && sel.canRead() && 
+							(filename.toLowerCase().endsWith("jpeg") || 
+						    filename.toLowerCase().endsWith("jpg"))) {
+						return true;
+					}
+					return false;
 				}
 			};
 
