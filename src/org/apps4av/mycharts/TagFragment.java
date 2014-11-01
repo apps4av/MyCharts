@@ -47,9 +47,11 @@ public class TagFragment extends FragmentWrapper {
      */
     private TagView mTagView;
 
+    private static final int TOTAL_TAGS = 2;
+    
 	private ImageButton mTagButton;
 	private AddressToGps mAddressResolver;
-	private Address mNotifyAddress;
+	private Address mNotifyAddress[];
 	private AlertDialog mDialogSearch;
 
     public TagFragment() {
@@ -68,6 +70,7 @@ public class TagFragment extends FragmentWrapper {
         mTagView = (TagView)(rootView.findViewById(R.id.fragment_tag_plateview));
         mTagView.setService(getService());
         
+        mNotifyAddress = new Address[TOTAL_TAGS];
         
         mTagButton = (ImageButton)rootView.findViewById(R.id.fragment_tag_button_tag);
         mTagButton.setOnClickListener(new OnClickListener() {
@@ -134,6 +137,11 @@ public class TagFragment extends FragmentWrapper {
 			super(context);
 			
 			/*
+			 * New search
+			 */
+			mNotifyAddress = null;
+			
+			/*
 			 * Make a layout for a dialog that asks for tagging
 			 */
 			LinearLayout layout = new LinearLayout(getActivity());
@@ -153,7 +161,7 @@ public class TagFragment extends FragmentWrapper {
 		        @Override
 		        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 			        if(null != mAList) {
-				        mNotifyAddress = mAList.get(position);
+				        mNotifyAddress[0] = mAList.get(position);
 				        Util.hideKeyboard(mText);
 				        try {
 				        	mDialogSearch.dismiss();
