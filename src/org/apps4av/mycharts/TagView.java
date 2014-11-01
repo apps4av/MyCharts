@@ -12,9 +12,10 @@ Redistribution and use in source and binary forms, with or without modification,
 
 package org.apps4av.mycharts;
 
-
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint.Style;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -28,13 +29,13 @@ import android.view.View.OnTouchListener;
  * User sees the map on this view
  *
  */
-public class MapView extends MappingView implements OnTouchListener {
+public class TagView extends MappingView implements OnTouchListener {	
 
     /**
      * 
      * @param context
      */
-	public MapView(Context context) {
+	public TagView(Context context) {
 		super(context);
 		setOnTouchListener(this);
 	}
@@ -43,7 +44,7 @@ public class MapView extends MappingView implements OnTouchListener {
      * 
      * @param context
      */
-    public MapView(Context context, AttributeSet set) {
+    public TagView(Context context, AttributeSet set) {
         super(context, set);
 		setOnTouchListener(this);
     }
@@ -52,7 +53,7 @@ public class MapView extends MappingView implements OnTouchListener {
      * 
      * @param context
      */
-    public MapView(Context context, AttributeSet set, int arg) {
+    public TagView(Context context, AttributeSet set, int arg) {
         super(context, set, arg);
 		setOnTouchListener(this);
     }
@@ -71,6 +72,17 @@ public class MapView extends MappingView implements OnTouchListener {
     @Override
     public void onDraw(Canvas canvas) {
     	super.onDraw(canvas);
+    	
+    	/*
+    	 * The cross in the middle
+    	 */
+    	getPaint().setColor(Color.RED);
+    	getPaint().setStyle(Style.STROKE);
+    	getPaint().setStrokeWidth(4);
+        canvas.drawLine(0, getHeight() / 2, getWidth() , getHeight() / 2, getPaint());
+        canvas.drawLine(getWidth() / 2, 0, getWidth() / 2, getHeight(), getPaint());
+        canvas.drawCircle(getWidth() / 2, getHeight() / 2, 4, getPaint());
     }
+
 }
 

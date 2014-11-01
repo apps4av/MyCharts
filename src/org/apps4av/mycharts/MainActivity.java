@@ -18,9 +18,11 @@ import org.apps4av.mycharts.R;
 
 import android.app.Activity;
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
@@ -41,7 +43,7 @@ public class MainActivity extends Activity implements
      * The serialization (saved instance state) Bundle key representing the
      * current dropdown position.
      */
-    private FragmentWrapper[] mFragments = new FragmentWrapper[1];
+    private FragmentWrapper[] mFragments = new FragmentWrapper[2];
     private StorageService mService = null;
 
     /**
@@ -59,6 +61,8 @@ public class MainActivity extends Activity implements
         Bundle args = new Bundle();
         mFragments[0] = new MapFragment();
         mFragments[0].setArguments(args);
+        mFragments[1] = new TagFragment();
+        mFragments[1].setArguments(args);
 
         // Set up the drop down list navigation in the action bar.
         actionBar.setListNavigationCallbacks(
@@ -67,6 +71,7 @@ public class MainActivity extends Activity implements
                 android.R.layout.simple_list_item_1,
                 android.R.id.text1, new String[] {
                 getString(R.string.title_map),
+                getString(R.string.title_tag),
                 }), this);
     }
 
@@ -181,6 +186,37 @@ public class MainActivity extends Activity implements
      */
     @Override
     public void onBackPressed() {
-    	finish();
+        /*
+         * And may exit
+         */
+        AlertDialog exit = new AlertDialog.Builder(MainActivity.this).create();
+        exit.setTitle(getString(R.string.exit));
+        exit.setCanceledOnTouchOutside(true);
+        exit.setCancelable(true);
+        exit.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.yes), new DialogInterface.OnClickListener() {
+            /* (non-Javadoc)
+             * @see android.content.DialogInterface.OnClickListener#onClick(android.content.DialogInterface, int)
+             */
+            public void onClick(DialogInterface dialog, int which) {
+                /*
+                 * Go to background
+                 */
+                dialog.dismiss();
+                finish();
+            }
+        });
+        exit.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.no), new DialogInterface.OnClickListener() {
+            /* (non-Javadoc)
+             * @see android.content.DialogInterface.OnClickListener#onClick(android.content.DialogInterface, int)
+             */
+            public void onClick(DialogInterface dialog, int which) {
+                /*
+                 * Go to background
+                 */
+                dialog.dismiss();
+            }            
+        });
+
+        exit.show();
     }
 }

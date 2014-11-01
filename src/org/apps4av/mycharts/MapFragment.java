@@ -38,12 +38,12 @@ public class MapFragment extends FragmentWrapper {
      * The view of this fragment that has the map on it
      *
      */
-    MapView mMapView;
+    private MapView mMapView;
 
 	private ImageButton mLoadButton;
 	private ProgressBar mProgressLoading;
 	private String mPath;
-
+	
     public MapFragment() {
     }
     
@@ -62,7 +62,7 @@ public class MapFragment extends FragmentWrapper {
         
         mProgressLoading = (ProgressBar)rootView.findViewById(R.id.fragment_map_progress_bar);
        
-        mLoadButton = (ImageButton)rootView.findViewById(R.id.fragment_map_button);
+        mLoadButton = (ImageButton)rootView.findViewById(R.id.fragment_map_button_load);
         mLoadButton.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -78,7 +78,6 @@ public class MapFragment extends FragmentWrapper {
 			}
         });
 
-        
         /**
          * Set image callback for showing image is loaded
          */
@@ -96,6 +95,8 @@ public class MapFragment extends FragmentWrapper {
         return rootView;
     }
 
+    
+    
     /**
      * 
      */
@@ -148,5 +149,4 @@ public class MapFragment extends FragmentWrapper {
 		alertDialog.show();
 
     }
-    
 }
