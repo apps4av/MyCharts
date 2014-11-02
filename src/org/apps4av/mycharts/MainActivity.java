@@ -26,10 +26,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 
 /**
@@ -44,7 +46,7 @@ public class MainActivity extends Activity implements
      * The serialization (saved instance state) Bundle key representing the
      * current dropdown position.
      */
-    private FragmentWrapper[] mFragments = new FragmentWrapper[2];
+    private FragmentWrapper[] mFragments = new FragmentWrapper[3];
     private StorageService mService = null;
 
     /**
@@ -55,6 +57,9 @@ public class MainActivity extends Activity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         /*
          * Start service now, bind later. This will be no-op if service is already running
          */
@@ -70,6 +75,8 @@ public class MainActivity extends Activity implements
         mFragments[0].setArguments(args);
         mFragments[1] = new TagFragment();
         mFragments[1].setArguments(args);
+        mFragments[2] = new SatelliteFragment();
+        mFragments[2].setArguments(args);
 
         // Set up the drop down list navigation in the action bar.
         actionBar.setListNavigationCallbacks(
@@ -79,6 +86,7 @@ public class MainActivity extends Activity implements
                 android.R.id.text1, new String[] {
                 getString(R.string.title_map),
                 getString(R.string.title_tag),
+                getString(R.string.title_gps),
                 }), this);
                 
     }
@@ -118,8 +126,11 @@ public class MainActivity extends Activity implements
         // When the given dropdown item is selected, show its contents in the
         // container view.
     	
+    	if(mService == null) {
+    		return false;
+    	}
     	mFragments[position].setService(mService);
-    
+
     	FragmentTransaction f = getFragmentManager().beginTransaction();
         f.replace(R.id.container, mFragments[position]).commit();
         
@@ -146,8 +157,7 @@ public class MainActivity extends Activity implements
              */
             StorageService.LocalBinder binder = (StorageService.LocalBinder)service;
             mService = binder.getService();
-            
-            
+                   
             /**
              * Warn about GPS disabled
              */

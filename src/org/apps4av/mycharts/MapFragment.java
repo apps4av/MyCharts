@@ -30,7 +30,7 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ImageButton;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
@@ -44,7 +44,7 @@ public class MapFragment extends FragmentWrapper {
      */
     private MapView mMapView;
 
-	private ImageButton mLoadButton;
+	private Button mLoadButton;
 	private ProgressBar mProgressLoading;
 	private String mPath;
 	
@@ -76,19 +76,6 @@ public class MapFragment extends FragmentWrapper {
 
         @Override
         public void timeoutCallback(boolean timeout) {
-            /*
-             *  No GPS signal
-             *  Tell location view to show GPS status
-             */
-            if(null == getService()) {
-            }
-            else if(timeout) {
-            }
-            else {
-                /*
-                 *  GPS kicking.
-                 */
-            }           
         }
 
         @Override
@@ -111,7 +98,7 @@ public class MapFragment extends FragmentWrapper {
         
         mProgressLoading = (ProgressBar)rootView.findViewById(R.id.fragment_map_progress_bar);
        
-        mLoadButton = (ImageButton)rootView.findViewById(R.id.fragment_map_button_load);
+        mLoadButton = (Button)rootView.findViewById(R.id.fragment_map_button_load);
         mLoadButton.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -127,21 +114,6 @@ public class MapFragment extends FragmentWrapper {
 			}
         });
 
-        /**
-         * Set image callback for showing image is loaded
-         */
-        getService().setImageCallback(new ImageCallback() {
-
-			@Override
-			public void imageReady() {
-				mProgressLoading.setVisibility(View.INVISIBLE);
-				mMapView.invalidate();
-			}
-        	
-        });
-        
-        getService().registerGpsListener(mGpsInfc);
-        
         return rootView;
     }
 
@@ -203,7 +175,31 @@ public class MapFragment extends FragmentWrapper {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        getService().unregisterGpsListener(mGpsInfc);
+    	getService().unregisterGpsListener(mGpsInfc);
     }
 
+    /**
+     * 
+     */
+    @Override
+    public void setService(StorageService service) {
+    	
+    	super.setService(service);
+    	
+        /**
+         * Set image callback for showing image is loaded
+         */
+        getService().setImageCallback(new ImageCallback() {
+
+			@Override
+			public void imageReady() {
+				mProgressLoading.setVisibility(View.INVISIBLE);
+				mMapView.invalidate();
+			}
+        	
+        });
+
+        getService().registerGpsListener(mGpsInfc);
+        
+    }
 }

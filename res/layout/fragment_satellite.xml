@@ -13,21 +13,12 @@ Redistribution and use in source and binary forms, with or without modification,
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="#FF000000"
     android:layout_height="match_parent">
     
-    <org.apps4av.mycharts.TagView
-        android:id="@+id/fragment_tag_plateview"
+    <org.apps4av.mycharts.SatelliteView
+        android:id="@+id/fragment_satellite_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <Button
-        android:id="@+id/fragment_tag_button_tag"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:drawableLeft="@+drawable/tag"
-        android:text="@+string/tag"
-        android:contentDescription="@+string/tag"
-        android:layout_alignParentBottom="true"/>
-    
 </RelativeLayout>

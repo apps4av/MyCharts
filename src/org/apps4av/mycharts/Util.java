@@ -36,6 +36,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.location.Address;
+import android.util.TypedValue;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
@@ -160,5 +161,25 @@ public class Util {
 	    		Context.INPUT_METHOD_SERVICE);
 	    imm.hideSoftInputFromWindow(text.getWindowToken(), 0);
     }
+
+    /**
+     *  Converts 1 dip (device independent pixel) into its equivalent physical pixels
+     */
+    public static float getDpiToPix(Context ctx) {
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, 
+                ctx.getResources().getDisplayMetrics());
+    }
+    
+    /**
+     * 
+     * @param lonlat
+     */
+    public static double truncGeo(double lonlat) {
+        lonlat *= 10000;
+        lonlat = Math.round(lonlat);
+        lonlat /= 10000;
+        return lonlat;
+    }
+
 
 }

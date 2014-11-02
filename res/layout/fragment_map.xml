@@ -29,13 +29,13 @@ Redistribution and use in source and binary forms, with or without modification,
         android:visibility="invisible"
         />
     
-    <ImageButton
+    <Button
         android:id="@+id/fragment_map_button_load"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:alpha="1.0"
-        android:src="@+drawable/load"
+        android:drawableLeft="@+drawable/load"
+        android:text="@+string/load"
         android:contentDescription="@+string/load"
         android:layout_alignParentBottom="true"/>
     

@@ -30,8 +30,8 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -47,7 +47,7 @@ public class TagFragment extends FragmentWrapper {
      */
     private TagView mTagView;
 
-	private ImageButton mTagButton;
+	private Button mTagButton;
 	private AddressToGps mAddressResolver;
 	private Address mNotifyAddress;
 	private AlertDialog mDialogSearch;
@@ -69,7 +69,7 @@ public class TagFragment extends FragmentWrapper {
         mTagView.setService(getService());
         
         
-        mTagButton = (ImageButton)rootView.findViewById(R.id.fragment_tag_button_tag);
+        mTagButton = (Button)rootView.findViewById(R.id.fragment_tag_button_tag);
         mTagButton.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -94,20 +94,7 @@ public class TagFragment extends FragmentWrapper {
 
 
         mAddressResolver = new AddressToGps();
-        
-        
-        /**
-         * Set image callback for showing image is loaded
-         */
-        getService().setImageCallback(new ImageCallback() {
-
-			@Override
-			public void imageReady() {
-				mTagView.invalidate();
-			}
-        	
-        });
-
+           
         return rootView;
     }
 
@@ -228,4 +215,23 @@ public class TagFragment extends FragmentWrapper {
         super.onDestroyView();
     }
 
+    /**
+     * 
+     */
+    @Override
+    public void setService(StorageService service) {
+    	
+    	super.setService(service);
+    	
+        /**
+         * Set image callback for showing image is loaded
+         */
+        getService().setImageCallback(new ImageCallback() {
+
+			@Override
+			public void imageReady() {
+				mTagView.invalidate();
+			}
+        });
+    }
 }
