@@ -12,7 +12,9 @@ Redistribution and use in source and binary forms, with or without modification,
 
 package org.apps4av.mycharts;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 
 /*
  * Just a fragment wrapper to handle some common stuff
@@ -21,6 +23,27 @@ public class FragmentWrapper extends Fragment {
 
 	private StorageService mService;
 	
+    /**
+     * 
+     */
+    protected void showHelp(String message) {
+        /*
+         * Show help dialog with OK
+         */
+        AlertDialog.Builder start = new AlertDialog.Builder(getActivity());
+        start.setTitle(getString(R.string.help));
+        start.setMessage(message);
+        start.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener(){
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				dialog.dismiss();
+			}
+        });
+        start.create().show();
+    }
+    
+
 	/**
 	 * 
 	 * @param s

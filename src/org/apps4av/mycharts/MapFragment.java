@@ -163,6 +163,16 @@ public class MapFragment extends FragmentWrapper {
 					alertDialog.dismiss();
 					mProgressLoading.setVisibility(View.VISIBLE);
 					getService().loadBitmap(mPath + "/" + item.getName());
+					String data = "";
+					if(null == data) {
+						showHelp(getString(R.string.map_help_tag));
+					}
+					else {
+						String tokens[] = data.split(",");
+						if(tokens.length != 4) {
+							showHelp(getString(R.string.map_help_tag));
+						}
+					}
 				}
 			}
 		});
@@ -195,8 +205,10 @@ public class MapFragment extends FragmentWrapper {
 			public void imageReady() {
 				mProgressLoading.setVisibility(View.INVISIBLE);
 				mMapView.invalidate();
+				/*
+				 * Loaded. Set data in view
+				 */
 			}
-        	
         });
 
         getService().registerGpsListener(mGpsInfc);

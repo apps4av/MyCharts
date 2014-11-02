@@ -49,7 +49,8 @@ public class TagFragment extends FragmentWrapper {
 
 	private Button mTagButton;
 	private AddressToGps mAddressResolver;
-	private Address mNotifyAddress;
+	private Address mNotifyAddress0;
+	private Address mNotifyAddress1;
 	private AlertDialog mDialogSearch;
 
     public TagFragment() {
@@ -94,10 +95,70 @@ public class TagFragment extends FragmentWrapper {
 
 
         mAddressResolver = new AddressToGps();
-           
+		/*
+		 * New search
+		 */
+		mNotifyAddress0 = mNotifyAddress1 = null;	
+        
+        showHelp(getString(R.string.tag_help_start));
+        
         return rootView;
     }
 
+    /**
+     * Calculate tagging info and store in image.
+     */
+    private boolean calculateTag() {
+    	double x0, x1, y0, y1, lon0, lon1, lat0, lat1;
+    	String tokens0[];
+    	String tokens1[];
+    	lon0 = mNotifyAddress0.getLongitude();
+    	lat0 = mNotifyAddress0.getLatitude();
+    	lon1 = mNotifyAddress1.getLongitude();
+    	lat1 = mNotifyAddress1.getLatitude();
+    	tokens0 = mNotifyAddress0.getFeatureName().split(",");
+    	tokens1 = mNotifyAddress1.getFeatureName().split(",");
+    	
+    	try {
+    		x0 = Double.parseDouble(tokens0[0]);
+    		y0 = Double.parseDouble(tokens0[1]);
+    		x1 = Double.parseDouble(tokens1[0]);
+    		y1 = Double.parseDouble(tokens1[1]);
+    	}
+    	catch(Exception e) {
+    		return false;
+    	}
+    	
+    	double diffx = x0 - x1;
+    	double diffy = y0 - y1;
+    	double difflon = lon0 - lon1;
+    	double difflat = lat0 - lat1;
+    	if(difflon == 0 || difflat == 0 || diffx == 0 || diffy == 0) {
+    		return false;
+    	}
+    	
+        double dx = diffx / difflon; 
+        double dy = diffy / difflat;
+
+        if(dx == 0 || dy == 0) {
+        	return false;
+        }
+    	
+        double lonTopLeft = lon0 - x0 / dx;
+        double latTopLeft = lat0 - y0 / dy;
+        
+        /**
+         * Save data if sane
+         */
+        if(Util.isLongitudeSane(lonTopLeft) && Util.isLatitudeSane(latTopLeft)) {
+        	/*
+        	 * Save in image dx + "," + dy + "," + lonTopLeft + "," + latTopLeft 
+        	 */
+        	return true;
+        }
+
+    	return false;
+    }
     
     /**
      * 
@@ -121,11 +182,6 @@ public class TagFragment extends FragmentWrapper {
 			super(context);
 			
 			/*
-			 * New search
-			 */
-			mNotifyAddress = null;
-			
-			/*
 			 * Make a layout for a dialog that asks for tagging
 			 */
 			LinearLayout layout = new LinearLayout(getActivity());
@@ -145,13 +201,40 @@ public class TagFragment extends FragmentWrapper {
 		        @Override
 		        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 			        if(null != mAList) {
-				        mNotifyAddress = mAList.get(position);
 				        Util.hideKeyboard(mText);
 				        try {
 				        	mDialogSearch.dismiss();
+				        	/*
+				        	 * Get two points
+				        	 */
+				        	if(null == mNotifyAddress0) {
+				        		mNotifyAddress0 = mAList.get(position);
+				        		mNotifyAddress0.setFeatureName(
+				        				(getService().getPan().getMoveX() + getService().getPan().getDragX())
+				        				+ "," + 
+				        			    (getService().getPan().getMoveY() + getService().getPan().getDragY()) 
+				        				);
+					        	showHelp(getString(R.string.tag_help_point1));
+				        	}
+				        	else if(null == mNotifyAddress1) {
+				        		mNotifyAddress1 = mAList.get(position);
+				        		mNotifyAddress1.setFeatureName(
+				        				(getService().getPan().getMoveX() + getService().getPan().getDragX())
+				        				+ "," + 
+				        			    (getService().getPan().getMoveY() + getService().getPan().getDragY()) 
+				        				);
+				        	}
+				        	/*
+				        	 * Now two points done, calculate and store data
+				        	 */
+				        	if(calculateTag()) {
+				        		showHelp(getString(R.string.tag_help_end));
+				        	}
+				        	else {
+				        		showHelp(getString(R.string.tag_help_fail));        		
+				        	}
 				        }
 				        catch (Exception e) {
-				        	
 				        }
 			        }
 			    }

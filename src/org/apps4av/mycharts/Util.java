@@ -181,5 +181,22 @@ public class Util {
         return lonlat;
     }
 
+    /**
+     * 
+     * @param lon
+     * @return
+     */
+    public static boolean isLongitudeSane(double lon) {
+        return (lon < 180) && (lon > -180);
+    }
+    
+    /**
+     * 
+     * @param lat
+     * @return
+     */
+    public static boolean isLatitudeSane(double lat) {
+        return (lat > -90) && (lat < 90); 
+    }
 
 }

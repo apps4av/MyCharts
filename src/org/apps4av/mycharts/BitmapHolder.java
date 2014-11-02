@@ -13,13 +13,13 @@ Redistribution and use in source and binary forms, with or without modification,
 package org.apps4av.mycharts;
 
 import java.io.File;
+import java.io.IOException;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapRegionDecoder;
 import android.graphics.Matrix;
 import android.graphics.Rect;
-import android.media.ExifInterface;
 
 /**
  * @author zkhan
@@ -49,8 +49,6 @@ public class BitmapHolder {
 
     private int mWidth = 0;
     private int mHeight = 0;
-    
-    private ExifInterface mData;
     
     /**
      * Android does not free memory for a bitmap. Have to call this explicitly
@@ -120,11 +118,6 @@ public class BitmapHolder {
 
 
         mName = name;
-        try {
-            mData = new ExifInterface(name);
-        }
-        catch(Exception e){
-        }
     }
 
     /**
@@ -164,19 +157,4 @@ public class BitmapHolder {
         return mHeight;
     }
     
-    /**
-     * 
-     * @return
-     */
-    public String getData() {
-    	return mData.getAttribute("Apps4Av");
-    }
-    
-    /**
-     * 
-     * @return
-     */
-    public void setData(String data) {
-    	mData.setAttribute("Apps4Av", data);
-    }
 }
