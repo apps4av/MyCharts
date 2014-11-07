@@ -162,8 +162,12 @@ public class MapFragment extends FragmentWrapper {
 					 */
 					alertDialog.dismiss();
 					mProgressLoading.setVisibility(View.VISIBLE);
-					getService().loadBitmap(mPath + "/" + item.getName());
-					String data = "";
+
+					String name = mPath + "/" + item.getName();
+		        	TagData provider = new TagData(getActivity());
+		        	String data = provider.getTag(name);
+
+		        	getService().loadBitmap(name);
 					if(null == data) {
 						showHelp(getString(R.string.map_help_tag));
 					}

@@ -154,6 +154,12 @@ public class TagFragment extends FragmentWrapper {
         	/*
         	 * Save in image dx + "," + dy + "," + lonTopLeft + "," + latTopLeft 
         	 */
+        	String tag =  dx + "," + dy + "," + lonTopLeft + "," + latTopLeft;
+        	TagData provider = new TagData(getActivity());
+        	String name = getService().getBitmapHolder().getName();
+        	// delete old tag
+        	provider.deleteTag(name);
+        	provider.addTag(name, tag);
         	return true;
         }
 

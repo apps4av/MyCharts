@@ -42,7 +42,9 @@ Redistribution and use in source and binary forms, with or without modification,
             </intent-filter>
         </activity>
         <service android:name="org.apps4av.mycharts.StorageService"/>
-        
+        <provider android:name="DataProvider"
+	            android:authorities="org.apps4av.mycharts">
+        </provider>
     </application>
 
 </manifest>
