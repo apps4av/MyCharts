@@ -11,7 +11,7 @@ Redistribution and use in source and binary forms, with or without modification,
 */
 
 
-package org.apps4av.mycharts.gps;
+package com.chartsack.charts.gps;
 
 import android.hardware.GeomagneticField;
 import android.location.Location;

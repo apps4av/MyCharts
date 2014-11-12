@@ -12,7 +12,7 @@ Redistribution and use in source and binary forms, with or without modification,
 -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.apps4av.mycharts"
+    package="com.chartsack.charts"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -33,7 +33,7 @@ Redistribution and use in source and binary forms, with or without modification,
         android:theme="@style/AppTheme" >
         <activity
             
-            android:name="org.apps4av.mycharts.MainActivity"
+            android:name="com.chartsack.charts.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -41,9 +41,9 @@ Redistribution and use in source and binary forms, with or without modification,
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name="org.apps4av.mycharts.StorageService"/>
+        <service android:name="com.chartsack.charts.StorageService"/>
         <provider android:name="DataProvider"
-	            android:authorities="org.apps4av.mycharts">
+	            android:authorities="com.chartsack.charts">
         </provider>
     </application>
 

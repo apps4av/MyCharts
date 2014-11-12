@@ -1,9 +1,9 @@
-package org.apps4av.mycharts;
+package com.chartsack.charts;
 
-import org.apps4av.mycharts.touch.MultiTouchController;
-import org.apps4av.mycharts.touch.MultiTouchController.MultiTouchObjectCanvas;
-import org.apps4av.mycharts.touch.MultiTouchController.PointInfo;
-import org.apps4av.mycharts.touch.MultiTouchController.PositionAndScale;
+import com.chartsack.charts.touch.MultiTouchController;
+import com.chartsack.charts.touch.MultiTouchController.MultiTouchObjectCanvas;
+import com.chartsack.charts.touch.MultiTouchController.PointInfo;
+import com.chartsack.charts.touch.MultiTouchController.PositionAndScale;
 
 import android.content.Context;
 import android.graphics.Canvas;

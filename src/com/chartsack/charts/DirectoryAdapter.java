@@ -9,78 +9,59 @@ Redistribution and use in source and binary forms, with or without modification,
     *
     *     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+package com.chartsack.charts;
 
-package org.apps4av.mycharts;
 
+import java.util.ArrayList;
 
-import org.apps4av.mycharts.gps.GpsParams;
+import com.chartsack.charts.R;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.util.AttributeSet;
-import android.view.MotionEvent;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnTouchListener;
-
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 /**
- * 
  * @author zkhan
- * 
- * User sees the map on this view
  *
  */
-public class MapView extends MappingView implements OnTouchListener {
+public class DirectoryAdapter extends ArrayAdapter<DirectoryItem> {
 
+    private Context  mContext;
+    private ArrayList<DirectoryItem> mInfo;
+        
     /**
-     * 
      * @param context
-     */
-	public MapView(Context context) {
-		super(context);
-		setOnTouchListener(this);
-	}
-
-    /**
      * 
-     * @param context
      */
-    public MapView(Context context, AttributeSet set) {
-        super(context, set);
-		setOnTouchListener(this);
-    }
-    
-    /**
-     * 
-     * @param context
-     */
-    public MapView(Context context, AttributeSet set, int arg) {
-        super(context, set, arg);
-		setOnTouchListener(this);
+    public DirectoryAdapter(Context context, ArrayList<DirectoryItem> info) {
+        super(context, R.layout.file_list, info);
+        mContext = context;
+        mInfo = info;
     }
 
-	/* (non-Javadoc)
-     * @see android.view.View.OnTouchListener#onTouch(android.view.View, android.view.MotionEvent)
-     */
+  
     @Override
-    public boolean onTouch(View view, MotionEvent e) {
-        return super.onTouch(view, e);
-    }
+    public View getView(int position, View convertView, ViewGroup parent) {
+        LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-    /* (non-Javadoc)
-     * @see android.view.View#onDraw(android.graphics.Canvas)
-     */
-    @Override
-    public void onDraw(Canvas canvas) {
-    	super.onDraw(canvas);
-    }
-    
-    /**
-     * 
-     * @param g
-     */
-    public void setGpsParams(GpsParams g) {
-    	
-    }
+        View rowView = convertView;
+        
+        if(null == rowView) {
+            rowView = inflater.inflate(R.layout.file_list, parent, false);
+        }
+        TextView textView = (TextView)rowView.findViewById(R.id.file_list_info);
+        ImageView imgView = (ImageView)rowView.findViewById(R.id.file_list_icon);
+        textView.setText(mInfo.get(position).getName());
+        if(mInfo.get(position).isDir()) {
+        	imgView.setImageResource(R.drawable.directory_icon);
+        }
+        else {
+        	imgView.setImageResource(R.drawable.file_icon);
+        }
+        return rowView;
+    }    
 }
-

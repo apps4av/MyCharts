@@ -11,11 +11,12 @@ Redistribution and use in source and binary forms, with or without modification,
 */
 
 
-package org.apps4av.mycharts;
+package com.chartsack.charts;
 
 
-import org.apps4av.mycharts.R;
-import org.apps4av.mycharts.gps.Gps;
+import com.chartsack.charts.R;
+
+import com.chartsack.charts.gps.Gps;
 
 import android.app.Activity;
 import android.app.ActionBar;

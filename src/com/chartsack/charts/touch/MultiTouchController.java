@@ -1,4 +1,4 @@
-package org.apps4av.mycharts.touch;
+package com.chartsack.charts.touch;
 
 /**
  * MultiTouchController.java

@@ -15,5 +15,5 @@ Redistribution and use in source and binary forms, with or without modification,
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="org.apps4av.mycharts.MainActivity"
+    tools:context="com.chartsack.charts.MainActivity"
     tools:ignore="MergeRootFrame" />

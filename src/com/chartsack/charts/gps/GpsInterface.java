@@ -9,61 +9,26 @@ Redistribution and use in source and binary forms, with or without modification,
     *
     *     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+package com.chartsack.charts.gps;
 
-package org.apps4av.mycharts;
-
-import java.io.File;
-import java.io.FilenameFilter;
-import java.util.ArrayList;
+import android.location.GpsStatus;
+import android.location.Location;
 
 /**
- * 
  * @author zkhan
  *
  */
-public class Helper {
+public interface GpsInterface {
 
-	/**
-	 * 
-	 * @param root
-	 * @return
-	 */
-	public static ArrayList<DirectoryItem> loadFileList(String root) {
-		
-		File path = new File(root);
-		ArrayList<DirectoryItem> fileList = new ArrayList<DirectoryItem>();
-		
-		// Checks whether path exists
-		if (path.exists()) {
-			FilenameFilter filter = new FilenameFilter() {
-				@Override
-				public boolean accept(File dir, String filename) {
-					File sel = new File(dir, filename);
-					// Filters based on whether the file is hidden or not and can be read
-					if(sel.isDirectory() && (!sel.isHidden()) && sel.canRead()) {
-						return true;
-					}
-					if(sel.isFile() && (!sel.isHidden()) && sel.canRead() && 
-							(filename.toLowerCase().endsWith("jpeg") || 
-						    filename.toLowerCase().endsWith("jpg"))) {
-						return true;
-					}
-					return false;
-				}
-			};
+    /*
+     * Few callbacks from GPS to make dealing with it easier and uniform
+     * This keeps all the GPS logic separate from rest of the code.
+     */
+    void statusCallback(GpsStatus gpsStatus);
 
-			String[] fList = path.list(filter);
-			/*
-			 * Add one up
-			 */
-			fileList.add(new DirectoryItem(true, ".."));
-			for (int i = 0; i < fList.length; i++) {
-				File sel = new File(path, fList[i]);
-				fileList.add(new DirectoryItem(sel.isDirectory(), fList[i]));
-			}
+    void locationCallback(Location location);
+    
+    void timeoutCallback(boolean timeout);
 
-		}
-
-		return fileList;
-	}
+    void enabledCallback(boolean enabled);
 }

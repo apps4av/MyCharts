@@ -11,7 +11,7 @@ Redistribution and use in source and binary forms, with or without modification,
 */
 
 
-package org.apps4av.mycharts;
+package com.chartsack.charts;
 
 
 import java.io.IOException;
