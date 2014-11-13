@@ -18,6 +18,7 @@ import com.chartsack.charts.gps.GpsParams;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint.Style;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -97,16 +98,18 @@ public class MapView extends MappingView implements OnTouchListener {
          * Draw a circle on current location
          */
         getPaint().setColor(Color.BLUE);
+        getPaint().setStyle(Style.STROKE);
+        getPaint().setStrokeWidth(4);
         canvas.drawCircle(
         		getService().getPan().getMoveX() - (float)pixx, 
         		getService().getPan().getMoveY() - (float)pixy, 
-                12,
+                16,
                 getPaint());
         getPaint().setColor(Color.RED);
         canvas.drawCircle(
         		getService().getPan().getMoveX() - (float)pixx, 
         		getService().getPan().getMoveY() - (float)pixy, 
-                16,
+                12,
                 getPaint());
     	
     }
@@ -115,22 +118,11 @@ public class MapView extends MappingView implements OnTouchListener {
      * Set geo coordinates 
      * @param data
      */
-    public boolean setCoordinates(String data) {
-    	String tokens[] = data.split(",");
-    	if(tokens.length != 4) {
-    		return false;
-    	}
-    	
-    	try {
-	    	mDx = Double.parseDouble(tokens[0]);
-	    	mDy = Double.parseDouble(tokens[1]);
-	    	mLonTopLeft = Double.parseDouble(tokens[2]);
-	    	mLatTopLeft = Double.parseDouble(tokens[3]);
-    	}
-    	catch(Exception e) {
-    		return false;
-    	};
-    	return true;
+    public void setCoordinates(double data[]) {   	
+    	mDx = data[0];
+    	mDy = data[1];
+    	mLonTopLeft = data[2];
+    	mLatTopLeft = data[3];
     }
     
     /**
@@ -139,6 +131,7 @@ public class MapView extends MappingView implements OnTouchListener {
      */
     public void setGpsParams(GpsParams g) {
     	mGpsParams = g;
+    	postInvalidate();
     }
     
 

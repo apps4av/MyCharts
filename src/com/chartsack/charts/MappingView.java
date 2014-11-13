@@ -68,6 +68,7 @@ public class MappingView extends View implements MultiTouchObjectCanvas<Object> 
         mCurrTouchPoint = new PointInfo();
         setBackgroundColor(Color.BLACK);
         mPaint = new Paint();
+        mPaint.setAntiAlias(true);
     }
 
 

@@ -22,7 +22,7 @@ Redistribution and use in source and binary forms, with or without modification,
 
     <Button
         android:id="@+id/fragment_tag_button_tag"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:drawableLeft="@+drawable/tag"

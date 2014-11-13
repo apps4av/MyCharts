@@ -13,27 +13,17 @@ Redistribution and use in source and binary forms, with or without modification,
 package com.chartsack.charts;
 
 
-import java.util.ArrayList;
 
 import com.chartsack.charts.R;
-
 import com.chartsack.charts.gps.GpsInterface;
 import com.chartsack.charts.gps.GpsParams;
 
-import android.app.AlertDialog;
 import android.location.GpsStatus;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.ProgressBar;
 
 /**
  * A fragment that shows the map
@@ -45,10 +35,6 @@ public class MapFragment extends FragmentWrapper {
      */
     private MapView mMapView;
 
-	private Button mLoadButton;
-	private ProgressBar mProgressLoading;
-	private String mPath;
-	private String mChart;
 	
 
     public MapFragment() {
@@ -96,112 +82,17 @@ public class MapFragment extends FragmentWrapper {
         mMapView = (MapView)(rootView.findViewById(R.id.fragment_map_plateview));
         mMapView.setService(getService());
         
-        
-        mProgressLoading = (ProgressBar)rootView.findViewById(R.id.fragment_map_progress_bar);
-       
-        mLoadButton = (Button)rootView.findViewById(R.id.fragment_map_button_load);
-        mLoadButton.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				/*
-				 * Add dialog to select a file from Download folder
-				 */
-				
-		        mPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
-		        
-		        updateDirectory();
-			}
-        });
-
         return rootView;
     }
 
     /**
      * 
      */
-    private void loadGeoTagData() {
-    	if(null == mChart) {
-    		return;
-    	}
-    	TagData provider = new TagData(getActivity());
-    	String data = provider.getTag(mChart);
-		if(null == data || (!mMapView.setCoordinates(data))) {
-			showHelp(getString(R.string.map_help_tag));
-		}
-		else {
-			String tokens[] = data.split(",");
-			if(tokens.length != 4) {
-				showHelp(getString(R.string.map_help_tag));
-			}
-		}
-    }
-    
-    /**
-     * 
-     */
     @Override
     public void onResume() {
        super.onResume();
-       loadGeoTagData();
-    }
-    
-    /**
-     * 
-     */
-    private void updateDirectory() {
-        ArrayList<DirectoryItem> info = Helper.loadFileList(mPath);
-		final DirectoryAdapter adapter = new DirectoryAdapter(getActivity(), info);
-        ListView list = new ListView(getActivity());
-		list.setAdapter(adapter);
-		
-		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
- 
-		// set title
-		alertDialogBuilder.setTitle(getString(R.string.choose_map));
-		// set dialog message
-		alertDialogBuilder.setView(list);
-
-		// create alert dialog
-		final AlertDialog alertDialog = alertDialogBuilder.create();
-
-		list.setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1,
-					int pos, long id) {
-				/**
-				 * Clicked on directory, go into it
-				 */
-				DirectoryItem item = (DirectoryItem)arg0.getAdapter().getItem(pos);
-				if(item.isDir()) {
-					mPath += "/" + item.getName();
-					alertDialog.dismiss();
-					
-					/*
-					 * Recurse  into folders
-					 */
-					updateDirectory();
-				}
-				else {
-					/*
-					 * File chosen, load it
-					 */
-					alertDialog.dismiss();
-					mProgressLoading.setVisibility(View.VISIBLE);
-
-					mChart = item.getName();
-					String name = mPath + "/" + mChart;
-
-					loadGeoTagData();
-		        	getService().loadBitmap(name);
-				}
-			}
-		});
-
-		// show it
-		alertDialog.show();
-
+       mMapView.setGpsParams(getService().getGpsParams());
+       mMapView.setCoordinates(getService().getGeotagData());
     }
     
     @Override
@@ -218,6 +109,8 @@ public class MapFragment extends FragmentWrapper {
     	
     	super.setService(service);
     	
+        getService().registerGpsListener(mGpsInfc);
+        
         /**
          * Set image callback for showing image is loaded
          */
@@ -225,15 +118,8 @@ public class MapFragment extends FragmentWrapper {
 
 			@Override
 			public void imageReady() {
-				mProgressLoading.setVisibility(View.INVISIBLE);
 				mMapView.invalidate();
-				/*
-				 * Loaded. Set data in view
-				 */
 			}
         });
-
-        getService().registerGpsListener(mGpsInfc);
-        
     }
 }

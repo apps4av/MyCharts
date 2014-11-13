@@ -2,8 +2,9 @@
 <resources>
 
     <string name="app_name">ChartSack</string>
-    <string name="title_map">Show Chart</string>
+    <string name="title_map">Navigate</string>
     <string name="title_tag">Tag Chart</string>
+    <string name="title_load">Load Chart</string>
     <string name="title_gps">GPS Status</string>
     <string name="load">Load</string>
     <string name="tag">Tag</string>
@@ -14,7 +15,6 @@
     <string name="no">No</string>
     <string name="yes">Yes</string>
     <string name="search">Describe the place under the cross hair, then select one of the presented options to tag it</string>
-    <string name="action_settings">Settings</string>
     <string name="longitude">Longitude</string>
     <string name="latitude">Latitude</string>
     <string name="altitude">Altitude</string>
@@ -25,6 +25,8 @@
     <string name="tag_help_end">You have tagged the chart, and it is now ready for navigation</string>
     <string name="tag_help_fail">Tagging failed. Please repeat, making sure that the two tagged places are well apart geographically</string>
     <string name="map_help_tag">This chart is not Geo. tagged. Please Geo. tag it first from the Tag Chart screen, so your position on it can be shown</string>
+    <string name="load_status">Loaded chart name:</string>
+    <string name="load_geostatus">Is it Geo. tagged?</string>
     
 </resources>
  

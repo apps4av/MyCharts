@@ -14,10 +14,4 @@ Redistribution and use in source and binary forms, with or without modification,
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="org.apps4av.snapandtrack.MainActivity" >
 
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_settings"/>
-
 </menu>

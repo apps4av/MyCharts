@@ -15,7 +15,6 @@ package com.chartsack.charts;
 
 
 import com.chartsack.charts.R;
-
 import com.chartsack.charts.gps.Gps;
 
 import android.app.Activity;
@@ -32,6 +31,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 
@@ -47,7 +47,7 @@ public class MainActivity extends Activity implements
      * The serialization (saved instance state) Bundle key representing the
      * current dropdown position.
      */
-    private FragmentWrapper[] mFragments = new FragmentWrapper[3];
+    private FragmentWrapper[] mFragments;
     private StorageService mService = null;
 
     /**
@@ -61,6 +61,7 @@ public class MainActivity extends Activity implements
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
+
         /*
          * Start service now, bind later. This will be no-op if service is already running
          */
@@ -70,14 +71,18 @@ public class MainActivity extends Activity implements
         // Set up the action bar to show a dropdown list.
         final ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
         Bundle args = new Bundle();
-        mFragments[0] = new MapFragment();
+        mFragments = new FragmentWrapper[4];
+        mFragments[0] = new LoadFragment();
         mFragments[0].setArguments(args);
         mFragments[1] = new TagFragment();
         mFragments[1].setArguments(args);
-        mFragments[2] = new SatelliteFragment();
+        mFragments[2] = new MapFragment();
         mFragments[2].setArguments(args);
+        mFragments[3] = new SatelliteFragment();
+        mFragments[3].setArguments(args);
 
         // Set up the drop down list navigation in the action bar.
         actionBar.setListNavigationCallbacks(
@@ -85,39 +90,14 @@ public class MainActivity extends Activity implements
                 new ArrayAdapter<String>(actionBar.getThemedContext(),
                 android.R.layout.simple_list_item_1,
                 android.R.id.text1, new String[] {
-                getString(R.string.title_map),
+                getString(R.string.title_load),
                 getString(R.string.title_tag),
+                getString(R.string.title_map),
                 getString(R.string.title_gps),
                 }), this);
                 
     }
 
-
-    /**
-     * 
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    /**
-     * 
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     /**
      * 

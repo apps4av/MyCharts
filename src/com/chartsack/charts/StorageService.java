@@ -35,6 +35,8 @@ import android.os.Message;
 import android.view.Display;
 import android.view.WindowManager;
 
+import com.chartsack.charts.gps.GpsParams;
+
 
 /**
  * @author zkhan
@@ -62,6 +64,9 @@ public class StorageService extends Service {
     private int                      mHeight;
     ImageThread                 	 mImageThread;
     private ImageCallback			 mICallback;
+    private GpsParams				mGpsParams;
+    private String                  mChart;
+    private double                  mGeoData[];
 
     private boolean mIsGpsOn;
     
@@ -123,6 +128,7 @@ public class StorageService extends Service {
         mBitmap = null;
         
         mPan = new Pan();
+        mGeoData = new double[4];
         
         /*
          * Get width / height
@@ -187,6 +193,7 @@ public class StorageService extends Service {
             public void locationCallback(Location location) {                
                 LinkedList<GpsInterface> list = extracted();
                 Iterator<GpsInterface> it = list.iterator();
+                mGpsParams = new GpsParams(location);
                 while (it.hasNext()) {
                     GpsInterface infc = it.next();
                     infc.locationCallback(location);
@@ -349,6 +356,14 @@ public class StorageService extends Service {
      * 
      * @return
      */
+    public GpsParams getGpsParams() {
+    	return mGpsParams;
+    }
+
+    /**
+     * 
+     * @return
+     */
     public int getWidth() {
     	return mWidth;
     }
@@ -491,6 +506,53 @@ public class StorageService extends Service {
             }
 
         }
+    }
+
+    /**
+     * 
+     * @return
+     */
+    public String getChartName() {
+    	return mChart;
+    }
+
+    /**
+     * 
+     * @param name
+     */
+    public void setChartName(String name) {
+    	mChart = name;
+    }
+
+    /**
+     * 
+     * @param name
+     */
+    public boolean setGeotagData(String name) {
+    	
+    	String tokens[] = name.split(",");
+    	if(tokens.length != 4) {
+    		return false;
+    	}
+    	
+    	try {
+    		mGeoData[0] = Double.parseDouble(tokens[0]);
+    		mGeoData[1] = Double.parseDouble(tokens[1]);
+    		mGeoData[2] = Double.parseDouble(tokens[2]);
+    		mGeoData[3] = Double.parseDouble(tokens[3]);
+    	}
+    	catch(Exception e) {
+    		return false;
+    	};
+    	return true;
+    }
+
+    /**
+     * 
+     * @return
+     */
+    public double[] getGeotagData() {
+    	return mGeoData;
     }
 
 }

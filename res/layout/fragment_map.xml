@@ -20,23 +20,4 @@ Redistribution and use in source and binary forms, with or without modification,
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <ProgressBar
-        android:id="@+id/fragment_map_progress_bar"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:visibility="invisible"
-        />
-    
-    <Button
-        android:id="@+id/fragment_map_button_load"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:drawableLeft="@+drawable/load"
-        android:text="@+string/load"
-        android:contentDescription="@+string/load"
-        android:layout_alignParentBottom="true"/>
-    
 </RelativeLayout>
