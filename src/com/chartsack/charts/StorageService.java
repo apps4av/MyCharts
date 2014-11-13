@@ -130,6 +130,9 @@ public class StorageService extends Service {
         mPan = new Pan();
         mGeoData = new double[4];
         
+        Location l = Gps.getLastLocation(getApplicationContext());
+        mGpsParams = new GpsParams(l);
+
         /*
          * Get width / height
          */

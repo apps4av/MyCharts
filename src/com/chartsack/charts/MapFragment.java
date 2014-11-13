@@ -24,6 +24,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 
 /**
  * A fragment that shows the map
@@ -35,7 +37,8 @@ public class MapFragment extends FragmentWrapper {
      */
     private MapView mMapView;
 
-	
+	private ImageButton mCenterButton;
+
 
     public MapFragment() {
     }
@@ -76,6 +79,20 @@ public class MapFragment extends FragmentWrapper {
         View rootView = inflater.inflate(R.layout.fragment_map, container,
                 false);
         
+        mCenterButton = (ImageButton)rootView.findViewById(R.id.fragment_map_button_center);
+        mCenterButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				/*
+				 * center on current position
+				 */
+				if(!mMapView.centerOnChart()) {
+					showHelp(getString(R.string.not_on_chart));
+				}
+			}
+        });
+
         /*
          * Set service in map view
          */
@@ -95,6 +112,9 @@ public class MapFragment extends FragmentWrapper {
        mMapView.setCoordinates(getService().getGeotagData());
     }
     
+    /**
+     * 
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();

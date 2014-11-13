@@ -133,6 +133,35 @@ public class MapView extends MappingView implements OnTouchListener {
     	mGpsParams = g;
     	postInvalidate();
     }
+
+    /**
+     * 
+     * @return
+     */
+	public boolean centerOnChart() {
+		/*
+		 * Change pan to center on GPS location
+		 */
+    	if(null == mGpsParams || null == getService()) {
+    		return false;
+    	}
+        double lon = mGpsParams.getLongitude();
+        double lat = mGpsParams.getLatitude();
+        double pixx = (lon - mLonTopLeft) * mDx;
+        double pixy = (lat - mLatTopLeft) * mDy;
+
+        boolean ret = getService().getPan().setMove(
+        		(float)pixx + getWidth() / 2,
+        		(float)pixy + getHeight() / 2,
+                -(getService().getBitmapHolder().getWidth() - getWidth()),
+                -(getService().getBitmapHolder().getHeight() - getWidth()),
+                0,
+                0);
+
+      	getService().loadBitmap(null);
+        
+		return ret;
+	}
     
 
 }
