@@ -198,7 +198,14 @@ public class MappingView extends View implements MultiTouchObjectCanvas<Object> 
     public void setService(StorageService service) {
     	mService = service;
     } 
-    
+
+    /**
+     * 
+     */
+    public StorageService getService() {
+    	return mService;
+    } 
+
     /**
      * 
      */

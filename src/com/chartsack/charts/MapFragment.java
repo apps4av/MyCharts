@@ -48,7 +48,7 @@ public class MapFragment extends FragmentWrapper {
 	private Button mLoadButton;
 	private ProgressBar mProgressLoading;
 	private String mPath;
-	
+	private String mChart;
 	
 
     public MapFragment() {
@@ -105,11 +105,10 @@ public class MapFragment extends FragmentWrapper {
 			@Override
 			public void onClick(View arg0) {
 				/*
-				 * Show loading. Image ready callback with hide it
-				 * Add dialog to select a file
+				 * Add dialog to select a file from Download folder
 				 */
 				
-		        mPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+		        mPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
 		        
 		        updateDirectory();
 			}
@@ -118,7 +117,34 @@ public class MapFragment extends FragmentWrapper {
         return rootView;
     }
 
+    /**
+     * 
+     */
+    private void loadGeoTagData() {
+    	if(null == mChart) {
+    		return;
+    	}
+    	TagData provider = new TagData(getActivity());
+    	String data = provider.getTag(mChart);
+		if(null == data || (!mMapView.setCoordinates(data))) {
+			showHelp(getString(R.string.map_help_tag));
+		}
+		else {
+			String tokens[] = data.split(",");
+			if(tokens.length != 4) {
+				showHelp(getString(R.string.map_help_tag));
+			}
+		}
+    }
     
+    /**
+     * 
+     */
+    @Override
+    public void onResume() {
+       super.onResume();
+       loadGeoTagData();
+    }
     
     /**
      * 
@@ -164,20 +190,11 @@ public class MapFragment extends FragmentWrapper {
 					alertDialog.dismiss();
 					mProgressLoading.setVisibility(View.VISIBLE);
 
-					String name = mPath + "/" + item.getName();
-		        	TagData provider = new TagData(getActivity());
-		        	String data = provider.getTag(name);
+					mChart = item.getName();
+					String name = mPath + "/" + mChart;
 
+					loadGeoTagData();
 		        	getService().loadBitmap(name);
-					if(null == data) {
-						showHelp(getString(R.string.map_help_tag));
-					}
-					else {
-						String tokens[] = data.split(",");
-						if(tokens.length != 4) {
-							showHelp(getString(R.string.map_help_tag));
-						}
-					}
 				}
 			}
 		});

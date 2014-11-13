@@ -156,7 +156,9 @@ public class TagFragment extends FragmentWrapper {
         	 */
         	String tag =  dx + "," + dy + "," + lonTopLeft + "," + latTopLeft;
         	TagData provider = new TagData(getActivity());
-        	String name = getService().getBitmapHolder().getName();
+        	// file name not full path
+        	String names[] = getService().getBitmapHolder().getName().split("/");
+        	String name = names[names.length - 1];
         	// delete old tag
         	provider.deleteTag(name);
         	provider.addTag(name, tag);
@@ -216,18 +218,18 @@ public class TagFragment extends FragmentWrapper {
 				        	if(null == mNotifyAddress0) {
 				        		mNotifyAddress0 = mAList.get(position);
 				        		mNotifyAddress0.setFeatureName(
-				        				(getService().getPan().getMoveX() + getService().getPan().getDragX())
+				        				(getService().getPan().getMoveX() + getService().getPan().getDragX() - (mTagView.getWidth() / 2))
 				        				+ "," + 
-				        			    (getService().getPan().getMoveY() + getService().getPan().getDragY()) 
+				        			    (getService().getPan().getMoveY() + getService().getPan().getDragY() - (mTagView.getHeight() / 2)) 
 				        				);
 					        	showHelp(getString(R.string.tag_help_point1));
 				        	}
 				        	else if(null == mNotifyAddress1) {
 				        		mNotifyAddress1 = mAList.get(position);
 				        		mNotifyAddress1.setFeatureName(
-				        				(getService().getPan().getMoveX() + getService().getPan().getDragX())
+				        				(getService().getPan().getMoveX() + getService().getPan().getDragX() - (mTagView.getWidth() / 2))
 				        				+ "," + 
-				        			    (getService().getPan().getMoveY() + getService().getPan().getDragY()) 
+				        			    (getService().getPan().getMoveY() + getService().getPan().getDragY() - (mTagView.getHeight() / 2)) 
 				        				);
 				        	}
 				        	/*

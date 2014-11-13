@@ -2,12 +2,12 @@
 <resources>
 
     <string name="app_name">ChartSack</string>
-    <string name="title_map">Map</string>
-    <string name="title_tag">Tag</string>
-    <string name="title_gps">GPS</string>
+    <string name="title_map">Show Chart</string>
+    <string name="title_tag">Tag Chart</string>
+    <string name="title_gps">GPS Status</string>
     <string name="load">Load</string>
     <string name="tag">Tag</string>
-    <string name="choose_map">Choose a map JPEG map to load</string>
+    <string name="choose_map">Choose a picture chart to load</string>
     <string name="up">Up</string>
     <string name="exit">Do you want to exit?</string>
     <string name="gps_enable">GPS is disabled on this device. Do you want to enable it for navigation?</string>
@@ -24,7 +24,7 @@
     <string name="tag_help_point1">You have tagged a place on the chart, now repeat the process to tag one more place geographically well away from the first place</string>
     <string name="tag_help_end">You have tagged the chart, and it is now ready for navigation</string>
     <string name="tag_help_fail">Tagging failed. Please repeat, making sure that the two tagged places are well apart geographically</string>
-    <string name="map_help_tag">This chart is not Geo. tagged. Please Geo. tag it first from the Tag screen so your position on it can be shown</string>
+    <string name="map_help_tag">This chart is not Geo. tagged. Please Geo. tag it first from the Tag Chart screen, so your position on it can be shown</string>
     
 </resources>
  

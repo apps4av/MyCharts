@@ -44,8 +44,14 @@ public class Helper {
 						return true;
 					}
 					if(sel.isFile() && (!sel.isHidden()) && sel.canRead() && 
-							(filename.toLowerCase().endsWith("jpeg") || 
-						    filename.toLowerCase().endsWith("jpg"))) {
+							(
+							filename.toLowerCase().endsWith("jpeg") || 
+							filename.toLowerCase().endsWith("jpg")  ||
+							filename.toLowerCase().endsWith("gif")  ||
+							filename.toLowerCase().endsWith("bmp")  ||
+							filename.toLowerCase().endsWith("png")
+							)
+							) {
 						return true;
 					}
 					return false;
