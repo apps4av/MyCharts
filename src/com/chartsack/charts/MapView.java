@@ -18,7 +18,6 @@ import com.chartsack.charts.gps.GpsParams;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint.Style;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -97,9 +96,8 @@ public class MapView extends MappingView implements OnTouchListener {
         /*
          * Draw a circle on current location
          */
-        getPaint().setColor(Color.BLUE);
-        getPaint().setStyle(Style.STROKE);
         getPaint().setStrokeWidth(4);
+        getPaint().setColor(Color.BLUE);
         canvas.drawCircle(
         		getService().getPan().getMoveX() - (float)pixx, 
         		getService().getPan().getMoveY() - (float)pixy, 
@@ -111,7 +109,27 @@ public class MapView extends MappingView implements OnTouchListener {
         		getService().getPan().getMoveY() - (float)pixy, 
                 12,
                 getPaint());
-    	
+        getPaint().setColor(Color.GREEN);
+        canvas.drawLine(
+        		getService().getPan().getMoveX() - (float)pixx,
+        		getService().getPan().getMoveY() - (float)pixy - 24,
+        		getService().getPan().getMoveX() - (float)pixx,
+        		getService().getPan().getMoveY() - (float)pixy + 24,
+        		getPaint());
+        canvas.drawLine(
+        		getService().getPan().getMoveX() - (float)pixx - 24,
+        		getService().getPan().getMoveY() - (float)pixy,
+        		getService().getPan().getMoveX() - (float)pixx + 24,
+        		getService().getPan().getMoveY() - (float)pixy,
+        		getPaint());
+        /*
+         * Edge tape
+         */
+      	EdgeDistanceTape.draw(canvas, getPaint(), Helper.findPixelsPerMile(mDy),
+      			(int)(getService().getPan().getMoveX() - (float)pixx),
+      			(int)(getService().getPan().getMoveY() - (float)pixy), 
+      			0, getWidth(), getHeight());
+
     }
     
     /**

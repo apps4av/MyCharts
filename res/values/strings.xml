@@ -6,7 +6,7 @@
     <string name="title_tag">Tag Chart</string>
     <string name="title_load">Load Chart</string>
     <string name="title_gps">GPS Status</string>
-    <string name="load">Load</string>
+    <string name="browse">Browse</string>
     <string name="tag">Tag</string>
     <string name="choose_map">Choose a picture chart to load</string>
     <string name="up">Up</string>

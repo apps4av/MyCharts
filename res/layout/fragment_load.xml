@@ -68,8 +68,9 @@ Redistribution and use in source and binary forms, with or without modification,
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:drawableLeft="@+drawable/load"
-        android:text="@+string/load"
-        android:contentDescription="@+string/load"
+        android:text="@+string/browse"
+        android:background="@android:drawable/btn_default"
+        android:contentDescription="@+string/browse"
         android:layout_alignParentBottom="true"/>
     
 </RelativeLayout>

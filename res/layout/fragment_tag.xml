@@ -27,6 +27,7 @@ Redistribution and use in source and binary forms, with or without modification,
         android:layout_alignParentLeft="true"
         android:drawableLeft="@+drawable/tag"
         android:text="@+string/tag"
+        android:background="@android:drawable/btn_default"
         android:contentDescription="@+string/tag"
         android:layout_alignParentBottom="true"/>
     

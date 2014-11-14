@@ -72,4 +72,14 @@ public class Helper {
 
 		return fileList;
 	}
+	
+	
+	/**
+	 * 
+	 * @param pixelPerLatitude
+	 * @return
+	 */
+	public static int findPixelsPerMile(double pixelPerLatitude) { 
+		 return (int) Math.round(Math.abs(pixelPerLatitude / 69)); 
+	}
 }
