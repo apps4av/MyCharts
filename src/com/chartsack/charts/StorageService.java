@@ -29,9 +29,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Binder;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
 import android.view.Display;
 import android.view.WindowManager;
 
@@ -44,7 +42,7 @@ import com.chartsack.charts.gps.GpsParams;
  * we dont start from no state.
 
  */
-public class StorageService extends Service {
+public class StorageService extends Service implements SimpleAsyncTask.Methods {
 
     /*
      * A bitmap
@@ -59,14 +57,13 @@ public class StorageService extends Service {
     AsyncTask<String, Void, Boolean> mDecodeTask;
 
     private Pan                      mPan;
-    private Thread                   mThread;
     private int                      mWidth;
     private int                      mHeight;
-    ImageThread                 	 mImageThread;
     private ImageCallback			 mICallback;
     private GpsParams				mGpsParams;
     private String                  mChart;
     private double                  mGeoData[];
+    private SimpleAsyncTask         mLoadTask;
 
     private boolean mIsGpsOn;
     
@@ -153,14 +150,6 @@ public class StorageService extends Service {
          */
         mTimer.scheduleAtFixedRate(gpsTime, 0, 60 * 1000);
 
-        /*
-         * Our image thread
-         */
-        mImageThread = new ImageThread();
-        mThread = new Thread(mImageThread);
-        mThread.start();
-        
-        
         /*
          * Start GPS, and call all activities registered to listen to GPS
          */
@@ -324,9 +313,8 @@ public class StorageService extends Service {
      * 
      */
     public void loadBitmap(String file) {
-    	
-    	mImageThread.file = file;
-    	mThread.interrupt();
+    	mLoadTask = new SimpleAsyncTask(this);
+    	mLoadTask.run(file);
     }
 
     	
@@ -387,105 +375,6 @@ public class StorageService extends Service {
     	mICallback = cb;
     }
     
-	/**
-	 * 
-	 * @author zkhan
-	 *
-	 */
-	class ImageThread implements Runnable {
-
-        public boolean running = true;
-        private boolean runAgain = false;
-        public String file = null;
-        
-        /**
-         * Typical value clamper
-         * @param input
-         * @param min
-         * @param max
-         */
-        private float clamp(float input, float min, float max) {
-        	if(input < min) {
-        		input = min;
-        	}
-        	if(input > max) {
-        		input = max;
-        	}
-        	
-        	return input;
-        }
-        
-        public void run() {
-        	
-            while(running) {
-                
-            	/*
-            	 * Sleep here till we are told to load another region, or a new file
-            	 */
-                if(!runAgain) {
-                    try {
-                        Thread.sleep(1000 * 3600);
-                    }
-                    catch(Exception e) {
-                        
-                    }
-                }
-                runAgain = false;
-                
-                /*
-                 * Invalid. Nothing to do
-                 */
-                if(file == null && getBitmapHolder() == null) {
-                	continue;
-                }
-                
-                if(file != null) {
-                	/*
-                	 * 
-                	 */
-                	if(getBitmapHolder() != null) {
-                		getBitmapHolder().recycle();
-                	}
-	                setBitmap(new BitmapHolder(file, getWidth(), getHeight()));
-                }
-                
-                if(getBitmapHolder() != null) {
-                    int x = (int)clamp(-(getPan().getMoveX()), 0, getBitmapHolder().getWidth());
-                    int y = (int)clamp(-(getPan().getMoveY()), 0, getBitmapHolder().getHeight());
-                    int x1 = (int)clamp(x + getWidth(), 0, getBitmapHolder().getWidth());
-                    int y1 = (int)clamp(y + getHeight(), 0, getBitmapHolder().getHeight());
-                    Rect rect = new Rect(x, y, x1, y1);
-
-                    getBitmapHolder().decodeRegion(rect, 1);
-                    
-                    /*
-                     * Post results in handler
-                     */
-                }
-                Message m = mHandler.obtainMessage();
-                mHandler.sendMessage(m);
-
-        	}
-        }
-        
-        /**
-         * This leak warning is not an issue if we do not post delayed messages, which is true here.
-         */
-        private Handler mHandler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                /*
-                 * Load new image region
-                 */
-                getPan().endDrag();
-                if(mICallback != null) {
-                	mICallback.imageReady();
-                }            	
-            }
-        };
-	}
-	
-	
     /**
      * @author zkhan
      *
@@ -557,5 +446,73 @@ public class StorageService extends Service {
     public double[] getGeotagData() {
     	return mGeoData;
     }
+
+    /**
+     * Typical value clamper
+     * @param input
+     * @param min
+     * @param max
+     */
+    private float clamp(float input, float min, float max) {
+    	if(input < min) {
+    		input = min;
+    	}
+    	if(input > max) {
+    		input = max;
+    	}
+    	
+    	return input;
+    }
+
+    /**
+     * This loads bitmap in background
+     */
+	@Override
+	public Object background(Object... vals) {
+		
+		String file = (String)vals[0];
+		
+		// TODO Auto-generated method stub
+        /*
+         * Invalid. Nothing to do
+         */
+        if(file == null && getBitmapHolder() == null) {
+        	return (Object)false;
+        }
+        
+        if(file != null) {
+        	/*
+        	 * 
+        	 */
+        	if(getBitmapHolder() != null) {
+        		getBitmapHolder().recycle();
+        	}
+            setBitmap(new BitmapHolder(file, getWidth(), getHeight()));
+        }
+        
+        if(getBitmapHolder() != null) {
+            int x = (int)clamp(-(getPan().getMoveX()), 0, getBitmapHolder().getWidth());
+            int y = (int)clamp(-(getPan().getMoveY()), 0, getBitmapHolder().getHeight());
+            int x1 = (int)clamp(x + getWidth(), 0, getBitmapHolder().getWidth());
+            int y1 = (int)clamp(y + getHeight(), 0, getBitmapHolder().getHeight());
+            Rect rect = new Rect(x, y, x1, y1);
+
+            getBitmapHolder().decodeRegion(rect, 1);
+        }
+		return (Object)true;
+	}
+
+	/**
+	 * This updates screen with newly loaded bitmap
+	 */
+	@Override
+	public void ui(Object ret) {
+        getPan().endDrag();
+        if((boolean)ret) {
+	        if(mICallback != null) {
+	        	mICallback.imageReady();
+	        }
+        }
+	}
 
 }

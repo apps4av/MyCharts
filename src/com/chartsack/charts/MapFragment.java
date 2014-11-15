@@ -12,8 +12,6 @@ Redistribution and use in source and binary forms, with or without modification,
 
 package com.chartsack.charts;
 
-
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -28,9 +26,6 @@ import android.location.Address;
 import android.location.GpsStatus;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.os.SystemClock;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -46,7 +41,7 @@ import android.widget.ListView;
 /**
  * A fragment that shows the map
  */
-public class MapFragment extends FragmentWrapper implements Observer {
+public class MapFragment extends FragmentWrapper implements Observer, SimpleAsyncTask.Methods {
     /**
      * The view of this fragment that has the map on it
      *
@@ -116,17 +111,8 @@ public class MapFragment extends FragmentWrapper implements Observer {
 		        	 */
 		        	Address a = mAList.get(position);
 		        	mText.setText("");
-		        	/*
-		        	 * Save it for offline search
-		        	 */
-					AddressData ad = new AddressData(getActivity());
-					ad.deleteAddress(a);
-					ad.addAddress(a);
-
-					/*
-					 * Update chart in handler
-					 */
-					sendtome(a);
+		        	SimpleAsyncTask task = new SimpleAsyncTask(MapFragment.this);
+		        	task.run(a);
 		        }
 	        }
         });
@@ -171,7 +157,7 @@ public class MapFragment extends FragmentWrapper implements Observer {
 		        a.setLongitude(param.getLongitude());
 		        a.setLatitude(param.getLatitude());
 		        
-		        sendtome(a);
+		        centerOnLocation(a);
 			}
         });
 
@@ -257,23 +243,35 @@ public class MapFragment extends FragmentWrapper implements Observer {
 	 * 
 	 * @param a
 	 */
-	private void sendtome(Address a) {
-		Message m = mHandler.obtainMessage();
-		m.obj = a;
-        mHandler.sendMessageAtTime(m, SystemClock.uptimeMillis() + 100);			
+	private void centerOnLocation(Address a) {
+		if(!mMapView.centerOnChart(a.getLongitude(), a.getLatitude())) {
+			showHelp(getString(R.string.not_on_chart));
+		}
 	}
 	
 
 	/**
 	 * 
 	 */
-	Handler mHandler = new Handler(){
-		
-		@Override
-	    public void handleMessage(Message msg) {
-			if(!mMapView.centerOnChart(((Address)msg.obj).getLongitude(), ((Address)msg.obj).getLatitude())) {
-				showHelp(getString(R.string.not_on_chart));
-			}
-		}
-	};
+	@Override
+	public Object background(Object... vals) {
+    	/*
+    	 * Save address for offline search
+    	 */
+		AddressData ad = new AddressData(getActivity());
+		ad.deleteAddress((Address)vals[0]);
+		ad.addAddress((Address)vals[0]);
+		return vals[0];
+	}
+
+	/**
+	 * 
+	 */
+	@Override
+	public void ui(Object ret) {
+		/*
+		 * Update chart in handler
+		 */
+		centerOnLocation((Address)ret);
+	}
 }

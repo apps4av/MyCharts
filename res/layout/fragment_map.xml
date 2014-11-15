@@ -31,8 +31,10 @@ Redistribution and use in source and binary forms, with or without modification,
     
     <ListView
         android:id="@+id/fragment_map_list"
+        android:layout_margin="10dp"
         android:layout_below="@+id/fragment_map_address"
         android:layout_width="match_parent"
+        android:cacheColorHint="#00000000"
         android:background="#FF7F7F7F"
         android:layout_height="wrap_content"/>
     
