@@ -59,7 +59,7 @@ public class ObserverAlertDialogBuilder extends AlertDialog.Builder implements O
 	 * 
 	 * @param context
 	 */
-    protected ObserverAlertDialogBuilder(Context context, Methods process, String title) {
+    protected ObserverAlertDialogBuilder(Context context, Methods process, String message) {
     	
 		super(context);
 		
@@ -120,8 +120,9 @@ public class ObserverAlertDialogBuilder extends AlertDialog.Builder implements O
      	    }
          });
 
-		// set title
-		setTitle(title);
+		// set title, message of dialog
+		setTitle(mContext.getString(R.string.find));
+		setMessage(message);
 		// set dialog message
 		setView(layout);
 	}
