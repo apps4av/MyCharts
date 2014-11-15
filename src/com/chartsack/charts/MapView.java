@@ -13,8 +13,6 @@ Redistribution and use in source and binary forms, with or without modification,
 package com.chartsack.charts;
 
 
-import com.chartsack.charts.gps.GpsParams;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -38,7 +36,6 @@ public class MapView extends MappingView implements OnTouchListener {
 	private double mLatTopLeft;
 	private double mDx;
 	private double mDy;
-	private GpsParams mGpsParams;
 	
     /**
      * 
@@ -85,11 +82,11 @@ public class MapView extends MappingView implements OnTouchListener {
     	/*
     	 * Draw our location
     	 */
-    	if(null == mGpsParams || null == getService()) {
+    	if(null == getService()) {
     		return;
     	}
-        double lon = mGpsParams.getLongitude();
-        double lat = mGpsParams.getLatitude();
+        double lon = getService().getGpsParams().getLongitude();
+        double lat = getService().getGpsParams().getLatitude();
         double pixx = (lon - mLonTopLeft) * mDx;
         double pixy = (lat - mLatTopLeft) * mDy;
 
@@ -145,26 +142,15 @@ public class MapView extends MappingView implements OnTouchListener {
     
     /**
      * 
-     * @param g
-     */
-    public void setGpsParams(GpsParams g) {
-    	mGpsParams = g;
-    	postInvalidate();
-    }
-
-    /**
-     * 
      * @return
      */
-	public boolean centerOnChart() {
+	public boolean centerOnChart(double lon, double lat) {
 		/*
 		 * Change pan to center on GPS location
 		 */
-    	if(null == mGpsParams || null == getService() || null == getService().getBitmapHolder()) {
+    	if(null == getService() || null == getService().getBitmapHolder()) {
     		return false;
     	}
-        double lon = mGpsParams.getLongitude();
-        double lat = mGpsParams.getLatitude();
         double pixx = (lon - mLonTopLeft) * mDx;
         double pixy = (lat - mLatTopLeft) * mDy;
 

@@ -38,7 +38,7 @@ public class MapFragment extends FragmentWrapper {
     private MapView mMapView;
 
 	private ImageButton mCenterButton;
-
+	
 
     public MapFragment() {
     }
@@ -60,7 +60,7 @@ public class MapFragment extends FragmentWrapper {
                 /*
                  * Called by GPS. Update everything driven by GPS.
                  */
-                mMapView.setGpsParams(new GpsParams(location));               
+                mMapView.postInvalidate();               
             }
         }
 
@@ -87,7 +87,14 @@ public class MapFragment extends FragmentWrapper {
 				/*
 				 * center on current position
 				 */
-				if(!mMapView.centerOnChart()) {
+				if(getService() == null) {
+					return;
+				}
+				GpsParams param = getService().getGpsParams();
+		        double lon = param.getLongitude();
+		        double lat = param.getLatitude();
+
+				if(!mMapView.centerOnChart(lon, lat)) {
 					showHelp(getString(R.string.not_on_chart));
 				}
 			}
@@ -108,8 +115,8 @@ public class MapFragment extends FragmentWrapper {
     @Override
     public void onResume() {
        super.onResume();
-       mMapView.setGpsParams(getService().getGpsParams());
        mMapView.setCoordinates(getService().getGeotagData());
+       mMapView.postInvalidate();
     }
     
     /**
