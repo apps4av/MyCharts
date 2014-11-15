@@ -16,6 +16,7 @@ package com.chartsack.charts;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -27,6 +28,9 @@ import android.location.Address;
 import android.location.GpsStatus;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.os.SystemClock;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -111,18 +115,18 @@ public class MapFragment extends FragmentWrapper implements Observer {
 		        	 * Get address, center on it
 		        	 */
 		        	Address a = mAList.get(position);
-		        	double lat = a.getLatitude();
-		        	double lon = a.getLongitude();
-					if(!mMapView.centerOnChart(lon, lat)) {
-						showHelp(getString(R.string.not_on_chart));
-					}
-					AddressData ad = new AddressData(getActivity());
-					ad.deleteAddress(a);
-					ad.addAddress(a);
 		        	mText.setText("");
 		        	/*
 		        	 * Save it for offline search
 		        	 */
+					AddressData ad = new AddressData(getActivity());
+					ad.deleteAddress(a);
+					ad.addAddress(a);
+
+					/*
+					 * Update chart in handler
+					 */
+					sendtome(a);
 		        }
 	        }
         });
@@ -161,13 +165,13 @@ public class MapFragment extends FragmentWrapper implements Observer {
 				if(getService() == null) {
 					return;
 				}
-				GpsParams param = getService().getGpsParams();
-		        double lon = param.getLongitude();
-		        double lat = param.getLatitude();
 
-				if(!mMapView.centerOnChart(lon, lat)) {
-					showHelp(getString(R.string.not_on_chart));
-				}
+				GpsParams param = getService().getGpsParams();
+				Address a = new Address(Locale.getDefault());
+		        a.setLongitude(param.getLongitude());
+		        a.setLatitude(param.getLatitude());
+		        
+		        sendtome(a);
 			}
         });
 
@@ -248,4 +252,28 @@ public class MapFragment extends FragmentWrapper implements Observer {
 			 }
 		}		
 	}
+
+	/**
+	 * 
+	 * @param a
+	 */
+	private void sendtome(Address a) {
+		Message m = mHandler.obtainMessage();
+		m.obj = a;
+        mHandler.sendMessageAtTime(m, SystemClock.uptimeMillis() + 100);			
+	}
+	
+
+	/**
+	 * 
+	 */
+	Handler mHandler = new Handler(){
+		
+		@Override
+	    public void handleMessage(Message msg) {
+			if(!mMapView.centerOnChart(((Address)msg.obj).getLongitude(), ((Address)msg.obj).getLatitude())) {
+				showHelp(getString(R.string.not_on_chart));
+			}
+		}
+	};
 }
