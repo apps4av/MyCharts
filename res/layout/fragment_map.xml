@@ -21,28 +21,21 @@ Redistribution and use in source and binary forms, with or without modification,
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <EditText
-        android:id="@+id/fragment_map_address"
-        android:layout_width="match_parent"
-        android:textSize="15sp"
-        android:inputType="text"
-        android:hint="@string/find"
-        android:layout_height="wrap_content"/>
-    
-    <ListView
-        android:id="@+id/fragment_map_list"
-        android:layout_margin="10dp"
-        android:layout_below="@+id/fragment_map_address"
-        android:layout_width="match_parent"
-        android:cacheColorHint="#00000000"
-        android:background="#FF7F7F7F"
-        android:layout_height="wrap_content"/>
-    
     <ImageButton
         android:id="@+id/fragment_map_button_center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:src="@+drawable/center"
+        android:background="@android:drawable/btn_default"
+        android:contentDescription="@string/center"
+        android:layout_alignParentBottom="true"/>
+
+    <ImageButton
+        android:id="@+id/fragment_map_button_find"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
         android:src="@+drawable/center"
         android:background="@android:drawable/btn_default"
         android:contentDescription="@string/center"

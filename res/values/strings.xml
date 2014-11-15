@@ -16,6 +16,7 @@
     <string name="yes">Yes</string>
     <string name="find">Find</string>
     <string name="search">Describe the place under the cross hair, then select one of the presented options to tag it</string>
+    <string name="search_address">Describe the place, then select one of the presented options to go to it</string>
     <string name="longitude">Longitude</string>
     <string name="latitude">Latitude</string>
     <string name="altitude">Altitude</string>

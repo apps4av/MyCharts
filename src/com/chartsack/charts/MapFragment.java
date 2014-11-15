@@ -12,36 +12,27 @@ Redistribution and use in source and binary forms, with or without modification,
 
 package com.chartsack.charts;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
-import java.util.Observable;
-import java.util.Observer;
 
 import com.chartsack.charts.R;
 import com.chartsack.charts.gps.GpsInterface;
 import com.chartsack.charts.gps.GpsParams;
 
+import android.app.AlertDialog;
 import android.location.Address;
 import android.location.GpsStatus;
 import android.location.Location;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ListView;
 
 /**
  * A fragment that shows the map
  */
-public class MapFragment extends FragmentWrapper implements Observer, SimpleAsyncTask.Methods {
+public class MapFragment extends FragmentWrapper implements SimpleAsyncTask.Methods, ObserverAlertDialogBuilder.Methods {
     /**
      * The view of this fragment that has the map on it
      *
@@ -49,17 +40,10 @@ public class MapFragment extends FragmentWrapper implements Observer, SimpleAsyn
     private MapView mMapView;
 
 	private ImageButton mCenterButton;
-	
-	private AddressToGps mAddressResolver;
-	
-	private List<Address> mAList;
-	
-	private ListView mList;
 
-	private EditText mText;
+	private ImageButton mFindButton;
 	
-	private static final int SEARCH_MIN_LENGTH = 4;
-
+	private AlertDialog mDialogSearch;
 	
     public MapFragment() {
     }
@@ -99,47 +83,7 @@ public class MapFragment extends FragmentWrapper implements Observer, SimpleAsyn
             Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_map, container,
                 false);
-
-        mList = (ListView)rootView.findViewById(R.id.fragment_map_list);
-        mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-	        @Override
-	        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		        if(null != mAList) {
-			        Util.hideKeyboard(mText);
-		        	/*
-		        	 * Get address, center on it
-		        	 */
-		        	Address a = mAList.get(position);
-		        	mText.setText("");
-		        	SimpleAsyncTask task = new SimpleAsyncTask(MapFragment.this);
-		        	task.run(a);
-		        }
-	        }
-        });
-
         
-        mText = (EditText)rootView.findViewById(R.id.fragment_map_address);
-		/*
-		 * Add listener for search text
-		 */
-		mText.addTextChangedListener(new TextWatcher() {
-     	    @Override
-     	    public void afterTextChanged(Editable arg0) {
-     	    }
-     	    @Override
-     	    public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-     	    }
-     	    @Override
-     	    public void onTextChanged(CharSequence s, int start, int before, int after) {
-     		    if(s.length() > SEARCH_MIN_LENGTH) {
-     		    	mAddressResolver.get(getActivity(), s.toString());
-     		    }
-     		    else {
-     		    	mList.setAdapter(null);
-     		    }
-     	    }
-         });
-
         mCenterButton = (ImageButton)rootView.findViewById(R.id.fragment_map_button_center);
         mCenterButton.setOnClickListener(new OnClickListener() {
 
@@ -160,10 +104,26 @@ public class MapFragment extends FragmentWrapper implements Observer, SimpleAsyn
 		        centerOnLocation(a);
 			}
         });
-
-        mAddressResolver = new AddressToGps();
-        mAddressResolver.addObserver(this);        
         
+        mFindButton = (ImageButton)rootView.findViewById(R.id.fragment_map_button_find);
+        mFindButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				/*
+				 * Make dialog
+				 */
+				ObserverAlertDialogBuilder alertDialogBuilder = new ObserverAlertDialogBuilder(getActivity(),
+						MapFragment.this, getString(R.string.search_address));
+				 
+				// create alert dialog
+				mDialogSearch = alertDialogBuilder.create();
+
+				// show it
+				mDialogSearch.show();
+			}
+        });
+
         /*
          * Set service in map view
          */
@@ -214,30 +174,6 @@ public class MapFragment extends FragmentWrapper implements Observer, SimpleAsyn
         });
     }
 
-	@Override
-	public void update(Observable observable, Object data) {
-		// TODO Auto-generated method stub
-		if (data instanceof List<?>) {
-			
-			 /*
-			  * Save the list of addresses
-			  */
-			 mAList = (List<Address>)data;
-			 final ArrayList<String> alist = new ArrayList<String>();
-			 for(Address a : mAList) {
-				 alist.add(a.getAddressLine(0));
-			 }
-			 /*
-			  * Present in the dialog
-			  */
-			 final ArrayAdapter adapter = new ArrayAdapter(getActivity(),
-					 android.R.layout.simple_list_item_1, alist);
-			 mList.setAdapter(adapter);
-			 if(mText.toString().length() > SEARCH_MIN_LENGTH) {
-				 mList.setVisibility(View.VISIBLE);
-			 }
-		}		
-	}
 
 	/**
 	 * 
@@ -274,4 +210,16 @@ public class MapFragment extends FragmentWrapper implements Observer, SimpleAsyn
 		 */
 		centerOnLocation((Address)ret);
 	}
+	
+	@Override
+	public void onItemSelected(Address a) {
+        try {
+        	SimpleAsyncTask task = new SimpleAsyncTask(MapFragment.this);
+        	task.run(a);
+        	mDialogSearch.dismiss();
+        }
+        catch (Exception e) {
+        }		
+	}
+
 }
