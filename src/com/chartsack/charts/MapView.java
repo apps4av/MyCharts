@@ -119,6 +119,7 @@ public class MapView extends MappingView implements OnTouchListener {
         		getService().getPan().getMoveX() - (float)pixx + 24,
         		getService().getPan().getMoveY() - (float)pixy,
         		getPaint());
+        getPaint().setTextSize(20);
         /*
          * Edge tape
          */

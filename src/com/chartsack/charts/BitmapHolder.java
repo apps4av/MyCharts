@@ -13,12 +13,13 @@ Redistribution and use in source and binary forms, with or without modification,
 package com.chartsack.charts;
 
 import java.io.File;
-import java.io.IOException;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapRegionDecoder;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.Rect;
 
 /**
@@ -33,9 +34,14 @@ public class BitmapHolder {
     private BitmapRegionDecoder mDecoder;
     
     /**
-     * 
+     * This bitmap is the work bitmap
      */
     private Bitmap mBitmap = null;
+    
+    /*
+     * Front one serves as double buffer.
+     */
+    private Bitmap mBitmapFront = null;
     
     /**
      * 
@@ -58,7 +64,11 @@ public class BitmapHolder {
         if(null != mBitmap) {
             mBitmap.recycle();
         }
+        if(null != mBitmapFront) {
+            mBitmapFront.recycle();
+        }
         mBitmap = null;
+        mBitmapFront = null;
         mName = null;
         mWidth = 0;
         mHeight = 0;
@@ -112,6 +122,8 @@ public class BitmapHolder {
         try {
             mBitmap = Bitmap.createBitmap(width, height, conf);
             mBitmap.setDensity(Bitmap.DENSITY_NONE);
+            mBitmapFront = Bitmap.createBitmap(width, height, conf);
+            mBitmapFront.setDensity(Bitmap.DENSITY_NONE);
         }
         catch(OutOfMemoryError e){
         }
@@ -119,7 +131,7 @@ public class BitmapHolder {
 
         mName = name;
     }
-
+    
     /**
      * @return
      */
@@ -131,7 +143,18 @@ public class BitmapHolder {
      * @return
      */
     public Bitmap getBitmap() {
-        return mBitmap;
+        return mBitmapFront;
+    }
+
+    /**
+     * 
+     */
+    public void moveToFront() {
+    	/*
+    	 * Draw from working to front
+    	 */
+		Canvas canvas = new Canvas(mBitmapFront);
+		canvas.drawBitmap(mBitmap, 0, 0, new Paint());
     }
     
     /**

@@ -331,14 +331,6 @@ public class StorageService extends Service implements SimpleAsyncTask.Methods {
      * 
      * @return
      */
-    public void setBitmap(BitmapHolder b) {
-        mBitmap = b;
-    }
-
-    /**
-     * 
-     * @return
-     */
     public Pan getPan() {
     	return mPan;
     }
@@ -472,7 +464,6 @@ public class StorageService extends Service implements SimpleAsyncTask.Methods {
 		
 		String file = (String)vals[0];
 		
-		// TODO Auto-generated method stub
         /*
          * Invalid. Nothing to do
          */
@@ -487,7 +478,7 @@ public class StorageService extends Service implements SimpleAsyncTask.Methods {
         	if(getBitmapHolder() != null) {
         		getBitmapHolder().recycle();
         	}
-            setBitmap(new BitmapHolder(file, getWidth(), getHeight()));
+            mBitmap = new BitmapHolder(file, getWidth(), getHeight());
         }
         
         if(getBitmapHolder() != null) {
@@ -509,6 +500,7 @@ public class StorageService extends Service implements SimpleAsyncTask.Methods {
 	public void ui(Object ret) {
         getPan().endDrag();
         if((boolean)ret) {
+        	mBitmap.moveToFront();
 	        if(mICallback != null) {
 	        	mICallback.imageReady();
 	        }
