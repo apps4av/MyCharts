@@ -9,6 +9,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Paint.Style;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -180,6 +181,17 @@ public class MappingView extends View implements MultiTouchObjectCanvas<Object> 
         mService.getBitmapHolder().getTransform().setTranslate(mService.getPan().getDragX(), mService.getPan().getDragY());
 
         canvas.drawBitmap(mService.getBitmapHolder().getBitmap(), mService.getBitmapHolder().getTransform(), mPaint);
+        
+    	/*
+    	 * The cross in the middle
+    	 */
+    	getPaint().setColor(Color.RED);
+    	getPaint().setStyle(Style.STROKE);
+    	getPaint().setStrokeWidth(2);
+        canvas.drawLine(getWidth() / 4, getHeight() / 2, (getWidth() * 3) / 4, getHeight() / 2, getPaint());
+        canvas.drawLine(getWidth() / 2, getHeight() / 4, getWidth() / 2, (getHeight() * 3) / 4, getPaint());
+        canvas.drawCircle(getWidth() / 2, getHeight() / 2, 4, getPaint());
+
     }
     
     

@@ -18,6 +18,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Paint.Align;
+import android.graphics.Paint.Style;
 
 /***
  * A static class that handles the drawing of the distance tape 
@@ -79,6 +80,8 @@ public class EdgeDistanceTape {
 		int leftMargin = (int) (textBounds.width()  * 0.2);
 		int bgndHeight = (int) (textBounds.height() * 1.4);
 		int botmMargin = (int) (textBounds.height() * 1.2);
+
+    	paint.setStyle(Style.FILL);
 
 	    paint.setColor(Color.BLACK);// shadow color is black
 	    paint.setAlpha(0x7F);		// Make it see-thru

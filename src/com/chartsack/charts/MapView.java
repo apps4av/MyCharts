@@ -160,7 +160,7 @@ public class MapView extends MappingView implements OnTouchListener {
 		/*
 		 * Change pan to center on GPS location
 		 */
-    	if(null == mGpsParams || null == getService()) {
+    	if(null == mGpsParams || null == getService() || null == getService().getBitmapHolder()) {
     		return false;
     	}
         double lon = mGpsParams.getLongitude();

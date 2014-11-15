@@ -71,17 +71,7 @@ public class TagView extends MappingView implements OnTouchListener {
      */
     @Override
     public void onDraw(Canvas canvas) {
-    	super.onDraw(canvas);
-    	
-    	/*
-    	 * The cross in the middle
-    	 */
-    	getPaint().setColor(Color.RED);
-    	getPaint().setStyle(Style.STROKE);
-    	getPaint().setStrokeWidth(2);
-        canvas.drawLine(getWidth() / 4, getHeight() / 2, (getWidth() * 3) / 4, getHeight() / 2, getPaint());
-        canvas.drawLine(getWidth() / 2, getHeight() / 4, getWidth() / 2, (getHeight() * 3) / 4, getPaint());
-        canvas.drawCircle(getWidth() / 2, getHeight() / 2, 4, getPaint());
+    	super.onDraw(canvas);    	
     }
 
 }
