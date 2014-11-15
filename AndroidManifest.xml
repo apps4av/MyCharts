@@ -22,6 +22,7 @@ Redistribution and use in source and binary forms, with or without modification,
     
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     
@@ -44,7 +45,10 @@ Redistribution and use in source and binary forms, with or without modification,
         </activity>
         <service android:name="com.chartsack.charts.StorageService"/>
         <provider android:name="DataProvider"
-	            android:authorities="com.chartsack.charts">
+	            android:authorities="com.chartsack.charts.geoinfo">
+        </provider>
+        <provider android:name="AddressProvider"
+	            android:authorities="com.chartsack.charts.addrinfo">
         </provider>
     </application>
 

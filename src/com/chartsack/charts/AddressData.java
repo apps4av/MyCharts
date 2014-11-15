@@ -12,16 +12,19 @@ Redistribution and use in source and binary forms, with or without modification,
 
 package com.chartsack.charts;
 
+import java.util.Locale;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.location.Address;
 
 /**
  * 
  * @author zkhan
  *
  */
-public class TagData {
+public class AddressData {
 
 	private Context mContext;
 	
@@ -29,7 +32,7 @@ public class TagData {
 	 * 
 	 * @param ctx
 	 */
-	public TagData(Context ctx) {
+	public AddressData(Context ctx) {
 		mContext = ctx;
 	}
 
@@ -38,23 +41,24 @@ public class TagData {
 	 * @param name
 	 * @param tag
 	 */
-	public void addTag(String name, String tag) {
+	public void addAddress(Address a) {
 		
 		ContentValues values = new ContentValues();
-		values.put(DataProvider.NAME,  name);
-		values.put(DataProvider.DATA,  tag);
+		values.put(AddressProvider.ADDRESS, a.getAddressLine(0));
+		values.put(AddressProvider.LONGITUDE, a.getLongitude());
+		values.put(AddressProvider.LATITUDE, a.getLatitude());
 		
-		mContext.getContentResolver().insert(DataProvider.CONTENT_URI, values);
+		mContext.getContentResolver().insert(AddressProvider.CONTENT_URI, values);
 	}
 	
 	/**
 	 * 
 	 * @param name
 	 */
-	public void deleteTag(String name) {
+	public void deleteAddress(Address a) {
 		String args[] = new String[1];
-		args[0] = name;
-		mContext.getContentResolver().delete(DataProvider.CONTENT_URI, DataProvider.NAME + " = ?", args);
+		args[0] = a.getAddressLine(0);
+		mContext.getContentResolver().delete(AddressProvider.CONTENT_URI, AddressProvider.ADDRESS + " = ?", args);
 	}
 
 	
@@ -63,17 +67,33 @@ public class TagData {
 	 * @param name
 	 * @return
 	 */
-	public String getTag(String name) {
+	public Address[] getAddress(String address) {
+		Address adds[] = null;
 		String args[] = new String[1];
-		args[0] = name;
-		Cursor c = mContext.getContentResolver().query(DataProvider.CONTENT_URI, null, DataProvider.NAME + " = ?", args, null);
+		args[0] = "%" + address + "%";
+		Cursor c = mContext.getContentResolver().query(AddressProvider.CONTENT_URI, null, AddressProvider.ADDRESS + " LIKE ?", args, null);
 		if(c != null && c.getCount() != 0) {
+			adds = new Address[c.getCount()];
 			if(c.moveToFirst()) {
-				String data = c.getString(c.getColumnIndex(DataProvider.DATA));
+				int count = 0;
+				do {
+				
+					/*
+					 * Find addresses
+					 */
+					String data = c.getString(c.getColumnIndex(AddressProvider.ADDRESS));
+					double lon = c.getDouble(c.getColumnIndex(AddressProvider.LONGITUDE));
+					double lat = c.getDouble(c.getColumnIndex(AddressProvider.LATITUDE));
+					Address a = new Address(Locale.getDefault());
+					a.setLongitude(lon);
+					a.setLatitude(lat);
+					a.setAddressLine(0, data);
+					adds[count++] = a;
+				}
+				while(c.moveToNext());
 				c.close();
-				return data;
 			}
 		}
-		return null;
+		return adds;
 	}
 }

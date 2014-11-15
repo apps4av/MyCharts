@@ -31,39 +31,41 @@ import android.text.TextUtils;
  * @author zkhan
  *
  */
-public class DataProvider extends ContentProvider {
+public class AddressProvider extends ContentProvider {
 	 // fields for my content provider
-	 static final String PROVIDER_NAME = "com.chartsack.charts.geoinfo";
-	 static final String URL = "content://" + PROVIDER_NAME + "/geotags";
+	 static final String PROVIDER_NAME = "com.chartsack.charts.addrinfo";
+	 static final String URL = "content://" + PROVIDER_NAME + "/address";
 	 static final Uri CONTENT_URI = Uri.parse(URL);
 	   
 	 // fields for the database
 	 static final String ID = "id";
-	 static final String NAME = "name";
-	 static final String DATA = "data";
+	 static final String ADDRESS = "address";
+	 static final String LONGITUDE = "longitude";
+	 static final String LATITUDE = "latitude";
 	 
 	 DBHelper dbHelper;
 	 
 	 // database declarations
 	 private SQLiteDatabase mSqliteDatabase;
-	 static final String DATABASE_NAME = "dbGeo";
-	 static final String TABLE_NAME = "geotags";
+	 static final String DATABASE_NAME = "dbAddress";
+	 static final String TABLE_NAME = "address";
 	 static final int DATABASE_VERSION = 1;
 	 static final String CREATE_TABLE = 
 			 " CREATE TABLE " + TABLE_NAME +
 			 " (" + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + 
-			 " " + NAME + " TEXT NOT NULL, " +
-			 " " + DATA + " TEXT NOT NULL);";
+			 " " + ADDRESS + " TEXT NOT NULL, " +
+			 " " + LATITUDE + " DOUBLE NOT NULL, " +
+			 " " + LONGITUDE + " DOUBLE NOT NULL);";
 	 
 	 // integer values used in content URI
-	 static final int GEOTAGS_ALL = 1;
-	 static final int GEOTAGS_SINGLE = 2;
+	 static final int ADDRESS_ALL = 1;
+	 static final int ADDRESS_SINGLE = 2;
 	 
 	 static final UriMatcher uriMatcher;
 	 static {
 		 uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-		 uriMatcher.addURI(PROVIDER_NAME, "geotags", GEOTAGS_ALL);
-		 uriMatcher.addURI(PROVIDER_NAME, "geotags/#", GEOTAGS_SINGLE);
+		 uriMatcher.addURI(PROVIDER_NAME, "address", ADDRESS_ALL);
+		 uriMatcher.addURI(PROVIDER_NAME, "address/#", ADDRESS_SINGLE);
 	 }
  
 	 // class that creates and manages the provider's database 
@@ -107,9 +109,9 @@ public class DataProvider extends ContentProvider {
 	      
 		switch(uriMatcher.match(uri)) {
 			// maps all database column names
-	    	case GEOTAGS_ALL:
+	    	case ADDRESS_ALL:
 	    		break;
-	    	case GEOTAGS_SINGLE:
+	    	case ADDRESS_SINGLE:
 	    		queryBuilder.appendWhere(ID + "=" + uri.getLastPathSegment());
 	    		break;
 	    	default:
@@ -117,7 +119,7 @@ public class DataProvider extends ContentProvider {
 	    }
 	    if (sortOrder == null || sortOrder == "") {
 	    	// No sorting-> sort on names by default
-	        sortOrder = NAME;
+	        sortOrder = ADDRESS;
 	    }
 	    Cursor cursor = queryBuilder.query(mSqliteDatabase, projection, selection, 
 	    		selectionArgs, null, null, sortOrder);
@@ -148,10 +150,10 @@ public class DataProvider extends ContentProvider {
 		int count = 0;
 	      
 	    switch (uriMatcher.match(uri)){
-	    	case GEOTAGS_ALL:
+	    	case ADDRESS_ALL:
 	    		count = mSqliteDatabase.update(TABLE_NAME, values, selection, selectionArgs);
 	    		break;
-	    	case GEOTAGS_SINGLE:
+	    	case ADDRESS_SINGLE:
 	    		count = mSqliteDatabase.update(TABLE_NAME, values, ID + 
 	    				" = " + uri.getLastPathSegment() + 
 	    				(!TextUtils.isEmpty(selection) ? " AND (" +
@@ -168,10 +170,10 @@ public class DataProvider extends ContentProvider {
 	public int delete(Uri uri, String selection, String[] selectionArgs) {
 		int count = 0;
 		switch(uriMatcher.match(uri)) {
-			case GEOTAGS_ALL:
+			case ADDRESS_ALL:
 				count = mSqliteDatabase.delete(TABLE_NAME, selection, selectionArgs);
 				break;
-			case GEOTAGS_SINGLE:
+			case ADDRESS_SINGLE:
 	    	  	String id = uri.getLastPathSegment();	//gets the id
 	    	  	count = mSqliteDatabase.delete(TABLE_NAME, ID +  " = " + id + 
 	    			  (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), selectionArgs);
@@ -188,11 +190,11 @@ public class DataProvider extends ContentProvider {
 	public String getType(Uri uri) {
 		switch (uriMatcher.match(uri)){
 	      // Get all records 
-	      case GEOTAGS_ALL:
-	         return ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.com.chartsack.charts.geoinfo.geotags";
+	      case ADDRESS_ALL:
+	         return ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.com.chartsack.charts.addrinfo.address";
 	      // Get a particular records 
-	      case GEOTAGS_SINGLE:
-	         return ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd.com.chartsack.charts.geoinfo.geotags";
+	      case ADDRESS_SINGLE:
+	         return ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd.com.chartsack.charts.addrinfo.address";
 	      default:
 	    	  throw new IllegalArgumentException("Unsupported URI: " + uri);
 	      }
