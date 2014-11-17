@@ -28,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
+import android.widget.ZoomControls;
 
 /**
  * A fragment that shows the map
@@ -39,6 +40,7 @@ public class MapFragment extends FragmentWrapper implements SimpleAsyncTask.Meth
      */
     private MapView mMapView;
 
+    private ZoomControls mZoomControls;
 	private ImageButton mCenterButton;
 
 	private ImageButton mFindButton;
@@ -104,7 +106,22 @@ public class MapFragment extends FragmentWrapper implements SimpleAsyncTask.Meth
 		        centerOnLocation(a);
 			}
         });
-        
+
+        // Zooming in/out
+        mZoomControls = (ZoomControls)rootView.findViewById(R.id.fragment_map_zoom);
+        mZoomControls.setOnZoomInClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				getService().getScale().zoomIn();
+				getService().loadBitmap(null);
+			}
+		});
+        mZoomControls.setOnZoomOutClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				getService().getScale().zoomOut();
+				getService().loadBitmap(null);
+			}
+		});
+
         mFindButton = (ImageButton)rootView.findViewById(R.id.fragment_map_button_find);
         mFindButton.setOnClickListener(new OnClickListener() {
 

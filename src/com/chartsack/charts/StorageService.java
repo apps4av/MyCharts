@@ -475,10 +475,10 @@ public class StorageService extends Service implements SimpleAsyncTask.Methods {
         }
         
         if(getBitmapHolder() != null) {
-            int x = (int)-getPan().getMoveX();
-            int y = (int)-getPan().getMoveY();
-            int x1 = (int)(x + getWidth());
-            int y1 = (int)(y + getHeight());
+            int x = (int)(-getPan().getMoveX());
+            int y = (int)(-getPan().getMoveY()) ;
+            int x1 = (int)((x + getWidth()));
+            int y1 = (int)((y + getHeight()));
             Rect rect = new Rect(x, y, x1, y1);
             getBitmapHolder().decodeRegion(rect, 1);
         }

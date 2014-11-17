@@ -128,9 +128,6 @@ public class MappingView extends View implements MultiTouchObjectCanvas<Object> 
                     newObjPosAndScale.getXOff(), 
                     newObjPosAndScale.getYOff());
         }
-        else {
-	        mService.getScale().setScaleFactor(newObjPosAndScale.getScale());
-        }
 
         invalidate();
         return true;
@@ -161,7 +158,7 @@ public class MappingView extends View implements MultiTouchObjectCanvas<Object> 
     	}
         objPosAndScaleOut.set(
                 mService.getPan().getMoveX(), mService.getPan().getMoveY(), true,
-                mService.getScale().getScaleFactorRaw(), false, 0, 0, false, 0);
+                1, false, 0, 0, false, 0);
     }
 
     

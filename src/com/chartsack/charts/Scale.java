@@ -15,142 +15,49 @@ package com.chartsack.charts;
 /**
  * 
  * @author zkhan
- * Keeps scale factor and scale correction at this particular point on the map
+ * Keeps scale factor
  */
 public class Scale {
 
-    private double mScaleFactor;
-    private double mMacroMultiply;
+    private int mScaleFactor;
     
-    private static final double MIN_SCALE = 0.03125; 
-    private static final double MAX_SCALE = 2; 
+    private static final int MIN_SCALE = 1; 
+    private static final int MAX_SCALE = 32;
 
     /**
      * Scale for charts
      */
     public Scale() {
         mScaleFactor = 1;
-        mMacroMultiply = 1;
-    }
-    
-    // Determine a stepping factor based upon the macro and scale
-    // Used by dynamic distance rings and edge markers
-    public double getStep() {
-    	double step;
-        int macro = getMacroFactor();
-        float scaleRaw = getScaleFactorRaw();
-        if(macro <= 1 && scaleRaw > 1) {  
-            step = 2.5;        
-        } 
-        else if(macro <= 1 && scaleRaw <= 1) {  
-            step = 5;
-        } 
-        else if (macro <= 2) {
-            step = 10;
-        } 
-        else if (macro <= 4) {
-            step = 20;
-        } 
-        else if (macro <= 8) {
-            step = 40;
-        }  
-        else {
-            step = 80;
-        } 
-        return step;
     }
     
     /**
      * 
-     * @param factor
      */
-    public void setScaleFactor(float factor) {
-        mScaleFactor = (double)factor;
+    public void zoomIn() {
+    	mScaleFactor /= 2;
+        if(mScaleFactor < MIN_SCALE) {
+        	mScaleFactor = MIN_SCALE;
+        }
     }
 
     /**
      * 
-     * @return
      */
-    public float getScaleFactorRaw() {
-        double s;
+    public void zoomOut() {
+    	mScaleFactor *= 2;
         if(mScaleFactor > MAX_SCALE) {
-            s = MAX_SCALE;
+        	mScaleFactor = MAX_SCALE;
         }
-        else if(mScaleFactor < MIN_SCALE) {
-            s = MIN_SCALE;
-        }
-        else {
-            s = mScaleFactor;
-        }
-        return((float)s);        
     }
 
     /**
      * This one is for plates drawing only
      * @return
      */
-    public float getScaleFactor() {
-        double s;
-        if(mScaleFactor > MAX_SCALE) {
-            s = MAX_SCALE;
-        }
-        else if(mScaleFactor < MIN_SCALE) {
-            s = MIN_SCALE;
-        }
-        else {
-            s = mScaleFactor;
-        }
-        s = s * mMacroMultiply;
-        return((float)s);
+    public int getScaleFactor() {
+        return(mScaleFactor);
     }
 
-    /**
-     * 
-     * @return
-     */
-    public int getMacroFactor() {
-        if(mScaleFactor >= 0.5) {
-            return 1;
-        }
-        else if(mScaleFactor >= 0.25) {
-            return 2;
-        }
-        else if(mScaleFactor >= 0.125) {
-            return 4;
-        }
-        else if(mScaleFactor >= 0.0625) {
-            return 8;
-        }
-        return 16;
-    }
-
-    /**
-     * 
-     * @return
-     */
-    public void updateMacro() {
-        mMacroMultiply = getMacroFactor();
-    }
-
-    /**
-     * 
-     * @return
-     */
-    public int downSample() {
-        if(mScaleFactor >= 0.5) {
-            return 0;
-        }
-        else if(mScaleFactor >= 0.25) {
-            return 1;
-        }
-        else if(mScaleFactor >= 0.125) {
-            return 2;
-        }
-        else if(mScaleFactor >= 0.0625) {
-            return 3;
-        }
-        return 4;
-    }
     
 }
