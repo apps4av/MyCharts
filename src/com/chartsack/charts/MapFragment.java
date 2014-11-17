@@ -139,7 +139,6 @@ public class MapFragment extends FragmentWrapper implements SimpleAsyncTask.Meth
     @Override
     public void onResume() {
        super.onResume();
-       mMapView.setCoordinates(getService().getGeotagData());
        mMapView.postInvalidate();
     }
     

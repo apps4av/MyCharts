@@ -32,11 +32,6 @@ import android.view.View.OnTouchListener;
 public class MapView extends MappingView implements OnTouchListener {
 
 	
-	private double mLonTopLeft;
-	private double mLatTopLeft;
-	private double mDx;
-	private double mDy;
-	
     /**
      * 
      * @param context
@@ -78,17 +73,24 @@ public class MapView extends MappingView implements OnTouchListener {
     @Override
     public void onDraw(Canvas canvas) {
     	super.onDraw(canvas);
-    	
+    	    	
     	/*
     	 * Draw our location
     	 */
     	if(null == getService()) {
     		return;
     	}
+    	
+    	double data[] = getService().getGeotagData();
+    	double dx = data[0];
+    	double dy = data[1];
+    	double lonTopLeft = data[2];
+    	double latTopLeft = data[3];
+
         double lon = getService().getGpsParams().getLongitude();
         double lat = getService().getGpsParams().getLatitude();
-        double pixx = (lon - mLonTopLeft) * mDx;
-        double pixy = (lat - mLatTopLeft) * mDy;
+        double pixx = (lon - lonTopLeft) * dx;
+        double pixy = (lat - latTopLeft) * dy;
 
         /*
          * Draw a circle on current location
@@ -123,22 +125,11 @@ public class MapView extends MappingView implements OnTouchListener {
         /*
          * Edge tape
          */
-      	EdgeDistanceTape.draw(canvas, getPaint(), Helper.findPixelsPerMile(mDy),
+      	EdgeDistanceTape.draw(canvas, getPaint(), Helper.findPixelsPerMile(dy),
       			(int)(getService().getPan().getMoveX() - (float)pixx),
       			(int)(getService().getPan().getMoveY() - (float)pixy), 
       			0, getWidth(), getHeight());
 
-    }
-    
-    /**
-     * Set geo coordinates 
-     * @param data
-     */
-    public void setCoordinates(double data[]) {   	
-    	mDx = data[0];
-    	mDy = data[1];
-    	mLonTopLeft = data[2];
-    	mLatTopLeft = data[3];
     }
     
     /**
@@ -152,8 +143,14 @@ public class MapView extends MappingView implements OnTouchListener {
     	if(null == getService() || null == getService().getBitmapHolder()) {
     		return false;
     	}
-        double pixx = (lon - mLonTopLeft) * mDx;
-        double pixy = (lat - mLatTopLeft) * mDy;
+    	double data[] = getService().getGeotagData();
+    	double dx = data[0];
+    	double dy = data[1];
+    	double lonTopLeft = data[2];
+    	double latTopLeft = data[3];
+
+        double pixx = (lon - lonTopLeft) * dx;
+        double pixy = (lat - latTopLeft) * dy;
 
         boolean ret = getService().getPan().setMove(
         		(float)pixx + getWidth() / 2,

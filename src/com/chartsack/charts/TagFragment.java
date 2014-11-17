@@ -142,6 +142,9 @@ public class TagFragment extends FragmentWrapper implements ObserverAlertDialogB
         	// delete old tag
         	provider.deleteTag(name);
         	provider.addTag(name, tag);
+
+        	// update in service
+        	getService().setGeotagData(tag);
         	return true;
         }
 

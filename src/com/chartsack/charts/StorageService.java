@@ -440,23 +440,6 @@ public class StorageService extends Service implements SimpleAsyncTask.Methods {
     }
 
     /**
-     * Typical value clamper
-     * @param input
-     * @param min
-     * @param max
-     */
-    private float clamp(float input, float min, float max) {
-    	if(input < min) {
-    		input = min;
-    	}
-    	if(input > max) {
-    		input = max;
-    	}
-    	
-    	return input;
-    }
-
-    /**
      * This loads bitmap in background
      */
 	@Override
