@@ -28,8 +28,6 @@ public class MappingView extends View implements MultiTouchObjectCanvas<Object> 
     private PointInfo                    mCurrTouchPoint;
     private Paint                        mPaint;
     private StorageService               mService;
-    private int                          mWidth;
-    private int                          mHeight;
 
     /**
      * 
@@ -130,6 +128,9 @@ public class MappingView extends View implements MultiTouchObjectCanvas<Object> 
                     newObjPosAndScale.getXOff(), 
                     newObjPosAndScale.getYOff());
         }
+        else {
+	        mService.getScale().setScaleFactor(newObjPosAndScale.getScale());
+        }
 
         invalidate();
         return true;
@@ -160,7 +161,7 @@ public class MappingView extends View implements MultiTouchObjectCanvas<Object> 
     	}
         objPosAndScaleOut.set(
                 mService.getPan().getMoveX(), mService.getPan().getMoveY(), true,
-                1, false, 0, 0, false, 0);
+                mService.getScale().getScaleFactorRaw(), false, 0, 0, false, 0);
     }
 
     
@@ -191,16 +192,6 @@ public class MappingView extends View implements MultiTouchObjectCanvas<Object> 
     }
     
     
-	/**
-	 * This for finding width / height of this view
-	 */
-    @Override
-    protected void onLayout(boolean changed, int l, int t, int r, int b) {
-    	mWidth = r - l;
-    	mHeight = b - t;
-        super.onLayout(changed, l, t, r, b);
-    }
-
     /**
      * 
      */

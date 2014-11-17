@@ -57,6 +57,7 @@ public class StorageService extends Service implements SimpleAsyncTask.Methods {
     AsyncTask<String, Void, Boolean> mDecodeTask;
 
     private Pan                      mPan;
+    private Scale                    mScale;
     private int                      mWidth;
     private int                      mHeight;
     private ImageCallback			 mICallback;
@@ -125,6 +126,7 @@ public class StorageService extends Service implements SimpleAsyncTask.Methods {
         mBitmap = null;
         
         mPan = new Pan();
+        mScale = new Scale();
         mGeoData = new double[4];
         
         Location l = Gps.getLastLocation(getApplicationContext());
@@ -333,6 +335,14 @@ public class StorageService extends Service implements SimpleAsyncTask.Methods {
      */
     public Pan getPan() {
     	return mPan;
+    }
+    
+    /**
+     * 
+     * @return
+     */
+    public Scale getScale() {
+    	return mScale;
     }
 
     /**
