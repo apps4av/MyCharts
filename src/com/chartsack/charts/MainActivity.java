@@ -75,11 +75,11 @@ public class MainActivity extends Activity implements
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
         Bundle args = new Bundle();
         mFragments = new FragmentWrapper[4];
-        mFragments[0] = new LoadFragment();
+        mFragments[0] = new MapFragment();
         mFragments[0].setArguments(args);
-        mFragments[1] = new TagFragment();
+        mFragments[1] = new LoadFragment();
         mFragments[1].setArguments(args);
-        mFragments[2] = new MapFragment();
+        mFragments[2] = new TagFragment();
         mFragments[2].setArguments(args);
         mFragments[3] = new SatelliteFragment();
         mFragments[3].setArguments(args);
@@ -90,9 +90,9 @@ public class MainActivity extends Activity implements
                 new ArrayAdapter<String>(actionBar.getThemedContext(),
                 android.R.layout.simple_list_item_1,
                 android.R.id.text1, new String[] {
+                getString(R.string.title_map),
                 getString(R.string.title_load),
                 getString(R.string.title_tag),
-                getString(R.string.title_map),
                 getString(R.string.title_gps),
                 }), this);
                 

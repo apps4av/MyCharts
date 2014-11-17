@@ -21,7 +21,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ZoomControls;
 
 /**
  * A fragment that shows the map
@@ -33,10 +34,12 @@ public class TagFragment extends FragmentWrapper implements ObserverAlertDialogB
      */
     private TagView mTagView;
 
-	private Button mTagButton;
+	private ImageButton mTagButton;
 	private Address mNotifyAddress0;
 	private Address mNotifyAddress1;
 	private AlertDialog mDialogSearch;
+    private ZoomControls mZoomControls;
+
 
     public TagFragment() {
     }
@@ -55,7 +58,7 @@ public class TagFragment extends FragmentWrapper implements ObserverAlertDialogB
         mTagView.setService(getService());
         
         
-        mTagButton = (Button)rootView.findViewById(R.id.fragment_tag_button_tag);
+        mTagButton = (ImageButton)rootView.findViewById(R.id.fragment_tag_button_tag);
         mTagButton.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -74,6 +77,21 @@ public class TagFragment extends FragmentWrapper implements ObserverAlertDialogB
 			}
         });
 
+
+        // Zooming in/out
+        mZoomControls = (ZoomControls)rootView.findViewById(R.id.fragment_tag_zoom);
+        mZoomControls.setOnZoomInClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				getService().getScale().zoomIn();
+				getService().loadBitmap(null);
+			}
+		});
+        mZoomControls.setOnZoomOutClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				getService().getScale().zoomOut();
+				getService().loadBitmap(null);
+			}
+		});
 
 		/*
 		 * New search
@@ -186,22 +204,20 @@ public class TagFragment extends FragmentWrapper implements ObserverAlertDialogB
         	/*
         	 * Get two points
         	 */
+        	Pan pan = getService().getPan();
+        	int scale = 1;
+        	int w2 = getService().getWidth() / 2;
+        	int h2 = getService().getHeight() / 2;
+        	String data = ((pan.getMoveX() + pan.getDragX() - w2) * scale) + "," + ((pan.getMoveY() + pan.getDragY() - h2) * scale);
+
         	if(null == mNotifyAddress0) {
         		mNotifyAddress0 = a;
-        		mNotifyAddress0.setFeatureName(
-        				(getService().getPan().getMoveX() + getService().getPan().getDragX() - (mTagView.getWidth() / 2))
-        				+ "," + 
-        			    (getService().getPan().getMoveY() + getService().getPan().getDragY() - (mTagView.getHeight() / 2)) 
-        				);
+        		mNotifyAddress0.setFeatureName(data);
 	        	showHelp(getString(R.string.tag_help_point1));
         	}
         	else if(null == mNotifyAddress1) {
         		mNotifyAddress1 = a;
-        		mNotifyAddress1.setFeatureName(
-        				(getService().getPan().getMoveX() + getService().getPan().getDragX() - (mTagView.getWidth() / 2))
-        				+ "," + 
-        			    (getService().getPan().getMoveY() + getService().getPan().getDragY() - (mTagView.getHeight() / 2)) 
-        				);
+        		mNotifyAddress1.setFeatureName(data);
         	}
         	/*
         	 * Now two points done, calculate and store data

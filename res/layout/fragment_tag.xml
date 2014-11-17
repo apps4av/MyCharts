@@ -20,15 +20,23 @@ Redistribution and use in source and binary forms, with or without modification,
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <Button
+    <ImageButton
         android:id="@+id/fragment_tag_button_tag"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:drawableLeft="@+drawable/tag"
-        android:text="@+string/tag"
+        android:layout_alignParentRight="true"
+        android:src="@+drawable/tag"
         android:background="@android:drawable/btn_default"
         android:contentDescription="@+string/tag"
         android:layout_alignParentBottom="true"/>
+    
+    <ZoomControls 
+        android:id="@+id/fragment_tag_zoom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="20dp"
+        />
     
 </RelativeLayout>

@@ -20,9 +20,7 @@ import com.chartsack.charts.gps.Gps;
 import com.chartsack.charts.gps.GpsInterface;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Point;
 import android.graphics.Rect;
 import android.location.GpsStatus;
 import android.location.Location;
@@ -30,8 +28,6 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
-import android.view.Display;
-import android.view.WindowManager;
 
 import com.chartsack.charts.gps.GpsParams;
 
@@ -132,16 +128,6 @@ public class StorageService extends Service implements SimpleAsyncTask.Methods {
         Location l = Gps.getLastLocation(getApplicationContext());
         mGpsParams = new GpsParams(l);
 
-        /*
-         * Get width / height
-         */
-        WindowManager wm = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        mWidth = size.x;
-        mHeight = size.y;
-        
         mGpsCallbacks = new LinkedList<GpsInterface>();
         mTimer = new Timer();
         TimerTask gpsTime = new UpdateTask();
@@ -369,6 +355,23 @@ public class StorageService extends Service implements SimpleAsyncTask.Methods {
     	return mHeight;
     }
 
+
+    /**
+     * 
+     * @param val
+     */
+    public void setWidth(int val) {
+    	mWidth = val;
+    }
+
+    /**
+     * 
+     * @param val
+     */
+    public void setHeight(int val) {
+    	mHeight = val;
+    }
+
     /**
      * 
      * @param cb
@@ -423,13 +426,23 @@ public class StorageService extends Service implements SimpleAsyncTask.Methods {
      * @param name
      */
     public boolean setGeotagData(String name) {
-    	
+
+    	/*
+    	 * Set data for drawing location on map. Get from geotag data from user's geotag database, 
+    	 * then parse here
+    	 */
+		mGeoData[0] = 0;
+		mGeoData[1] = 0;
+		mGeoData[2] = 0;
+		mGeoData[3] = 0;
+
     	String tokens[] = name.split(",");
     	if(tokens.length != 4) {
     		return false;
     	}
     	
     	try {
+    		// dx, dy, lonl, latl
     		mGeoData[0] = Double.parseDouble(tokens[0]);
     		mGeoData[1] = Double.parseDouble(tokens[1]);
     		mGeoData[2] = Double.parseDouble(tokens[2]);
@@ -472,15 +485,35 @@ public class StorageService extends Service implements SimpleAsyncTask.Methods {
         		getBitmapHolder().recycle();
         	}
             mBitmap = new BitmapHolder(file, getWidth(), getHeight());
+            mScale = new Scale();
+            mPan = new Pan();
         }
         
         if(getBitmapHolder() != null) {
-            int x = (int)(-getPan().getMoveX());
-            int y = (int)(-getPan().getMoveY()) ;
-            int x1 = (int)((x + getWidth()));
-            int y1 = (int)((y + getHeight()));
-            Rect rect = new Rect(x, y, x1, y1);
-            getBitmapHolder().decodeRegion(rect, 1);
+        	
+        	int scale = 1;
+        	
+        	// find center of screen
+        	int x = (int)(-getPan().getMoveX());
+        	x += getWidth() / 2;
+        	x *= scale;
+        	
+        	
+            int y = (int)(-getPan().getMoveY());
+            y += getHeight() / 2;
+        	y *= scale;
+
+            // find top coord
+            int x0 = x - (getWidth() / 2 * scale);
+            int y0 = y - (getHeight() / 2 * scale);
+
+            
+            // find bottom coord
+            int x1 = x + (getWidth() / 2 * scale);
+            int y1 = y + (getHeight() / 2 * scale);
+
+            Rect rect = new Rect(x0, y0, x1, y1);
+            getBitmapHolder().decodeRegion(rect, scale);
         }
 		return (Object)true;
 	}
