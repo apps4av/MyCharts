@@ -81,11 +81,19 @@ public class BitmapHolder {
     public void decodeRegion(Rect rect, int sampleSize) {
         
         if(null != mDecoder && mName != null && mBitmap != null) {
+            mBitmap.eraseColor(0);
             BitmapFactory.Options opt = new BitmapFactory.Options();
             opt.inPreferredConfig = Bitmap.Config.RGB_565;        
             opt.inBitmap = mBitmap;
             opt.inSampleSize = sampleSize;
-            mBitmap = mDecoder.decodeRegion(rect, opt);
+            try {
+            	mBitmap = mDecoder.decodeRegion(rect, opt);
+            }
+            catch(Exception e) {
+            	/*
+            	 * Out of region exception
+            	 */
+            }
         }
     }
     

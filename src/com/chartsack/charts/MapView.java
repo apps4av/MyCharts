@@ -157,12 +157,7 @@ public class MapView extends MappingView implements OnTouchListener {
 
         boolean ret = getService().getPan().setMove(
         		(float)pixx + getWidth() / 2,
-        		(float)pixy + getHeight() / 2,
-                -(getService().getBitmapHolder().getWidth() - getWidth()),
-                -(getService().getBitmapHolder().getHeight() - getWidth()),
-                0,
-                0);
-
+        		(float)pixy + getHeight() / 2);
       	getService().loadBitmap(null);
       	
 		return ret;

@@ -128,11 +128,7 @@ public class MappingView extends View implements MultiTouchObjectCanvas<Object> 
              */
             mService.getPan().setMove(
                     newObjPosAndScale.getXOff(), 
-                    newObjPosAndScale.getYOff(),
-                    -(mService.getBitmapHolder().getWidth() - mWidth),
-                    -(mService.getBitmapHolder().getHeight() - mHeight),
-                    0,
-                    0);
+                    newObjPosAndScale.getYOff());
         }
 
         invalidate();

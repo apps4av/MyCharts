@@ -63,27 +63,8 @@ public class Pan {
      * @param y
      * @return
      */
-    public boolean setMove(float x, float y, float minx, float miny, float maxx, float maxy) {
+    public boolean setMove(float x, float y) {
         boolean ret = true;
-        /*
-         * Limit pan to map size
-         */
-        if(x > maxx) {
-        	ret = false;
-            x = maxx;
-        }
-        if(y > maxy) {
-        	ret = false;
-            y = maxy;
-        }
-        if(x < minx) {
-        	ret = false;
-            x = minx;
-        }
-        if(y < miny) {
-        	ret = false;
-            y = miny;
-        }
         mMoveX = x;
         mMoveY = y;
         
