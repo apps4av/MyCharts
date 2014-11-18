@@ -335,6 +335,17 @@ public class StorageService extends Service implements SimpleAsyncTask.Methods {
      * 
      * @return
      */
+    public void resetMap() {
+    	// Go to the default location
+    	mScale = new Scale();
+    	mPan = new Pan();
+    	loadBitmap(null);
+    }
+
+    /**
+     * 
+     * @return
+     */
     public GpsParams getGpsParams() {
     	return mGpsParams;
     }

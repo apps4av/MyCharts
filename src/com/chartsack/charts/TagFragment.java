@@ -35,6 +35,7 @@ public class TagFragment extends FragmentWrapper implements ObserverAlertDialogB
     private TagView mTagView;
 
 	private ImageButton mTagButton;
+	private ImageButton mTopButton;
 	private Address mNotifyAddress0;
 	private Address mNotifyAddress1;
 	private AlertDialog mDialogSearch;
@@ -92,6 +93,16 @@ public class TagFragment extends FragmentWrapper implements ObserverAlertDialogB
 				getService().loadBitmap(null);
 			}
 		});
+
+        mTopButton = (ImageButton)rootView.findViewById(R.id.fragment_tag_button_top);
+        mTopButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				getService().resetMap();
+				
+			}
+        });
 
 		/*
 		 * New search

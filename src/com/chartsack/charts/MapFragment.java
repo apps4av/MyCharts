@@ -45,6 +45,8 @@ public class MapFragment extends FragmentWrapper implements SimpleAsyncTask.Meth
 
 	private ImageButton mFindButton;
 	
+	private ImageButton mTopButton;
+	
 	private AlertDialog mDialogSearch;
 	
     public MapFragment() {
@@ -121,6 +123,19 @@ public class MapFragment extends FragmentWrapper implements SimpleAsyncTask.Meth
 				getService().loadBitmap(null);
 			}
 		});
+
+        
+
+        mTopButton = (ImageButton)rootView.findViewById(R.id.fragment_map_button_top);
+        mTopButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				getService().resetMap();
+				
+			}
+        });
+
 
         mFindButton = (ImageButton)rootView.findViewById(R.id.fragment_map_button_find);
         mFindButton.setOnClickListener(new OnClickListener() {

@@ -26,8 +26,20 @@ Redistribution and use in source and binary forms, with or without modification,
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:src="@+drawable/tag"
-        android:background="@android:drawable/btn_default"
+        android:layout_margin="10dp"
+        android:background="#00000000"
         android:contentDescription="@+string/tag"
+        android:layout_alignParentBottom="true"/>
+    
+    <ImageButton
+        android:id="@+id/fragment_tag_button_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_alignParentLeft="true"
+        android:src="@+drawable/top"
+        android:background="#00000000"
+        android:contentDescription="@string/find"
         android:layout_alignParentBottom="true"/>
     
     <ZoomControls 
