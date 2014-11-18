@@ -67,6 +67,28 @@ public class MapView extends MappingView implements OnTouchListener {
         return super.onTouch(view, e);
     }
 
+    /**
+     * Get point of interest at lon/lat
+     * @return
+     */
+    private double[] getOffset(double lon, double lat) {
+    	double data[] = getService().getGeotagData();
+    	double dx = data[0];
+    	double dy = data[1];
+    	double lonTopLeft = data[2];
+    	double latTopLeft = data[3];
+
+    	double scale = getService().getScale().getScaleFactor();
+    	
+    	double coords[] = new double[4];
+    	coords[0] = (lon - lonTopLeft) * dx / scale;
+    	coords[1] = (lat - latTopLeft) * dy / scale;
+    	coords[2] = dx;
+    	coords[3] = dy;
+    	
+    	return coords;
+    }
+    
     /* (non-Javadoc)
      * @see android.view.View#onDraw(android.graphics.Canvas)
      */
@@ -81,16 +103,8 @@ public class MapView extends MappingView implements OnTouchListener {
     		return;
     	}
     	
-    	double data[] = getService().getGeotagData();
-    	double dx = data[0];
-    	double dy = data[1];
-    	double lonTopLeft = data[2];
-    	double latTopLeft = data[3];
-
-        double lon = getService().getGpsParams().getLongitude();
-        double lat = getService().getGpsParams().getLatitude();
-        double pixx = (lon - lonTopLeft) * dx;
-        double pixy = (lat - latTopLeft) * dy;
+     	double coords[] = getOffset(getService().getGpsParams().getLongitude(),
+    			getService().getGpsParams().getLatitude());
 
         /*
          * Draw a circle on current location
@@ -98,36 +112,36 @@ public class MapView extends MappingView implements OnTouchListener {
         getPaint().setStrokeWidth(4);
         getPaint().setColor(Color.BLUE);
         canvas.drawCircle(
-        		getService().getPan().getMoveX() - (float)pixx, 
-        		getService().getPan().getMoveY() - (float)pixy, 
+        		getService().getPan().getMoveX() - (float)coords[0], 
+        		getService().getPan().getMoveY() - (float)coords[1], 
                 16,
                 getPaint());
         getPaint().setColor(Color.RED);
         canvas.drawCircle(
-        		getService().getPan().getMoveX() - (float)pixx, 
-        		getService().getPan().getMoveY() - (float)pixy, 
+        		getService().getPan().getMoveX() - (float)coords[0], 
+        		getService().getPan().getMoveY() - (float)coords[1], 
                 12,
                 getPaint());
         getPaint().setColor(Color.GREEN);
         canvas.drawLine(
-        		getService().getPan().getMoveX() - (float)pixx,
-        		getService().getPan().getMoveY() - (float)pixy - 24,
-        		getService().getPan().getMoveX() - (float)pixx,
-        		getService().getPan().getMoveY() - (float)pixy + 24,
+        		getService().getPan().getMoveX() - (float)coords[0],
+        		getService().getPan().getMoveY() - (float)coords[1] - 24,
+        		getService().getPan().getMoveX() - (float)coords[0],
+        		getService().getPan().getMoveY() - (float)coords[1] + 24,
         		getPaint());
         canvas.drawLine(
-        		getService().getPan().getMoveX() - (float)pixx - 24,
-        		getService().getPan().getMoveY() - (float)pixy,
-        		getService().getPan().getMoveX() - (float)pixx + 24,
-        		getService().getPan().getMoveY() - (float)pixy,
+        		getService().getPan().getMoveX() - (float)coords[0] - 24,
+        		getService().getPan().getMoveY() - (float)coords[1],
+        		getService().getPan().getMoveX() - (float)coords[0] + 24,
+        		getService().getPan().getMoveY() - (float)coords[1],
         		getPaint());
         getPaint().setTextSize(20);
         /*
          * Edge tape
          */
-      	EdgeDistanceTape.draw(canvas, getPaint(), Helper.findPixelsPerMile(dy),
-      			(int)(getService().getPan().getMoveX() - (float)pixx),
-      			(int)(getService().getPan().getMoveY() - (float)pixy), 
+      	EdgeDistanceTape.draw(canvas, getPaint(), getService().getScale(), Helper.findPixelsPerMile(coords[3]),
+      			(int)(getService().getPan().getMoveX() - (float)coords[0]),
+      			(int)(getService().getPan().getMoveY() - (float)coords[1]), 
       			0, getWidth(), getHeight());
 
     }
@@ -143,18 +157,12 @@ public class MapView extends MappingView implements OnTouchListener {
     	if(null == getService() || null == getService().getBitmapHolder()) {
     		return false;
     	}
-    	double data[] = getService().getGeotagData();
-    	double dx = data[0];
-    	double dy = data[1];
-    	double lonTopLeft = data[2];
-    	double latTopLeft = data[3];
 
-        double pixx = (lon - lonTopLeft) * dx;
-        double pixy = (lat - latTopLeft) * dy;
-
+     	double coords[] = getOffset(lon, lat);
+     	
         boolean ret = getService().getPan().setMove(
-        		(float)pixx + getWidth() / 2,
-        		(float)pixy + getHeight() / 2);
+        		(float)coords[0] + getWidth() / 2,
+        		(float)coords[1] + getHeight() / 2);
       	getService().loadBitmap(null);
       	
 		return ret;

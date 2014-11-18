@@ -21,7 +21,6 @@ import com.chartsack.charts.gps.GpsInterface;
 
 import android.app.Service;
 import android.content.Intent;
-import android.graphics.Rect;
 import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationManager;
@@ -61,6 +60,7 @@ public class StorageService extends Service implements SimpleAsyncTask.Methods {
     private String                  mChart;
     private double                  mGeoData[];
     private SimpleAsyncTask         mLoadTask;
+    private Bounds                  mBounds;
 
     private boolean mIsGpsOn;
     
@@ -491,29 +491,8 @@ public class StorageService extends Service implements SimpleAsyncTask.Methods {
         
         if(getBitmapHolder() != null) {
         	
-        	int scale = 1;
-        	
-        	// find center of screen
-        	int x = (int)(-getPan().getMoveX());
-        	x += getWidth() / 2;
-        	x *= scale;
-        	
-        	
-            int y = (int)(-getPan().getMoveY());
-            y += getHeight() / 2;
-        	y *= scale;
-
-            // find top coord
-            int x0 = x - (getWidth() / 2 * scale);
-            int y0 = y - (getHeight() / 2 * scale);
-
-            
-            // find bottom coord
-            int x1 = x + (getWidth() / 2 * scale);
-            int y1 = y + (getHeight() / 2 * scale);
-
-            Rect rect = new Rect(x0, y0, x1, y1);
-            getBitmapHolder().decodeRegion(rect, scale);
+        	mBounds = new Bounds(mPan, mScale, mWidth, mHeight);
+            getBitmapHolder().decodeRegion(mBounds.getRect(), mScale.getScaleFactor());
         }
 		return (Object)true;
 	}
@@ -532,4 +511,11 @@ public class StorageService extends Service implements SimpleAsyncTask.Methods {
         }
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	public Bounds getBounds() {
+		return mBounds;
+	}
 }

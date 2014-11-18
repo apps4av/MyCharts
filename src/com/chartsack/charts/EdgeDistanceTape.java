@@ -58,6 +58,7 @@ public class EdgeDistanceTape {
 	 * Draw the horizontal and vertical distance tape
 	 * @param canvas what to draw upon
 	 * @param paint to use
+	 * @param scale to use
 	 * @param pixPerUnit how many pixels per mile/km/nm
 	 * @param homeX horizontal position of current location on display
 	 * @param homeY vertical position of current location on display
@@ -66,7 +67,7 @@ public class EdgeDistanceTape {
 	 * @param height of the display
 	 */
 	@SuppressLint("DefaultLocale")
-	static public void draw(Canvas canvas, Paint paint, float pixPerUnit, 
+	static public void draw(Canvas canvas, Paint paint, Scale scale, float pixPerUnit, 
 			int homeX, int homeY, int top, int width, int height) {
 		
 
@@ -95,7 +96,7 @@ public class EdgeDistanceTape {
 	    canvas.drawLine(bgndWidth - 1,  top + bgndHeight / 2,  width, top + bgndHeight / 2, paint);
 
 	    // The interval values for the scale indicator
-	    double step = 2.5;
+	    double step = scale.getScaleFactor() * 2;
 
 	    // text is white in color
 	    paint.setColor(Color.WHITE);

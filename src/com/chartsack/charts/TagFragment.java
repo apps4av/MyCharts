@@ -204,11 +204,7 @@ public class TagFragment extends FragmentWrapper implements ObserverAlertDialogB
         	/*
         	 * Get two points
         	 */
-        	Pan pan = getService().getPan();
-        	int scale = 1;
-        	int w2 = getService().getWidth() / 2;
-        	int h2 = getService().getHeight() / 2;
-        	String data = ((pan.getMoveX() + pan.getDragX() - w2) * scale) + "," + ((pan.getMoveY() + pan.getDragY() - h2) * scale);
+        	String data = getService().getBounds().getCenterX() + "," + getService().getBounds().getCenterY();
 
         	if(null == mNotifyAddress0) {
         		mNotifyAddress0 = a;
