@@ -39,14 +39,8 @@ public class MapFragment extends FragmentWrapper implements SimpleAsyncTask.Meth
      *
      */
     private MapView mMapView;
-
-    private ZoomControls mZoomControls;
 	private ImageButton mCenterButton;
-
 	private ImageButton mFindButton;
-	
-	private ImageButton mTopButton;
-	
 	private AlertDialog mDialogSearch;
 	
     public MapFragment() {
@@ -109,34 +103,6 @@ public class MapFragment extends FragmentWrapper implements SimpleAsyncTask.Meth
 			}
         });
 
-        // Zooming in/out
-        mZoomControls = (ZoomControls)rootView.findViewById(R.id.fragment_map_zoom);
-        mZoomControls.setOnZoomInClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				getService().getScale().zoomIn();
-				getService().loadBitmap(null);
-			}
-		});
-        mZoomControls.setOnZoomOutClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				getService().getScale().zoomOut();
-				getService().loadBitmap(null);
-			}
-		});
-
-        
-
-        mTopButton = (ImageButton)rootView.findViewById(R.id.fragment_map_button_top);
-        mTopButton.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				getService().resetMap();
-				
-			}
-        });
-
-
         mFindButton = (ImageButton)rootView.findViewById(R.id.fragment_map_button_find);
         mFindButton.setOnClickListener(new OnClickListener() {
 
@@ -161,6 +127,9 @@ public class MapFragment extends FragmentWrapper implements SimpleAsyncTask.Meth
          */
         mMapView = (MapView)(rootView.findViewById(R.id.fragment_map_plateview));
         mMapView.setService(getService());
+        mMapView.setZoomControls((ZoomControls)rootView.findViewById(R.id.fragment_map_zoom));
+        mMapView.setHomeControls((ImageButton)rootView.findViewById(R.id.fragment_map_button_top));
+
         
         return rootView;
     }

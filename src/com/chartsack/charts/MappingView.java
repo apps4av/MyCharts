@@ -13,6 +13,8 @@ import android.graphics.Paint.Style;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.ZoomControls;
 
 
 /**
@@ -28,6 +30,8 @@ public class MappingView extends View implements MultiTouchObjectCanvas<Object> 
     private PointInfo                    mCurrTouchPoint;
     private Paint                        mPaint;
     private StorageService               mService;
+    private ZoomControls 				 mZoomControls;
+    private ImageButton 				 mTopButton;
 
     /**
      * 
@@ -71,6 +75,40 @@ public class MappingView extends View implements MultiTouchObjectCanvas<Object> 
     }
 
 
+    /**
+     * Add zoom control for all map views
+     */
+    public void setZoomControls(ZoomControls zc) {
+    	mZoomControls = zc;
+        mZoomControls.setOnZoomInClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				getService().getScale().zoomIn();
+				getService().loadBitmap(null);
+			}
+		});
+        mZoomControls.setOnZoomOutClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				getService().getScale().zoomOut();
+				getService().loadBitmap(null);
+			}
+		});
+    }
+    
+    /**
+     * Set home button for all map views
+     */
+    public void setHomeControls(ImageButton ib) {
+    	mTopButton = ib;
+        mTopButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				getService().resetMap();
+			}
+        });
+    }
+    
+    
     /**
      * 
      * @param view

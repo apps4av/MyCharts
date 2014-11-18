@@ -34,12 +34,10 @@ public class TagFragment extends FragmentWrapper implements ObserverAlertDialogB
      */
     private TagView mTagView;
 
-	private ImageButton mTagButton;
-	private ImageButton mTopButton;
+	private ImageButton mFindButton;
 	private Address mNotifyAddress0;
 	private Address mNotifyAddress1;
 	private AlertDialog mDialogSearch;
-    private ZoomControls mZoomControls;
 
 
     public TagFragment() {
@@ -51,16 +49,9 @@ public class TagFragment extends FragmentWrapper implements ObserverAlertDialogB
         View rootView = inflater.inflate(R.layout.fragment_tag, container,
                 false);
         
-        
-        /*
-         * Set service in map view
-         */
-        mTagView = (TagView)(rootView.findViewById(R.id.fragment_tag_plateview));
-        mTagView.setService(getService());
-        
-        
-        mTagButton = (ImageButton)rootView.findViewById(R.id.fragment_tag_button_tag);
-        mTagButton.setOnClickListener(new OnClickListener() {
+                
+        mFindButton = (ImageButton)rootView.findViewById(R.id.fragment_tag_button_find);
+        mFindButton.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
@@ -79,30 +70,14 @@ public class TagFragment extends FragmentWrapper implements ObserverAlertDialogB
         });
 
 
-        // Zooming in/out
-        mZoomControls = (ZoomControls)rootView.findViewById(R.id.fragment_tag_zoom);
-        mZoomControls.setOnZoomInClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				getService().getScale().zoomIn();
-				getService().loadBitmap(null);
-			}
-		});
-        mZoomControls.setOnZoomOutClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				getService().getScale().zoomOut();
-				getService().loadBitmap(null);
-			}
-		});
-
-        mTopButton = (ImageButton)rootView.findViewById(R.id.fragment_tag_button_top);
-        mTopButton.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				getService().resetMap();
-				
-			}
-        });
+        /*
+         * Set service in map view
+         */
+        mTagView = (TagView)(rootView.findViewById(R.id.fragment_tag_plateview));
+        mTagView.setService(getService());
+        mTagView.setZoomControls((ZoomControls)rootView.findViewById(R.id.fragment_tag_zoom));
+        mTagView.setHomeControls((ImageButton)rootView.findViewById(R.id.fragment_tag_button_top));
+        
 
 		/*
 		 * New search

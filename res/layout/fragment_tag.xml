@@ -21,7 +21,7 @@ Redistribution and use in source and binary forms, with or without modification,
         android:layout_height="match_parent"/>
 
     <ImageButton
-        android:id="@+id/fragment_tag_button_tag"
+        android:id="@+id/fragment_tag_button_find"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
