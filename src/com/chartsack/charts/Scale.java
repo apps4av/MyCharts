@@ -23,6 +23,8 @@ public class Scale {
     
     private static final int MIN_SCALE = 1; 
     private static final int MAX_SCALE = 32;
+    // Factor of 2 as image re-sampling is a multiple of 2
+    public static final int SCALE_STEP = 2;
 
     /**
      * Scale for charts
@@ -35,7 +37,7 @@ public class Scale {
      * 
      */
     public void zoomIn() {
-    	mScaleFactor /= 2;
+    	mScaleFactor /= SCALE_STEP;
         if(mScaleFactor < MIN_SCALE) {
         	mScaleFactor = MIN_SCALE;
         }
@@ -45,14 +47,13 @@ public class Scale {
      * 
      */
     public void zoomOut() {
-    	mScaleFactor *= 2;
+    	mScaleFactor *= SCALE_STEP;
         if(mScaleFactor > MAX_SCALE) {
         	mScaleFactor = MAX_SCALE;
         }
     }
 
     /**
-     * This one is for plates drawing only
      * @return
      */
     public int getScaleFactor() {

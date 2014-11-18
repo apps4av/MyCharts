@@ -116,24 +116,41 @@ public class MappingView extends View implements MultiTouchObjectCanvas<Object> 
             mZoomControls.setVisibility(View.INVISIBLE);    		
     	}
     };
-    	
+    
     /**
      * Add zoom control for all map views
      */
     public void setZoomControls(ZoomControls zc) {
     	mZoomControls = zc;
+    	
+    	/*
+    	 * Zoom IN
+    	 */
         mZoomControls.setOnZoomInClickListener(new OnClickListener() {
 			public void onClick(View v) {
-	        	startAnimation(false);
+				float s = getService().getScale().getScaleFactor();
+				// Want to scale at the center
+				float x = getService().getPan().getMoveX() + getWidth() / 2;
+				float y = getService().getPan().getMoveY() + getHeight() / 2;
+				getService().getPan().setMove(x * Scale.SCALE_STEP, y * Scale.SCALE_STEP);
 				getService().getScale().zoomIn();
-				getService().loadBitmap(null);
+		    	startAnimation(false);
+				getService().loadBitmap(null); 	
 			}
 		});
+        
+        /*
+         *  Zoom OUT
+         */
         mZoomControls.setOnZoomOutClickListener(new OnClickListener() {
 			public void onClick(View v) {
-	        	startAnimation(false);
 				getService().getScale().zoomOut();
-				getService().loadBitmap(null);
+		    	startAnimation(false);
+				float s = getService().getScale().getScaleFactor();
+				float x = getService().getPan().getMoveX() + getWidth() / 2;
+				float y = getService().getPan().getMoveY() + getHeight() / 2;
+				getService().getPan().setMove(x / Scale.SCALE_STEP, y / Scale.SCALE_STEP);
+				getService().loadBitmap(null); 	
 			}
 		});
     }
