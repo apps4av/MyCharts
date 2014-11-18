@@ -13,6 +13,7 @@ import android.graphics.Paint.Style;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.widget.ImageButton;
 import android.widget.ZoomControls;
 
@@ -32,6 +33,7 @@ public class MappingView extends View implements MultiTouchObjectCanvas<Object> 
     private StorageService               mService;
     private ZoomControls 				 mZoomControls;
     private ImageButton 				 mTopButton;
+    private AlphaAnimation               mZoomAnimation;
 
     /**
      * 
@@ -72,6 +74,13 @@ public class MappingView extends View implements MultiTouchObjectCanvas<Object> 
         setBackgroundColor(Color.BLACK);
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
+        /*
+         * Zoom button animation, hide time of 5 seconds, and 2 second animation
+         */
+        mZoomAnimation = new AlphaAnimation(2.0f, 0.0f);
+        mZoomAnimation.setDuration(1000);
+        mZoomAnimation.setStartOffset(5000);
+        mZoomAnimation.setFillAfter(true);
     }
 
 
@@ -80,14 +89,17 @@ public class MappingView extends View implements MultiTouchObjectCanvas<Object> 
      */
     public void setZoomControls(ZoomControls zc) {
     	mZoomControls = zc;
+        mZoomControls.setAnimation(mZoomAnimation);
         mZoomControls.setOnZoomInClickListener(new OnClickListener() {
 			public void onClick(View v) {
+	        	mZoomControls.startAnimation(mZoomAnimation);
 				getService().getScale().zoomIn();
 				getService().loadBitmap(null);
 			}
 		});
         mZoomControls.setOnZoomOutClickListener(new OnClickListener() {
 			public void onClick(View v) {
+	        	mZoomControls.startAnimation(mZoomAnimation);
 				getService().getScale().zoomOut();
 				getService().loadBitmap(null);
 			}
@@ -127,12 +139,25 @@ public class MappingView extends View implements MultiTouchObjectCanvas<Object> 
 	    	 * Start the drag
 	    	 */
 	        mService.getPan().startDrag();
+	        /*
+	         * Show the zoom button
+	         */
+	        if(null != mZoomControls) {
+	        	mZoomControls.setAlpha(1.0f);
+	        }
 	    }
 	    else if(e.getAction() == MotionEvent.ACTION_UP) {
 	    	/*
 	    	 * Decode region of the image when we lift finger
 	    	 */
+	    	
 	      	mService.loadBitmap(null);
+	        if(null != mZoomControls) {
+	        	/*
+	        	 * Start to hide zoom control
+	        	 */
+	        	mZoomControls.startAnimation(mZoomAnimation);
+	        }
 	    }
 	    /*
 	     * This slows downs panning when zoomed in

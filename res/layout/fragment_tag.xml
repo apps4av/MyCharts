@@ -46,6 +46,7 @@ Redistribution and use in source and binary forms, with or without modification,
         android:id="@+id/fragment_tag_zoom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:alpha="0.0"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_marginTop="20dp"
