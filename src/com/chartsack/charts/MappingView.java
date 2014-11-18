@@ -128,13 +128,16 @@ public class MappingView extends View implements MultiTouchObjectCanvas<Object> 
     	 */
         mZoomControls.setOnZoomInClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				float s = getService().getScale().getScaleFactor();
 				// Want to scale at the center
-				float x = getService().getPan().getMoveX() + getWidth() / 2;
-				float y = getService().getPan().getMoveY() + getHeight() / 2;
-				getService().getPan().setMove(x * Scale.SCALE_STEP, y * Scale.SCALE_STEP);
-				getService().getScale().zoomIn();
+				Scale s = getService().getScale();
+				if(!s.canZoomIn()) {
+					return;
+				}
+				s.zoomIn();
 		    	startAnimation(false);
+				float x = getService().getPan().getMoveX() * Scale.SCALE_STEP;
+				float y = getService().getPan().getMoveY() * Scale.SCALE_STEP;
+				getService().getPan().setMove(x - getWidth() / 2, y - getHeight() / 2);
 				getService().loadBitmap(null); 	
 			}
 		});
@@ -144,9 +147,12 @@ public class MappingView extends View implements MultiTouchObjectCanvas<Object> 
          */
         mZoomControls.setOnZoomOutClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				getService().getScale().zoomOut();
+				Scale s = getService().getScale();
+				if(!s.canZoomOut()) {
+					return;
+				}
+				s.zoomOut();
 		    	startAnimation(false);
-				float s = getService().getScale().getScaleFactor();
 				float x = getService().getPan().getMoveX() + getWidth() / 2;
 				float y = getService().getPan().getMoveY() + getHeight() / 2;
 				getService().getPan().setMove(x / Scale.SCALE_STEP, y / Scale.SCALE_STEP);

@@ -47,7 +47,7 @@ Redistribution and use in source and binary forms, with or without modification,
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="invisible"
-        android:alpha="0.5"
+        android:alpha="0.75"
         android:layout_above="@+id/fragment_tag_button_find"
         android:layout_alignParentRight="true"
         android:layout_marginTop="20dp"

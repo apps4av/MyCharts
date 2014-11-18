@@ -54,6 +54,28 @@ public class Scale {
     }
 
     /**
+     * If can zoom in 
+     * @return
+     */
+    public boolean canZoomIn() {
+    	if(mScaleFactor == MIN_SCALE) {
+    		return false;
+    	}
+    	return true;
+    }
+
+    /**
+     * If can zoom out
+     * @return
+     */
+    public boolean canZoomOut() {
+    	if(mScaleFactor == MAX_SCALE) {
+    		return false;
+    	}
+    	return true;
+    }
+
+    /**
      * @return
      */
     public int getScaleFactor() {
