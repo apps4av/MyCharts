@@ -254,11 +254,12 @@ public class MappingView extends View implements MultiTouchObjectCanvas<Object> 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        
-        // This will serve as map dimensions. Match with layout of map view
-        // Note this will take effect when a new map is loaded
-    	getService().setHeight(getHeight());
-    	getService().setWidth(getWidth());
+        if(null != getService()) {
+	        // This will serve as map dimensions. Match with layout of map view
+	        // Note this will take effect when a new map is loaded
+	    	getService().setHeight(getHeight());
+	    	getService().setWidth(getWidth());
+        }
     }
     
     /**

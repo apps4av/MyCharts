@@ -59,8 +59,8 @@ Redistribution and use in source and binary forms, with or without modification,
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="invisible"
-        android:layout_alignParentTop="true"
+        android:alpha="0.5"
+        android:layout_above="@+id/fragment_map_button_find"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="20dp"
         />
 </RelativeLayout>
