@@ -23,57 +23,57 @@ import android.database.Cursor;
  */
 public class TagData {
 
-	private Context mContext;
-	
-	/**
-	 * 
-	 * @param ctx
-	 */
-	public TagData(Context ctx) {
-		mContext = ctx;
-	}
+    private Context mContext;
+    
+    /**
+     * 
+     * @param ctx
+     */
+    public TagData(Context ctx) {
+        mContext = ctx;
+    }
 
-	/**
-	 * 
-	 * @param name
-	 * @param tag
-	 */
-	public void addTag(String name, String tag) {
-		
-		ContentValues values = new ContentValues();
-		values.put(DataProvider.NAME,  name);
-		values.put(DataProvider.DATA,  tag);
-		
-		mContext.getContentResolver().insert(DataProvider.CONTENT_URI, values);
-	}
-	
-	/**
-	 * 
-	 * @param name
-	 */
-	public void deleteTag(String name) {
-		String args[] = new String[1];
-		args[0] = name;
-		mContext.getContentResolver().delete(DataProvider.CONTENT_URI, DataProvider.NAME + " = ?", args);
-	}
+    /**
+     * 
+     * @param name
+     * @param tag
+     */
+    public void addTag(String name, String tag) {
+        
+        ContentValues values = new ContentValues();
+        values.put(DataProvider.NAME,  name);
+        values.put(DataProvider.DATA,  tag);
+        
+        mContext.getContentResolver().insert(DataProvider.CONTENT_URI, values);
+    }
+    
+    /**
+     * 
+     * @param name
+     */
+    public void deleteTag(String name) {
+        String args[] = new String[1];
+        args[0] = name;
+        mContext.getContentResolver().delete(DataProvider.CONTENT_URI, DataProvider.NAME + " = ?", args);
+    }
 
-	
-	/**
-	 * 
-	 * @param name
-	 * @return
-	 */
-	public String getTag(String name) {
-		String args[] = new String[1];
-		args[0] = name;
-		Cursor c = mContext.getContentResolver().query(DataProvider.CONTENT_URI, null, DataProvider.NAME + " = ?", args, null);
-		if(c != null && c.getCount() != 0) {
-			if(c.moveToFirst()) {
-				String data = c.getString(c.getColumnIndex(DataProvider.DATA));
-				c.close();
-				return data;
-			}
-		}
-		return null;
-	}
+    
+    /**
+     * 
+     * @param name
+     * @return
+     */
+    public String getTag(String name) {
+        String args[] = new String[1];
+        args[0] = name;
+        Cursor c = mContext.getContentResolver().query(DataProvider.CONTENT_URI, null, DataProvider.NAME + " = ?", args, null);
+        if(c != null && c.getCount() != 0) {
+            if(c.moveToFirst()) {
+                String data = c.getString(c.getColumnIndex(DataProvider.DATA));
+                c.close();
+                return data;
+            }
+        }
+        return null;
+    }
 }

@@ -36,119 +36,119 @@ import android.widget.ListView;
  */
 public class ObserverAlertDialogBuilder extends AlertDialog.Builder implements Observer {
 
-	private EditText mText;
-	private ListView mList;
-	private List<Address> mAList;
-	private Context mContext;
-	private AddressToGps mAddressResolver;
-	
-	private static final int SEARCH_MIN_LENGTH = 4;
+    private EditText mText;
+    private ListView mList;
+    private List<Address> mAList;
+    private Context mContext;
+    private AddressToGps mAddressResolver;
+    
+    private static final int SEARCH_MIN_LENGTH = 4;
 
-	private Methods mMethods;
-	
-	/**
-	 * 
-	 * @author zkhan
-	 *
-	 */
-	public interface Methods {
-		public void onItemSelected(Address a);
-	}
-	
-	/**
-	 * 
-	 * @param context
-	 */
+    private Methods mMethods;
+    
+    /**
+     * 
+     * @author zkhan
+     *
+     */
+    public interface Methods {
+        public void onItemSelected(Address a);
+    }
+    
+    /**
+     * 
+     * @param context
+     */
     protected ObserverAlertDialogBuilder(Context context, Methods process, String message) {
-    	
-		super(context);
-		
-		mText = new EditText(context);
-		mList = new ListView(context);
-		
-		mContext = context;
-		
-		mMethods = process;
-		
-		mAddressResolver = new AddressToGps();
-		mAddressResolver.addObserver(this);
-		
-		/*
-		 * Make a layout for a dialog that asks for tagging
-		 */
-		LinearLayout layout = new LinearLayout(context);
-		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-		layout.setOrientation(LinearLayout.VERTICAL);
-		layout.setLayoutParams(params);
-		mText.setLayoutParams(params);
-		mList.setLayoutParams(params);
-		layout.addView(mText);
-		layout.addView(mList);
+        
+        super(context);
+        
+        mText = new EditText(context);
+        mList = new ListView(context);
+        
+        mContext = context;
+        
+        mMethods = process;
+        
+        mAddressResolver = new AddressToGps();
+        mAddressResolver.addObserver(this);
+        
+        /*
+         * Make a layout for a dialog that asks for tagging
+         */
+        LinearLayout layout = new LinearLayout(context);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setLayoutParams(params);
+        mText.setLayoutParams(params);
+        mList.setLayoutParams(params);
+        layout.addView(mText);
+        layout.addView(mList);
 
-		/*
-		 * Add listener for item selected
-		 */
-		
+        /*
+         * Add listener for item selected
+         */
+        
         mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-	        @Override
-	        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		        if(null != mAList) {
-			        Util.hideKeyboard(mText);
-			        mMethods.onItemSelected(mAList.get(position));
-		        }
-		    }
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(null != mAList) {
+                    Util.hideKeyboard(mText);
+                    mMethods.onItemSelected(mAList.get(position));
+                }
+            }
         });
 
-		/*
-		 * Add listener for search text
-		 */
-		mText.addTextChangedListener(new TextWatcher() {
-     	    @Override
-     	    public void afterTextChanged(Editable arg0) {
-     	    }
-     	    @Override
-     	    public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-     	    }
-     	    @Override
-     	    public void onTextChanged(CharSequence s, int start, int before, int after) {
-     		    if(s.length() > SEARCH_MIN_LENGTH) {
-     		    	mAddressResolver.get(mContext, s.toString());
-     		    }
-     		    else {
-     		    	mList.setAdapter(null);
-     		    }
-     	    }
+        /*
+         * Add listener for search text
+         */
+        mText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable arg0) {
+            }
+            @Override
+            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int after) {
+                if(s.length() > SEARCH_MIN_LENGTH) {
+                    mAddressResolver.get(mContext, s.toString());
+                }
+                else {
+                    mList.setAdapter(null);
+                }
+            }
          });
 
-		// set title, message of dialog
-		setTitle(mContext.getString(R.string.find));
-		setMessage(message);
-		// set dialog message
-		setView(layout);
-	}
+        // set title, message of dialog
+        setTitle(mContext.getString(R.string.find));
+        setMessage(message);
+        // set dialog message
+        setView(layout);
+    }
 
-	@Override
-	public void update(Observable observable, Object data) {
-		if (data instanceof List<?>) {
-			
-			 /*
-			  * Save the list of addresses
-			  */
-			 mAList = (List<Address>)data;
-			 final ArrayList<String> alist = new ArrayList<String>();
-			 for(Address a : mAList) {
-				 alist.add(a.getAddressLine(0));
-			 }
-			 /*
-			  * Present in the dialog
-			  */
-			 final ArrayAdapter adapter = new ArrayAdapter(mContext,
-					 android.R.layout.simple_list_item_1, alist);
-			 mList.setAdapter(adapter);
-			 if(mText.toString().length() > SEARCH_MIN_LENGTH) {
-     		    	mList.setVisibility(View.VISIBLE);
-			 }
-		}		
-	}
+    @Override
+    public void update(Observable observable, Object data) {
+        if (data instanceof List<?>) {
+            
+             /*
+              * Save the list of addresses
+              */
+             mAList = (List<Address>)data;
+             final ArrayList<String> alist = new ArrayList<String>();
+             for(Address a : mAList) {
+                 alist.add(a.getAddressLine(0));
+             }
+             /*
+              * Present in the dialog
+              */
+             final ArrayAdapter adapter = new ArrayAdapter(mContext,
+                     android.R.layout.simple_list_item_1, alist);
+             mList.setAdapter(adapter);
+             if(mText.toString().length() > SEARCH_MIN_LENGTH) {
+                    mList.setVisibility(View.VISIBLE);
+             }
+        }       
+    }
 
 }

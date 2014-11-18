@@ -106,13 +106,13 @@ public class MainActivity extends Activity implements
     public boolean onNavigationItemSelected(int position, long id) {
         // When the given dropdown item is selected, show its contents in the
         // container view.
-    	
-    	if(mService == null) {
-    		return false;
-    	}
-    	mFragments[position].setService(mService);
+        
+        if(mService == null) {
+            return false;
+        }
+        mFragments[position].setService(mService);
 
-    	FragmentTransaction f = getFragmentManager().beginTransaction();
+        FragmentTransaction f = getFragmentManager().beginTransaction();
         f.replace(R.id.container, mFragments[position]).commit();
         
         return true;

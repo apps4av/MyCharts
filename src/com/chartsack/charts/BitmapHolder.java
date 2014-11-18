@@ -87,12 +87,12 @@ public class BitmapHolder {
             opt.inBitmap = mBitmap;
             opt.inSampleSize = sampleSize;
             try {
-            	mBitmap = mDecoder.decodeRegion(rect, opt);
+                mBitmap = mDecoder.decodeRegion(rect, opt);
             }
             catch(Exception e) {
-            	/*
-            	 * Out of region exception
-            	 */
+                /*
+                 * Out of region exception
+                 */
             }
         }
     }
@@ -158,11 +158,11 @@ public class BitmapHolder {
      * 
      */
     public void moveToFront() {
-    	/*
-    	 * Draw from working to front
-    	 */
-		Canvas canvas = new Canvas(mBitmapFront);
-		canvas.drawBitmap(mBitmap, 0, 0, new Paint());
+        /*
+         * Draw from working to front
+         */
+        Canvas canvas = new Canvas(mBitmapFront);
+        canvas.drawBitmap(mBitmap, 0, 0, new Paint());
     }
     
     /**

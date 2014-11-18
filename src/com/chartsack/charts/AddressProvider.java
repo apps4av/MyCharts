@@ -32,172 +32,172 @@ import android.text.TextUtils;
  *
  */
 public class AddressProvider extends ContentProvider {
-	 // fields for my content provider
-	 static final String PROVIDER_NAME = "com.chartsack.charts.addrinfo";
-	 static final String URL = "content://" + PROVIDER_NAME + "/address";
-	 static final Uri CONTENT_URI = Uri.parse(URL);
-	   
-	 // fields for the database
-	 static final String ID = "id";
-	 static final String ADDRESS = "address";
-	 static final String LONGITUDE = "longitude";
-	 static final String LATITUDE = "latitude";
-	 
-	 DBHelper dbHelper;
-	 
-	 // database declarations
-	 private SQLiteDatabase mSqliteDatabase;
-	 static final String DATABASE_NAME = "dbAddress";
-	 static final String TABLE_NAME = "address";
-	 static final int DATABASE_VERSION = 1;
-	 static final String CREATE_TABLE = 
-			 " CREATE TABLE " + TABLE_NAME +
-			 " (" + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + 
-			 " " + ADDRESS + " TEXT NOT NULL, " +
-			 " " + LATITUDE + " DOUBLE NOT NULL, " +
-			 " " + LONGITUDE + " DOUBLE NOT NULL);";
-	 
-	 // integer values used in content URI
-	 static final int ADDRESS_ALL = 1;
-	 static final int ADDRESS_SINGLE = 2;
-	 
-	 static final UriMatcher uriMatcher;
-	 static {
-		 uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-		 uriMatcher.addURI(PROVIDER_NAME, "address", ADDRESS_ALL);
-		 uriMatcher.addURI(PROVIDER_NAME, "address/#", ADDRESS_SINGLE);
-	 }
+     // fields for my content provider
+     static final String PROVIDER_NAME = "com.chartsack.charts.addrinfo";
+     static final String URL = "content://" + PROVIDER_NAME + "/address";
+     static final Uri CONTENT_URI = Uri.parse(URL);
+       
+     // fields for the database
+     static final String ID = "id";
+     static final String ADDRESS = "address";
+     static final String LONGITUDE = "longitude";
+     static final String LATITUDE = "latitude";
+     
+     DBHelper dbHelper;
+     
+     // database declarations
+     private SQLiteDatabase mSqliteDatabase;
+     static final String DATABASE_NAME = "dbAddress";
+     static final String TABLE_NAME = "address";
+     static final int DATABASE_VERSION = 1;
+     static final String CREATE_TABLE = 
+             " CREATE TABLE " + TABLE_NAME +
+             " (" + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + 
+             " " + ADDRESS + " TEXT NOT NULL, " +
+             " " + LATITUDE + " DOUBLE NOT NULL, " +
+             " " + LONGITUDE + " DOUBLE NOT NULL);";
+     
+     // integer values used in content URI
+     static final int ADDRESS_ALL = 1;
+     static final int ADDRESS_SINGLE = 2;
+     
+     static final UriMatcher uriMatcher;
+     static {
+         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+         uriMatcher.addURI(PROVIDER_NAME, "address", ADDRESS_ALL);
+         uriMatcher.addURI(PROVIDER_NAME, "address/#", ADDRESS_SINGLE);
+     }
  
-	 // class that creates and manages the provider's database 
-	 private static class DBHelper extends SQLiteOpenHelper {
+     // class that creates and manages the provider's database 
+     private static class DBHelper extends SQLiteOpenHelper {
 
-		 public DBHelper(Context context) {
-			 super(context, DATABASE_NAME, null, DATABASE_VERSION);
-		 }
+         public DBHelper(Context context) {
+             super(context, DATABASE_NAME, null, DATABASE_VERSION);
+         }
 
-		 @Override
-		 public void onCreate(SQLiteDatabase db) {
-			 db.execSQL(CREATE_TABLE);
-		 }
+         @Override
+         public void onCreate(SQLiteDatabase db) {
+             db.execSQL(CREATE_TABLE);
+         }
 
-		 @Override
-		 public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			 db.execSQL("DROP TABLE IF EXISTS " +  TABLE_NAME);
-			 onCreate(db);
-		 }
-	}
+         @Override
+         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+             db.execSQL("DROP TABLE IF EXISTS " +  TABLE_NAME);
+             onCreate(db);
+         }
+    }
    
-	@Override
-	public boolean onCreate() {
-		Context context = getContext();
-		dbHelper = new DBHelper(context);
-		// permissions to be writable
-		mSqliteDatabase = dbHelper.getWritableDatabase();
+    @Override
+    public boolean onCreate() {
+        Context context = getContext();
+        dbHelper = new DBHelper(context);
+        // permissions to be writable
+        mSqliteDatabase = dbHelper.getWritableDatabase();
 
-	    if(mSqliteDatabase == null) {
-	    	return false;
-	    }
-	    return true;
-	}
+        if(mSqliteDatabase == null) {
+            return false;
+        }
+        return true;
+    }
 
-	@Override
-	public Cursor query(Uri uri, String[] projection, String selection,
-			String[] selectionArgs, String sortOrder) {
-		SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
-		// the TABLE_NAME to query on
-		queryBuilder.setTables(TABLE_NAME);
-	      
-		switch(uriMatcher.match(uri)) {
-			// maps all database column names
-	    	case ADDRESS_ALL:
-	    		break;
-	    	case ADDRESS_SINGLE:
-	    		queryBuilder.appendWhere(ID + "=" + uri.getLastPathSegment());
-	    		break;
-	    	default:
-	    		throw new IllegalArgumentException("Unknown URI " + uri);
-	    }
-	    if (sortOrder == null || sortOrder == "") {
-	    	// No sorting-> sort on names by default
-	        sortOrder = ADDRESS;
-	    }
-	    Cursor cursor = queryBuilder.query(mSqliteDatabase, projection, selection, 
-	    		selectionArgs, null, null, sortOrder);
-	    /** 
-	     * register to watch a content URI for changes
-	     */
-	    cursor.setNotificationUri(getContext().getContentResolver(), uri);
+    @Override
+    public Cursor query(Uri uri, String[] projection, String selection,
+            String[] selectionArgs, String sortOrder) {
+        SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
+        // the TABLE_NAME to query on
+        queryBuilder.setTables(TABLE_NAME);
+          
+        switch(uriMatcher.match(uri)) {
+            // maps all database column names
+            case ADDRESS_ALL:
+                break;
+            case ADDRESS_SINGLE:
+                queryBuilder.appendWhere(ID + "=" + uri.getLastPathSegment());
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown URI " + uri);
+        }
+        if (sortOrder == null || sortOrder == "") {
+            // No sorting-> sort on names by default
+            sortOrder = ADDRESS;
+        }
+        Cursor cursor = queryBuilder.query(mSqliteDatabase, projection, selection, 
+                selectionArgs, null, null, sortOrder);
+        /** 
+         * register to watch a content URI for changes
+         */
+        cursor.setNotificationUri(getContext().getContentResolver(), uri);
 
-	    return cursor;
-	}
+        return cursor;
+    }
 
-	@Override
-	public Uri insert(Uri uri, ContentValues values) {
-		long row = mSqliteDatabase.insert(TABLE_NAME, "", values);
-	      
-		// If record is added successfully
-		if(row > 0) {
-			Uri newUri = ContentUris.withAppendedId(CONTENT_URI, row);
-			getContext().getContentResolver().notifyChange(newUri, null);
-			
-			return newUri;
-		}
-		throw new SQLException("Fail to add a new record into " + uri);
-	}
+    @Override
+    public Uri insert(Uri uri, ContentValues values) {
+        long row = mSqliteDatabase.insert(TABLE_NAME, "", values);
+          
+        // If record is added successfully
+        if(row > 0) {
+            Uri newUri = ContentUris.withAppendedId(CONTENT_URI, row);
+            getContext().getContentResolver().notifyChange(newUri, null);
+            
+            return newUri;
+        }
+        throw new SQLException("Fail to add a new record into " + uri);
+    }
 
-	@Override
-	public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-		int count = 0;
-	      
-	    switch (uriMatcher.match(uri)){
-	    	case ADDRESS_ALL:
-	    		count = mSqliteDatabase.update(TABLE_NAME, values, selection, selectionArgs);
-	    		break;
-	    	case ADDRESS_SINGLE:
-	    		count = mSqliteDatabase.update(TABLE_NAME, values, ID + 
-	    				" = " + uri.getLastPathSegment() + 
-	    				(!TextUtils.isEmpty(selection) ? " AND (" +
-	    				selection + ')' : ""), selectionArgs);
-	    		break;
-	    	default: 
-	    		throw new IllegalArgumentException("Unsupported URI " + uri );
-	    }
-	    getContext().getContentResolver().notifyChange(uri, null);
-	    return count;
-	}
-	
-	@Override
-	public int delete(Uri uri, String selection, String[] selectionArgs) {
-		int count = 0;
-		switch(uriMatcher.match(uri)) {
-			case ADDRESS_ALL:
-				count = mSqliteDatabase.delete(TABLE_NAME, selection, selectionArgs);
-				break;
-			case ADDRESS_SINGLE:
-	    	  	String id = uri.getLastPathSegment();	//gets the id
-	    	  	count = mSqliteDatabase.delete(TABLE_NAME, ID +  " = " + id + 
-	    			  (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), selectionArgs);
-	    	  	break;
-			default: 
-	      		throw new IllegalArgumentException("Unsupported URI " + uri);
-	    }
-	      
-		getContext().getContentResolver().notifyChange(uri, null);
-	    return count;
-	}
+    @Override
+    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+        int count = 0;
+          
+        switch (uriMatcher.match(uri)){
+            case ADDRESS_ALL:
+                count = mSqliteDatabase.update(TABLE_NAME, values, selection, selectionArgs);
+                break;
+            case ADDRESS_SINGLE:
+                count = mSqliteDatabase.update(TABLE_NAME, values, ID + 
+                        " = " + uri.getLastPathSegment() + 
+                        (!TextUtils.isEmpty(selection) ? " AND (" +
+                        selection + ')' : ""), selectionArgs);
+                break;
+            default: 
+                throw new IllegalArgumentException("Unsupported URI " + uri );
+        }
+        getContext().getContentResolver().notifyChange(uri, null);
+        return count;
+    }
+    
+    @Override
+    public int delete(Uri uri, String selection, String[] selectionArgs) {
+        int count = 0;
+        switch(uriMatcher.match(uri)) {
+            case ADDRESS_ALL:
+                count = mSqliteDatabase.delete(TABLE_NAME, selection, selectionArgs);
+                break;
+            case ADDRESS_SINGLE:
+                String id = uri.getLastPathSegment();   //gets the id
+                count = mSqliteDatabase.delete(TABLE_NAME, ID +  " = " + id + 
+                      (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), selectionArgs);
+                break;
+            default: 
+                throw new IllegalArgumentException("Unsupported URI " + uri);
+        }
+          
+        getContext().getContentResolver().notifyChange(uri, null);
+        return count;
+    }
 
-	@Override
-	public String getType(Uri uri) {
-		switch (uriMatcher.match(uri)){
-	      // Get all records 
-	      case ADDRESS_ALL:
-	         return ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.com.chartsack.charts.addrinfo.address";
-	      // Get a particular records 
-	      case ADDRESS_SINGLE:
-	         return ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd.com.chartsack.charts.addrinfo.address";
-	      default:
-	    	  throw new IllegalArgumentException("Unsupported URI: " + uri);
-	      }
-	}
+    @Override
+    public String getType(Uri uri) {
+        switch (uriMatcher.match(uri)){
+          // Get all records 
+          case ADDRESS_ALL:
+             return ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.com.chartsack.charts.addrinfo.address";
+          // Get a particular records 
+          case ADDRESS_SINGLE:
+             return ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd.com.chartsack.charts.addrinfo.address";
+          default:
+              throw new IllegalArgumentException("Unsupported URI: " + uri);
+        }
+    }
 
 }

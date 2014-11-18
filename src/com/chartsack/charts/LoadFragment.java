@@ -39,11 +39,11 @@ import android.widget.TextView;
  */
 public class LoadFragment extends FragmentWrapper {
 
-	private Button mLoadButton;
-	private ProgressBar mProgressLoading;
-	private String mPath;
-	private TextView mTextChart;
-	private TextView mTextGeo;
+    private Button mLoadButton;
+    private ProgressBar mProgressLoading;
+    private String mPath;
+    private TextView mTextChart;
+    private TextView mTextGeo;
 
     public LoadFragment() {
     }
@@ -95,16 +95,16 @@ public class LoadFragment extends FragmentWrapper {
         mLoadButton = (Button)rootView.findViewById(R.id.fragment_load_button_load);
         mLoadButton.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View arg0) {
-				/*
-				 * Add dialog to select a file from Download folder
-				 */
-				
-		        mPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
-		        
-		        updateDirectory();
-			}
+            @Override
+            public void onClick(View arg0) {
+                /*
+                 * Add dialog to select a file from Download folder
+                 */
+                
+                mPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
+                
+                updateDirectory();
+            }
         });
 
 
@@ -116,55 +116,55 @@ public class LoadFragment extends FragmentWrapper {
      */
     private void updateDirectory() {
         ArrayList<DirectoryItem> info = Helper.loadFileList(mPath);
-		final DirectoryAdapter adapter = new DirectoryAdapter(getActivity(), info);
+        final DirectoryAdapter adapter = new DirectoryAdapter(getActivity(), info);
         ListView list = new ListView(getActivity());
-		list.setAdapter(adapter);
-		
-		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+        list.setAdapter(adapter);
+        
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
  
-		// set title
-		alertDialogBuilder.setTitle(getString(R.string.choose_map));
-		// set dialog message
-		alertDialogBuilder.setView(list);
+        // set title
+        alertDialogBuilder.setTitle(getString(R.string.choose_map));
+        // set dialog message
+        alertDialogBuilder.setView(list);
 
-		// create alert dialog
-		final AlertDialog alertDialog = alertDialogBuilder.create();
+        // create alert dialog
+        final AlertDialog alertDialog = alertDialogBuilder.create();
 
-		list.setOnItemClickListener(new OnItemClickListener() {
+        list.setOnItemClickListener(new OnItemClickListener() {
 
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1,
-					int pos, long id) {
-				/**
-				 * Clicked on directory, go into it
-				 */
-				DirectoryItem item = (DirectoryItem)arg0.getAdapter().getItem(pos);
-				if(item.isDir()) {
-					mPath += "/" + item.getName();
-					alertDialog.dismiss();
-					
-					/*
-					 * Recurse  into folders
-					 */
-					updateDirectory();
-				}
-				else {
-					/*
-					 * File chosen, load it
-					 */
-					alertDialog.dismiss();
-					mProgressLoading.setVisibility(View.VISIBLE);
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1,
+                    int pos, long id) {
+                /**
+                 * Clicked on directory, go into it
+                 */
+                DirectoryItem item = (DirectoryItem)arg0.getAdapter().getItem(pos);
+                if(item.isDir()) {
+                    mPath += "/" + item.getName();
+                    alertDialog.dismiss();
+                    
+                    /*
+                     * Recurse  into folders
+                     */
+                    updateDirectory();
+                }
+                else {
+                    /*
+                     * File chosen, load it
+                     */
+                    alertDialog.dismiss();
+                    mProgressLoading.setVisibility(View.VISIBLE);
 
-					getService().setChartName(item.getName());
-					String name = mPath + "/" + item.getName();
+                    getService().setChartName(item.getName());
+                    String name = mPath + "/" + item.getName();
 
-		        	getService().loadBitmap(name);
-				}
-			}
-		});
+                    getService().loadBitmap(name);
+                }
+            }
+        });
 
-		// show it
-		alertDialog.show();
+        // show it
+        alertDialog.show();
 
     }
     
@@ -189,23 +189,23 @@ public class LoadFragment extends FragmentWrapper {
      * 
      */
     private void loadTagData() {
-    	if(null == getService().getChartName()) {
-			mTextChart.setText("");
-			mTextGeo.setText("");
-    		return;
-    	}
-    	else {
-			mTextChart.setText(getService().getChartName());			    		
-    	}
-    	TagData provider = new TagData(getActivity());
-    	String data = provider.getTag(getService().getChartName());
-		if(null == data || (!getService().setGeotagData(data))) {
-			showHelp(getString(R.string.map_help_tag));
-			mTextGeo.setText(getActivity().getString(R.string.no));
-		}
-		else {
-			mTextGeo.setText(getActivity().getString(R.string.yes));						
-		}	
+        if(null == getService().getChartName()) {
+            mTextChart.setText("");
+            mTextGeo.setText("");
+            return;
+        }
+        else {
+            mTextChart.setText(getService().getChartName());                        
+        }
+        TagData provider = new TagData(getActivity());
+        String data = provider.getTag(getService().getChartName());
+        if(null == data || (!getService().setGeotagData(data))) {
+            showHelp(getString(R.string.map_help_tag));
+            mTextGeo.setText(getActivity().getString(R.string.no));
+        }
+        else {
+            mTextGeo.setText(getActivity().getString(R.string.yes));                        
+        }   
     }
     
     /**
@@ -213,31 +213,31 @@ public class LoadFragment extends FragmentWrapper {
      */
     @Override
     public void setService(StorageService service) {
-    	
-    	super.setService(service);
-    	
+        
+        super.setService(service);
+        
         getService().registerGpsListener(mGpsInfc);
         
-    	super.setService(service);
-    	
+        super.setService(service);
+        
         /**
          * Set image callback for showing image is loaded
          */
         getService().setImageCallback(new ImageCallback() {
 
-			@Override
-			public void imageReady() {
-				if(mProgressLoading.getVisibility() == View.VISIBLE) {
-					/*
-					 * Loaded. Get geotag data
-					 */
-			    	loadTagData();
-				}
-				/*
-				 * Hide progress
-				 */
-				mProgressLoading.setVisibility(View.INVISIBLE);
-			}
+            @Override
+            public void imageReady() {
+                if(mProgressLoading.getVisibility() == View.VISIBLE) {
+                    /*
+                     * Loaded. Get geotag data
+                     */
+                    loadTagData();
+                }
+                /*
+                 * Hide progress
+                 */
+                mProgressLoading.setVisibility(View.INVISIBLE);
+            }
         });
 
     }

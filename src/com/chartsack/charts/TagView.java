@@ -27,16 +27,16 @@ import android.view.View.OnTouchListener;
  * User sees the map on this view
  *
  */
-public class TagView extends MappingView implements OnTouchListener {	
+public class TagView extends MappingView implements OnTouchListener {   
 
     /**
      * 
      * @param context
      */
-	public TagView(Context context) {
-		super(context);
-		setOnTouchListener(this);
-	}
+    public TagView(Context context) {
+        super(context);
+        setOnTouchListener(this);
+    }
 
     /**
      * 
@@ -44,7 +44,7 @@ public class TagView extends MappingView implements OnTouchListener {
      */
     public TagView(Context context, AttributeSet set) {
         super(context, set);
-		setOnTouchListener(this);
+        setOnTouchListener(this);
     }
     
     /**
@@ -53,10 +53,10 @@ public class TagView extends MappingView implements OnTouchListener {
      */
     public TagView(Context context, AttributeSet set, int arg) {
         super(context, set, arg);
-		setOnTouchListener(this);
+        setOnTouchListener(this);
     }
 
-	/* (non-Javadoc)
+    /* (non-Javadoc)
      * @see android.view.View.OnTouchListener#onTouch(android.view.View, android.view.MotionEvent)
      */
     @Override
@@ -69,7 +69,7 @@ public class TagView extends MappingView implements OnTouchListener {
      */
     @Override
     public void onDraw(Canvas canvas) {
-    	super.onDraw(canvas);    	
+        super.onDraw(canvas);       
     }
 
 }

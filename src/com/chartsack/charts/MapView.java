@@ -31,15 +31,15 @@ import android.view.View.OnTouchListener;
  */
 public class MapView extends MappingView implements OnTouchListener {
 
-	
+    
     /**
      * 
      * @param context
      */
-	public MapView(Context context) {
-		super(context);
-		setOnTouchListener(this);
-	}
+    public MapView(Context context) {
+        super(context);
+        setOnTouchListener(this);
+    }
 
     /**
      * 
@@ -47,7 +47,7 @@ public class MapView extends MappingView implements OnTouchListener {
      */
     public MapView(Context context, AttributeSet set) {
         super(context, set);
-		setOnTouchListener(this);
+        setOnTouchListener(this);
     }
     
     /**
@@ -56,10 +56,10 @@ public class MapView extends MappingView implements OnTouchListener {
      */
     public MapView(Context context, AttributeSet set, int arg) {
         super(context, set, arg);
-		setOnTouchListener(this);
+        setOnTouchListener(this);
     }
 
-	/* (non-Javadoc)
+    /* (non-Javadoc)
      * @see android.view.View.OnTouchListener#onTouch(android.view.View, android.view.MotionEvent)
      */
     @Override
@@ -72,21 +72,21 @@ public class MapView extends MappingView implements OnTouchListener {
      * @return
      */
     private double[] getOffset(double lon, double lat) {
-    	double data[] = getService().getGeotagData();
-    	double dx = data[0];
-    	double dy = data[1];
-    	double lonTopLeft = data[2];
-    	double latTopLeft = data[3];
+        double data[] = getService().getGeotagData();
+        double dx = data[0];
+        double dy = data[1];
+        double lonTopLeft = data[2];
+        double latTopLeft = data[3];
 
-    	double scale = getService().getScale().getScaleFactor();
-    	
-    	double coords[] = new double[4];
-    	coords[0] = (lon - lonTopLeft) * dx / scale;
-    	coords[1] = (lat - latTopLeft) * dy / scale;
-    	coords[2] = dx;
-    	coords[3] = dy;
-    	
-    	return coords;
+        double scale = getService().getScale().getScaleFactor();
+        
+        double coords[] = new double[4];
+        coords[0] = (lon - lonTopLeft) * dx / scale;
+        coords[1] = (lat - latTopLeft) * dy / scale;
+        coords[2] = dx;
+        coords[3] = dy;
+        
+        return coords;
     }
     
     /* (non-Javadoc)
@@ -94,17 +94,17 @@ public class MapView extends MappingView implements OnTouchListener {
      */
     @Override
     public void onDraw(Canvas canvas) {
-    	super.onDraw(canvas);
-    	    	
-    	/*
-    	 * Draw our location
-    	 */
-    	if(null == getService()) {
-    		return;
-    	}
-    	
-     	double coords[] = getOffset(getService().getGpsParams().getLongitude(),
-    			getService().getGpsParams().getLatitude());
+        super.onDraw(canvas);
+                
+        /*
+         * Draw our location
+         */
+        if(null == getService()) {
+            return;
+        }
+        
+        double coords[] = getOffset(getService().getGpsParams().getLongitude(),
+                getService().getGpsParams().getLatitude());
 
         /*
          * Draw a circle on current location
@@ -112,37 +112,37 @@ public class MapView extends MappingView implements OnTouchListener {
         getPaint().setStrokeWidth(4);
         getPaint().setColor(Color.BLUE);
         canvas.drawCircle(
-        		getService().getPan().getMoveX() - (float)coords[0], 
-        		getService().getPan().getMoveY() - (float)coords[1], 
+                getService().getPan().getMoveX() - (float)coords[0], 
+                getService().getPan().getMoveY() - (float)coords[1], 
                 16,
                 getPaint());
         getPaint().setColor(Color.RED);
         canvas.drawCircle(
-        		getService().getPan().getMoveX() - (float)coords[0], 
-        		getService().getPan().getMoveY() - (float)coords[1], 
+                getService().getPan().getMoveX() - (float)coords[0], 
+                getService().getPan().getMoveY() - (float)coords[1], 
                 12,
                 getPaint());
         getPaint().setColor(Color.GREEN);
         canvas.drawLine(
-        		getService().getPan().getMoveX() - (float)coords[0],
-        		getService().getPan().getMoveY() - (float)coords[1] - 24,
-        		getService().getPan().getMoveX() - (float)coords[0],
-        		getService().getPan().getMoveY() - (float)coords[1] + 24,
-        		getPaint());
+                getService().getPan().getMoveX() - (float)coords[0],
+                getService().getPan().getMoveY() - (float)coords[1] - 24,
+                getService().getPan().getMoveX() - (float)coords[0],
+                getService().getPan().getMoveY() - (float)coords[1] + 24,
+                getPaint());
         canvas.drawLine(
-        		getService().getPan().getMoveX() - (float)coords[0] - 24,
-        		getService().getPan().getMoveY() - (float)coords[1],
-        		getService().getPan().getMoveX() - (float)coords[0] + 24,
-        		getService().getPan().getMoveY() - (float)coords[1],
-        		getPaint());
+                getService().getPan().getMoveX() - (float)coords[0] - 24,
+                getService().getPan().getMoveY() - (float)coords[1],
+                getService().getPan().getMoveX() - (float)coords[0] + 24,
+                getService().getPan().getMoveY() - (float)coords[1],
+                getPaint());
         getPaint().setTextSize(20);
         /*
          * Edge tape
          */
-      	EdgeDistanceTape.draw(canvas, getPaint(), getService().getScale(), Helper.findPixelsPerMile(coords[3]),
-      			(int)(getService().getPan().getMoveX() - (float)coords[0]),
-      			(int)(getService().getPan().getMoveY() - (float)coords[1]), 
-      			0, getWidth(), getHeight());
+        EdgeDistanceTape.draw(canvas, getPaint(), getService().getScale(), Helper.findPixelsPerMile(coords[3]),
+                (int)(getService().getPan().getMoveX() - (float)coords[0]),
+                (int)(getService().getPan().getMoveY() - (float)coords[1]), 
+                0, getWidth(), getHeight());
 
     }
     
@@ -150,23 +150,23 @@ public class MapView extends MappingView implements OnTouchListener {
      * 
      * @return
      */
-	public boolean centerOnChart(double lon, double lat) {
-		/*
-		 * Change pan to center on GPS location
-		 */
-    	if(null == getService() || null == getService().getBitmapHolder()) {
-    		return false;
-    	}
+    public boolean centerOnChart(double lon, double lat) {
+        /*
+         * Change pan to center on GPS location
+         */
+        if(null == getService() || null == getService().getBitmapHolder()) {
+            return false;
+        }
 
-     	double coords[] = getOffset(lon, lat);
-     	
+        double coords[] = getOffset(lon, lat);
+        
         boolean ret = getService().getPan().setMove(
-        		(float)coords[0] + getWidth() / 2,
-        		(float)coords[1] + getHeight() / 2);
-      	getService().loadBitmap(null);
-      	
-		return ret;
-	}
+                (float)coords[0] + getWidth() / 2,
+                (float)coords[1] + getHeight() / 2);
+        getService().loadBitmap(null);
+        
+        return ret;
+    }
     
 
 }

@@ -16,21 +16,21 @@ import android.graphics.Rect;
 
 public class Bounds {
 
-	private int mCoords[];
-	
-	/**
-	 * 
-	 * @param width
-	 * @param height
-	 * @param scale
-	 */
-	public Bounds(Pan pan, Scale scale, int width, int height) {
-		int s = scale.getScaleFactor();
-		mCoords = new int[6];
-		// Describe what is shown on screen with its center
-		    	
-    	// find center of screen
-    	int x = (int)(-pan.getMoveX() + width / 2) * s;
+    private int mCoords[];
+    
+    /**
+     * 
+     * @param width
+     * @param height
+     * @param scale
+     */
+    public Bounds(Pan pan, Scale scale, int width, int height) {
+        int s = scale.getScaleFactor();
+        mCoords = new int[6];
+        // Describe what is shown on screen with its center
+                
+        // find center of screen
+        int x = (int)(-pan.getMoveX() + width / 2) * s;
         int y = (int)(-pan.getMoveY() + height / 2) * s;
         
         // find top coord
@@ -47,29 +47,29 @@ public class Bounds {
         mCoords[3] = y1;
         mCoords[4] = x;
         mCoords[5] = y;
-	}
+    }
 
-	/**
-	 * 
-	 * @return
-	 */
-	public Rect getRect() {
-		return new Rect(mCoords[0], mCoords[1], mCoords[2], mCoords[3]);
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public int getCenterX() {
-		return -mCoords[4];
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public int getCenterY() {
-		return -mCoords[5];
-	}
+    /**
+     * 
+     * @return
+     */
+    public Rect getRect() {
+        return new Rect(mCoords[0], mCoords[1], mCoords[2], mCoords[3]);
+    }
+    
+    /**
+     * 
+     * @return
+     */
+    public int getCenterX() {
+        return -mCoords[4];
+    }
+    
+    /**
+     * 
+     * @return
+     */
+    public int getCenterY() {
+        return -mCoords[5];
+    }
 }

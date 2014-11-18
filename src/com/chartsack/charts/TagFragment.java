@@ -34,10 +34,10 @@ public class TagFragment extends FragmentWrapper implements ObserverAlertDialogB
      */
     private TagView mTagView;
 
-	private ImageButton mFindButton;
-	private Address mNotifyAddress0;
-	private Address mNotifyAddress1;
-	private AlertDialog mDialogSearch;
+    private ImageButton mFindButton;
+    private Address mNotifyAddress0;
+    private Address mNotifyAddress1;
+    private AlertDialog mDialogSearch;
 
 
     public TagFragment() {
@@ -53,20 +53,20 @@ public class TagFragment extends FragmentWrapper implements ObserverAlertDialogB
         mFindButton = (ImageButton)rootView.findViewById(R.id.fragment_tag_button_find);
         mFindButton.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View arg0) {
-				/*
-				 * Make dialog
-				 */
-				ObserverAlertDialogBuilder alertDialogBuilder = new ObserverAlertDialogBuilder(getActivity(),
-						TagFragment.this, getString(R.string.search));
-				 
-				// create alert dialog
-				mDialogSearch = alertDialogBuilder.create();
+            @Override
+            public void onClick(View arg0) {
+                /*
+                 * Make dialog
+                 */
+                ObserverAlertDialogBuilder alertDialogBuilder = new ObserverAlertDialogBuilder(getActivity(),
+                        TagFragment.this, getString(R.string.search));
+                 
+                // create alert dialog
+                mDialogSearch = alertDialogBuilder.create();
 
-				// show it
-				mDialogSearch.show();
-			}
+                // show it
+                mDialogSearch.show();
+            }
         });
 
 
@@ -79,10 +79,10 @@ public class TagFragment extends FragmentWrapper implements ObserverAlertDialogB
         mTagView.setHomeControls((ImageButton)rootView.findViewById(R.id.fragment_tag_button_top));
         
 
-		/*
-		 * New search
-		 */
-		mNotifyAddress0 = mNotifyAddress1 = null;	
+        /*
+         * New search
+         */
+        mNotifyAddress0 = mNotifyAddress1 = null;   
         
         showHelp(getString(R.string.tag_help_start));
         
@@ -93,41 +93,41 @@ public class TagFragment extends FragmentWrapper implements ObserverAlertDialogB
      * Calculate tagging info and store in image.
      */
     private boolean calculateTag() {
-    	double x0, x1, y0, y1, lon0, lon1, lat0, lat1;
-    	String tokens0[];
-    	String tokens1[];
-    	lon0 = mNotifyAddress0.getLongitude();
-    	lat0 = mNotifyAddress0.getLatitude();
-    	lon1 = mNotifyAddress1.getLongitude();
-    	lat1 = mNotifyAddress1.getLatitude();
-    	tokens0 = mNotifyAddress0.getFeatureName().split(",");
-    	tokens1 = mNotifyAddress1.getFeatureName().split(",");
-    	
-    	try {
-    		x0 = Double.parseDouble(tokens0[0]);
-    		y0 = Double.parseDouble(tokens0[1]);
-    		x1 = Double.parseDouble(tokens1[0]);
-    		y1 = Double.parseDouble(tokens1[1]);
-    	}
-    	catch(Exception e) {
-    		return false;
-    	}
-    	
-    	double diffx = x0 - x1;
-    	double diffy = y0 - y1;
-    	double difflon = lon0 - lon1;
-    	double difflat = lat0 - lat1;
-    	if(difflon == 0 || difflat == 0 || diffx == 0 || diffy == 0) {
-    		return false;
-    	}
-    	
+        double x0, x1, y0, y1, lon0, lon1, lat0, lat1;
+        String tokens0[];
+        String tokens1[];
+        lon0 = mNotifyAddress0.getLongitude();
+        lat0 = mNotifyAddress0.getLatitude();
+        lon1 = mNotifyAddress1.getLongitude();
+        lat1 = mNotifyAddress1.getLatitude();
+        tokens0 = mNotifyAddress0.getFeatureName().split(",");
+        tokens1 = mNotifyAddress1.getFeatureName().split(",");
+        
+        try {
+            x0 = Double.parseDouble(tokens0[0]);
+            y0 = Double.parseDouble(tokens0[1]);
+            x1 = Double.parseDouble(tokens1[0]);
+            y1 = Double.parseDouble(tokens1[1]);
+        }
+        catch(Exception e) {
+            return false;
+        }
+        
+        double diffx = x0 - x1;
+        double diffy = y0 - y1;
+        double difflon = lon0 - lon1;
+        double difflat = lat0 - lat1;
+        if(difflon == 0 || difflat == 0 || diffx == 0 || diffy == 0) {
+            return false;
+        }
+        
         double dx = diffx / difflon; 
         double dy = diffy / difflat;
 
         if(dx == 0 || dy == 0) {
-        	return false;
+            return false;
         }
-    	
+        
         double lonTopLeft = lon0 - x0 / dx;
         double latTopLeft = lat0 - y0 / dy;
         
@@ -135,24 +135,24 @@ public class TagFragment extends FragmentWrapper implements ObserverAlertDialogB
          * Save data if sane
          */
         if(Util.isLongitudeSane(lonTopLeft) && Util.isLatitudeSane(latTopLeft)) {
-        	/*
-        	 * Save in image dx + "," + dy + "," + lonTopLeft + "," + latTopLeft 
-        	 */
-        	String tag =  dx + "," + dy + "," + lonTopLeft + "," + latTopLeft;
-        	TagData provider = new TagData(getActivity());
-        	// file name not full path
-        	String names[] = getService().getBitmapHolder().getName().split("/");
-        	String name = names[names.length - 1];
-        	// delete old tag
-        	provider.deleteTag(name);
-        	provider.addTag(name, tag);
+            /*
+             * Save in image dx + "," + dy + "," + lonTopLeft + "," + latTopLeft 
+             */
+            String tag =  dx + "," + dy + "," + lonTopLeft + "," + latTopLeft;
+            TagData provider = new TagData(getActivity());
+            // file name not full path
+            String names[] = getService().getBitmapHolder().getName().split("/");
+            String name = names[names.length - 1];
+            // delete old tag
+            provider.deleteTag(name);
+            provider.addTag(name, tag);
 
-        	// update in service
-        	getService().setGeotagData(tag);
-        	return true;
+            // update in service
+            getService().setGeotagData(tag);
+            return true;
         }
 
-    	return false;
+        return false;
     }
     
     @Override
@@ -165,53 +165,53 @@ public class TagFragment extends FragmentWrapper implements ObserverAlertDialogB
      */
     @Override
     public void setService(StorageService service) {
-    	
-    	super.setService(service);
-    	
+        
+        super.setService(service);
+        
         /**
          * Set image callback for showing image is loaded
          */
         getService().setImageCallback(new ImageCallback() {
 
-			@Override
-			public void imageReady() {
-				mTagView.invalidate();
-			}
+            @Override
+            public void imageReady() {
+                mTagView.invalidate();
+            }
         });
     }
 
     /**
      * 
      */
-	@Override
-	public void onItemSelected(Address a) {
+    @Override
+    public void onItemSelected(Address a) {
         try {
-        	mDialogSearch.dismiss();
-        	/*
-        	 * Get two points
-        	 */
-        	String data = getService().getBounds().getCenterX() + "," + getService().getBounds().getCenterY();
+            mDialogSearch.dismiss();
+            /*
+             * Get two points
+             */
+            String data = getService().getBounds().getCenterX() + "," + getService().getBounds().getCenterY();
 
-        	if(null == mNotifyAddress0) {
-        		mNotifyAddress0 = a;
-        		mNotifyAddress0.setFeatureName(data);
-	        	showHelp(getString(R.string.tag_help_point1));
-        	}
-        	else if(null == mNotifyAddress1) {
-        		mNotifyAddress1 = a;
-        		mNotifyAddress1.setFeatureName(data);
-        	}
-        	/*
-        	 * Now two points done, calculate and store data
-        	 */
-        	if(calculateTag()) {
-        		showHelp(getString(R.string.tag_help_end));
-        	}
-        	else {
-        		showHelp(getString(R.string.tag_help_fail));        		
-        	}
+            if(null == mNotifyAddress0) {
+                mNotifyAddress0 = a;
+                mNotifyAddress0.setFeatureName(data);
+                showHelp(getString(R.string.tag_help_point1));
+            }
+            else if(null == mNotifyAddress1) {
+                mNotifyAddress1 = a;
+                mNotifyAddress1.setFeatureName(data);
+            }
+            /*
+             * Now two points done, calculate and store data
+             */
+            if(calculateTag()) {
+                showHelp(getString(R.string.tag_help_end));
+            }
+            else {
+                showHelp(getString(R.string.tag_help_fail));                
+            }
         }
         catch (Exception e) {
         }
-	}
+    }
 }

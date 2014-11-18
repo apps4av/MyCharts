@@ -26,74 +26,74 @@ import android.location.Address;
  */
 public class AddressData {
 
-	private Context mContext;
-	
-	/**
-	 * 
-	 * @param ctx
-	 */
-	public AddressData(Context ctx) {
-		mContext = ctx;
-	}
+    private Context mContext;
+    
+    /**
+     * 
+     * @param ctx
+     */
+    public AddressData(Context ctx) {
+        mContext = ctx;
+    }
 
-	/**
-	 * 
-	 * @param name
-	 * @param tag
-	 */
-	public void addAddress(Address a) {
-		
-		ContentValues values = new ContentValues();
-		values.put(AddressProvider.ADDRESS, a.getAddressLine(0));
-		values.put(AddressProvider.LONGITUDE, a.getLongitude());
-		values.put(AddressProvider.LATITUDE, a.getLatitude());
-		
-		mContext.getContentResolver().insert(AddressProvider.CONTENT_URI, values);
-	}
-	
-	/**
-	 * 
-	 * @param name
-	 */
-	public void deleteAddress(Address a) {
-		String args[] = new String[1];
-		args[0] = a.getAddressLine(0);
-		mContext.getContentResolver().delete(AddressProvider.CONTENT_URI, AddressProvider.ADDRESS + " = ?", args);
-	}
+    /**
+     * 
+     * @param name
+     * @param tag
+     */
+    public void addAddress(Address a) {
+        
+        ContentValues values = new ContentValues();
+        values.put(AddressProvider.ADDRESS, a.getAddressLine(0));
+        values.put(AddressProvider.LONGITUDE, a.getLongitude());
+        values.put(AddressProvider.LATITUDE, a.getLatitude());
+        
+        mContext.getContentResolver().insert(AddressProvider.CONTENT_URI, values);
+    }
+    
+    /**
+     * 
+     * @param name
+     */
+    public void deleteAddress(Address a) {
+        String args[] = new String[1];
+        args[0] = a.getAddressLine(0);
+        mContext.getContentResolver().delete(AddressProvider.CONTENT_URI, AddressProvider.ADDRESS + " = ?", args);
+    }
 
-	
-	/**
-	 * 
-	 * @param name
-	 * @return
-	 */
-	public Address[] getAddress(String address) {
-		Address adds[] = null;
-		String args[] = new String[1];
-		args[0] = "%" + address + "%";
-		Cursor c = mContext.getContentResolver().query(AddressProvider.CONTENT_URI, null, AddressProvider.ADDRESS + " LIKE ?", args, null);
-		if(c != null && c.getCount() != 0) {
-			adds = new Address[c.getCount()];
-			if(c.moveToFirst()) {
-				int count = 0;
-				do {
-				
-					/*
-					 * Find addresses
-					 */
-					String data = c.getString(c.getColumnIndex(AddressProvider.ADDRESS));
-					double lon = c.getDouble(c.getColumnIndex(AddressProvider.LONGITUDE));
-					double lat = c.getDouble(c.getColumnIndex(AddressProvider.LATITUDE));
-					Address a = new Address(Locale.getDefault());
-					a.setLongitude(lon);
-					a.setLatitude(lat);
-					a.setAddressLine(0, data);
-					adds[count++] = a;
-				}
-				while(c.moveToNext());
-				c.close();
-			}
-		}
-		return adds;
-	}
+    
+    /**
+     * 
+     * @param name
+     * @return
+     */
+    public Address[] getAddress(String address) {
+        Address adds[] = null;
+        String args[] = new String[1];
+        args[0] = "%" + address + "%";
+        Cursor c = mContext.getContentResolver().query(AddressProvider.CONTENT_URI, null, AddressProvider.ADDRESS + " LIKE ?", args, null);
+        if(c != null && c.getCount() != 0) {
+            adds = new Address[c.getCount()];
+            if(c.moveToFirst()) {
+                int count = 0;
+                do {
+                
+                    /*
+                     * Find addresses
+                     */
+                    String data = c.getString(c.getColumnIndex(AddressProvider.ADDRESS));
+                    double lon = c.getDouble(c.getColumnIndex(AddressProvider.LONGITUDE));
+                    double lat = c.getDouble(c.getColumnIndex(AddressProvider.LATITUDE));
+                    Address a = new Address(Locale.getDefault());
+                    a.setLongitude(lon);
+                    a.setLatitude(lat);
+                    a.setAddressLine(0, data);
+                    adds[count++] = a;
+                }
+                while(c.moveToNext());
+                c.close();
+            }
+        }
+        return adds;
+    }
 }

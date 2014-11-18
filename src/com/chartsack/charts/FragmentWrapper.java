@@ -23,8 +23,8 @@ import android.content.DialogInterface;
  */
 public class FragmentWrapper extends Fragment {
 
-	private StorageService mService;
-	
+    private StorageService mService;
+    
     /**
      * 
      */
@@ -36,29 +36,29 @@ public class FragmentWrapper extends Fragment {
         start.setTitle(getString(R.string.help));
         start.setMessage(message);
         start.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener(){
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				// TODO Auto-generated method stub
-				dialog.dismiss();
-			}
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // TODO Auto-generated method stub
+                dialog.dismiss();
+            }
         });
         start.create().show();
     }
     
 
-	/**
-	 * 
-	 * @param s
-	 */
-	public void setService(StorageService s) {
-		mService = s;
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public StorageService getService() {
-		return mService;
-	}
+    /**
+     * 
+     * @param s
+     */
+    public void setService(StorageService s) {
+        mService = s;
+    }
+    
+    /**
+     * 
+     * @return
+     */
+    public StorageService getService() {
+        return mService;
+    }
 }

@@ -37,9 +37,9 @@ public class Scale {
      * 
      */
     public void zoomIn() {
-    	mScaleFactor /= SCALE_STEP;
+        mScaleFactor /= SCALE_STEP;
         if(mScaleFactor < MIN_SCALE) {
-        	mScaleFactor = MIN_SCALE;
+            mScaleFactor = MIN_SCALE;
         }
     }
 
@@ -47,9 +47,9 @@ public class Scale {
      * 
      */
     public void zoomOut() {
-    	mScaleFactor *= SCALE_STEP;
+        mScaleFactor *= SCALE_STEP;
         if(mScaleFactor > MAX_SCALE) {
-        	mScaleFactor = MAX_SCALE;
+            mScaleFactor = MAX_SCALE;
         }
     }
 
@@ -58,10 +58,10 @@ public class Scale {
      * @return
      */
     public boolean canZoomIn() {
-    	if(mScaleFactor == MIN_SCALE) {
-    		return false;
-    	}
-    	return true;
+        if(mScaleFactor == MIN_SCALE) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -69,10 +69,10 @@ public class Scale {
      * @return
      */
     public boolean canZoomOut() {
-    	if(mScaleFactor == MAX_SCALE) {
-    		return false;
-    	}
-    	return true;
+        if(mScaleFactor == MAX_SCALE) {
+            return false;
+        }
+        return true;
     }
 
     /**

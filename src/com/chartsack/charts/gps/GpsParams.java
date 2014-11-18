@@ -91,7 +91,7 @@ public class GpsParams {
      * @return Duplicate copy of the right hand side
      */
     public static GpsParams copy(GpsParams rhs) {
-    	GpsParams lhs = new GpsParams(null);
+        GpsParams lhs = new GpsParams(null);
         lhs.mSpeed       = rhs.mSpeed;
         lhs.mLongitude   = rhs.mLongitude;
         lhs.mLatitude    = rhs.mLatitude;
@@ -151,7 +151,7 @@ public class GpsParams {
      * @return long mTime
      */
     public long getTime() {
-    	return mTime;
+        return mTime;
     }
     
     /***
@@ -159,7 +159,7 @@ public class GpsParams {
      * @return
      */
     public String getLatStringDMS() {
-    	return (mLatitude >= 0 ? "N" : "S") + getDMS(Math.abs(mLatitude));
+        return (mLatitude >= 0 ? "N" : "S") + getDMS(Math.abs(mLatitude));
     }
     
     /***
@@ -167,7 +167,7 @@ public class GpsParams {
      * @return
      */
     public String getLonStringDMS() {
-    	return (mLongitude >= 0 ? "E" : "W") + getDMS(Math.abs(mLongitude));
+        return (mLongitude >= 0 ? "E" : "W") + getDMS(Math.abs(mLongitude));
     }
 
     /***
@@ -175,21 +175,21 @@ public class GpsParams {
      * @param frac
      * @return DD MM SS.SS format
      */
-	private String getDMS(double frac) {
-    	
-    	// Degress is the integer part of the number
-		double deg = (int)(frac);
+    private String getDMS(double frac) {
+        
+        // Degress is the integer part of the number
+        double deg = (int)(frac);
 
-		// Minutes is the decimal part of the number multiplied by 60
-		frac -= deg;
-		frac *= 60;
-		double min = (int)(frac);
+        // Minutes is the decimal part of the number multiplied by 60
+        frac -= deg;
+        frac *= 60;
+        double min = (int)(frac);
 
-		// Seconds is the reminder after the minutes calc multipled by 60
-		frac -= min;
-		double sec = frac * 60;
+        // Seconds is the reminder after the minutes calc multipled by 60
+        frac -= min;
+        double sec = frac * 60;
 
-		// Place all those values into a string and return
-		return String.format("%02.0f\u00B0 %02.0f\' %02.2f\"", deg, min, sec);
+        // Place all those values into a string and return
+        return String.format("%02.0f\u00B0 %02.0f\' %02.2f\"", deg, min, sec);
     }
 }

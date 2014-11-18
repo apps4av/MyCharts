@@ -19,33 +19,33 @@ package com.chartsack.charts;
  */
 public class DirectoryItem {
 
-	private boolean mIsDir;
-	private String mName;
-	
-	/**
-	 * 
-	 * @param isDir
-	 * @param name
-	 */
-	public DirectoryItem(boolean isDir, String name) {
-		mIsDir = isDir;
-		mName = name;
-	}
-	
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public boolean isDir() {
-		return mIsDir;
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public String getName() {
-		return mName;
-	}
+    private boolean mIsDir;
+    private String mName;
+    
+    /**
+     * 
+     * @param isDir
+     * @param name
+     */
+    public DirectoryItem(boolean isDir, String name) {
+        mIsDir = isDir;
+        mName = name;
+    }
+    
+    
+    /**
+     * 
+     * @return
+     */
+    public boolean isDir() {
+        return mIsDir;
+    }
+    
+    /**
+     * 
+     * @return
+     */
+    public String getName() {
+        return mName;
+    }
 }

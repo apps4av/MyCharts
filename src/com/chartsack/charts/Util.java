@@ -52,9 +52,9 @@ public class Util {
      * @return
      */
     private static ArrayList<Address> hashMapToList(HashMap<String, Address> hash) {
-    	ArrayList<Address> addr =
-    		    new ArrayList<Address>(hash.values());
-    	return addr;
+        ArrayList<Address> addr =
+                new ArrayList<Address>(hash.values());
+        return addr;
     }
 
     /**
@@ -69,33 +69,33 @@ public class Util {
         // Send a address search string like 105 wood
         HashMap<String, Address> hash = new HashMap<String, Address>();
         
-		/*
-		 * See if it is GPS coordinates
-		 */
-		String regex = "[+-]?\\d+\\.?\\d+\\s*,\\s*[+-]?\\d+\\.?\\d+";
+        /*
+         * See if it is GPS coordinates
+         */
+        String regex = "[+-]?\\d+\\.?\\d+\\s*,\\s*[+-]?\\d+\\.?\\d+";
         Pattern ptn = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         Matcher matcher = ptn.matcher(address);
         if(matcher.find()) {
-        	String tokens[] = address.replaceAll("\\s+", "").split(",");
-        	if(tokens.length == 2) {
-        		try {
-        			/*
-        			 * This does look like a GPS coordinate. Add verbatim to top.
-        			 */
-            		double lat = Double.parseDouble(tokens[0]);
-            		double lon = Double.parseDouble(tokens[1]);
-    	            Address a = new Address(Locale.getDefault());
-    	            a.setLongitude(lon);
-    	            a.setLatitude(lat);
-    	            a.setAddressLine(0, address);
-    	            hash.put(address, a);        			
-        		}
-        		catch (Exception e) {
-        			/*
-        			 * Number format exception
-        			 */
-        		}
-        	}
+            String tokens[] = address.replaceAll("\\s+", "").split(",");
+            if(tokens.length == 2) {
+                try {
+                    /*
+                     * This does look like a GPS coordinate. Add verbatim to top.
+                     */
+                    double lat = Double.parseDouble(tokens[0]);
+                    double lon = Double.parseDouble(tokens[1]);
+                    Address a = new Address(Locale.getDefault());
+                    a.setLongitude(lon);
+                    a.setLatitude(lat);
+                    a.setAddressLine(0, address);
+                    hash.put(address, a);                   
+                }
+                catch (Exception e) {
+                    /*
+                     * Number format exception
+                     */
+                }
+            }
         }       
         
         String addr;
@@ -110,80 +110,80 @@ public class Util {
          */
         Address adds[] = (new AddressData(ctx)).getAddress(address);
         if(null != adds) {
-	        for(int count = 0; count < adds.length; count++) {
-	        	hash.put(adds[count].getAddressLine(0), adds[count]);
-	        }
+            for(int count = 0; count < adds.length; count++) {
+                hash.put(adds[count].getAddressLine(0), adds[count]);
+            }
         }
         
         /*
          * Find from INET
          */
         HttpParams httpParameters = new BasicHttpParams();
-	    int timeoutConnection = 3000;
-	    HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
-	    // Set the default socket timeout (SO_TIMEOUT) 
-	    // in milliseconds which is the timeout for waiting for data.
-	    int timeoutSocket = 3000;
-	    HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
+        int timeoutConnection = 3000;
+        HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
+        // Set the default socket timeout (SO_TIMEOUT) 
+        // in milliseconds which is the timeout for waiting for data.
+        int timeoutSocket = 3000;
+        HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
 
-	    // geolocation service query
-	    HttpGet httpGet = new HttpGet("http://maps.google.com/maps/api/geocode/json?address=" + addr + "&ka&sensor=false");
-	    HttpClient client = new DefaultHttpClient(httpParameters);
-	    HttpResponse response;
-	    StringBuilder stringBuilder = new StringBuilder();
-	
-	    try {
-	        response = client.execute(httpGet);
-	        HttpEntity entity = response.getEntity();
-	        InputStream stream = entity.getContent();
-	        int b;
-	        while ((b = stream.read()) != -1) {
-	            stringBuilder.append((char) b);
-	        }
-	    } catch (ClientProtocolException e) {
-	    } catch (IOException e) {
-	    	return hashMapToList(hash);
-	    }
-	
-	    // it returns in JSON, parse
-	    JSONObject jsonObject = new JSONObject();
-	    try {
-	        jsonObject = new JSONObject(stringBuilder.toString());
-		    // Dont return too many results
-		    for(int i = 0; i < LIMIT; i++) {
-		        double lon = 0;
-		        double lat = 0;
-		        String formatted = null;
-		        try {
-		
-		            lon = ((JSONArray)jsonObject.get("results")).getJSONObject(i)
-		                .getJSONObject("geometry").getJSONObject("location")
-		                .getDouble("lng");
-		
-		            lat = ((JSONArray)jsonObject.get("results")).getJSONObject(i)
-		                .getJSONObject("geometry").getJSONObject("location")
-		                .getDouble("lat");
-		
-		            formatted = ((JSONArray)jsonObject.get("results")).getJSONObject(i)
-		                    .getString("formatted_address");
-		
-		        } catch (JSONException e) {
-		            return hashMapToList(hash);
-		        }
-		        
-		        // got a suggestion
-		        if(formatted != null) {
-		            // set first line as suggestion, also populate its coordinates
-		            Address a = new Address(Locale.getDefault());
-		            a.setLongitude(lon);
-		            a.setLatitude(lat);
-		            a.setAddressLine(0, formatted);
-		            hash.put(formatted, a);
-		        }
-		    }
-	    } catch (JSONException e) {
-	    }
-	
+        // geolocation service query
+        HttpGet httpGet = new HttpGet("http://maps.google.com/maps/api/geocode/json?address=" + addr + "&ka&sensor=false");
+        HttpClient client = new DefaultHttpClient(httpParameters);
+        HttpResponse response;
+        StringBuilder stringBuilder = new StringBuilder();
+    
+        try {
+            response = client.execute(httpGet);
+            HttpEntity entity = response.getEntity();
+            InputStream stream = entity.getContent();
+            int b;
+            while ((b = stream.read()) != -1) {
+                stringBuilder.append((char) b);
+            }
+        } catch (ClientProtocolException e) {
+        } catch (IOException e) {
+            return hashMapToList(hash);
+        }
+    
+        // it returns in JSON, parse
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject = new JSONObject(stringBuilder.toString());
+            // Dont return too many results
+            for(int i = 0; i < LIMIT; i++) {
+                double lon = 0;
+                double lat = 0;
+                String formatted = null;
+                try {
+        
+                    lon = ((JSONArray)jsonObject.get("results")).getJSONObject(i)
+                        .getJSONObject("geometry").getJSONObject("location")
+                        .getDouble("lng");
+        
+                    lat = ((JSONArray)jsonObject.get("results")).getJSONObject(i)
+                        .getJSONObject("geometry").getJSONObject("location")
+                        .getDouble("lat");
+        
+                    formatted = ((JSONArray)jsonObject.get("results")).getJSONObject(i)
+                            .getString("formatted_address");
+        
+                } catch (JSONException e) {
+                    return hashMapToList(hash);
+                }
+                
+                // got a suggestion
+                if(formatted != null) {
+                    // set first line as suggestion, also populate its coordinates
+                    Address a = new Address(Locale.getDefault());
+                    a.setLongitude(lon);
+                    a.setLatitude(lat);
+                    a.setAddressLine(0, formatted);
+                    hash.put(formatted, a);
+                }
+            }
+        } catch (JSONException e) {
+        }
+    
         return hashMapToList(hash);
     }
 
@@ -192,9 +192,9 @@ public class Util {
     * Hide the soft keyboard on a text
     */
     public static void hideKeyboard(EditText text) {
-	    InputMethodManager imm = (InputMethodManager)text.getContext().getSystemService(
-	    		Context.INPUT_METHOD_SERVICE);
-	    imm.hideSoftInputFromWindow(text.getWindowToken(), 0);
+        InputMethodManager imm = (InputMethodManager)text.getContext().getSystemService(
+                Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(text.getWindowToken(), 0);
     }
 
     /**

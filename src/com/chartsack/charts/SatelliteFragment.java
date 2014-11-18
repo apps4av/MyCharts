@@ -45,7 +45,7 @@ public class SatelliteFragment extends FragmentWrapper {
 
         @Override
         public void statusCallback(GpsStatus gpsStatus) {
-        	mSatelliteView.updateGpsStatus(gpsStatus); 
+            mSatelliteView.updateGpsStatus(gpsStatus); 
         }
 
         @Override
@@ -100,9 +100,9 @@ public class SatelliteFragment extends FragmentWrapper {
      */
     @Override
     public void setService(StorageService service) {
-    	
-    	super.setService(service);
-    	
+        
+        super.setService(service);
+        
         getService().registerGpsListener(mGpsInfc);
     }
 }

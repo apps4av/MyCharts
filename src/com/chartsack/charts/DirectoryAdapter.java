@@ -57,10 +57,10 @@ public class DirectoryAdapter extends ArrayAdapter<DirectoryItem> {
         ImageView imgView = (ImageView)rowView.findViewById(R.id.file_list_icon);
         textView.setText(mInfo.get(position).getName());
         if(mInfo.get(position).isDir()) {
-        	imgView.setImageResource(R.drawable.directory_icon);
+            imgView.setImageResource(R.drawable.directory_icon);
         }
         else {
-        	imgView.setImageResource(R.drawable.file_icon);
+            imgView.setImageResource(R.drawable.file_icon);
         }
         return rowView;
     }    

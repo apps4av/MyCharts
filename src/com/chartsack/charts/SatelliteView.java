@@ -52,9 +52,9 @@ public class SatelliteView extends View {
     private Context         mContext;
     private float          mFontHeight;
     private int            mAltitude;
-    String 				     mLastTime;
+    String                   mLastTime;
     String                   mName;
-    private float 	        mDipToPix;
+    private float           mDipToPix;
 
     /**
      * 
@@ -183,46 +183,46 @@ public class SatelliteView extends View {
         mFontHeight =  fm.bottom - fm.top;
 
         if(mGpsStatus != null) {
-	        Iterable<GpsSatellite>satellites = mGpsStatus.getSatellites();
-	        Iterator<GpsSatellite>sat = satellites.iterator();
-	        mPaint.setColor(Color.WHITE);
-	        mPaint.setStyle(Paint.Style.STROKE);
-	
-	        /*
-	         * Now draw a circle for each satellite, use simple projections of x = sin(theta), y = cos(theta)
-	         * Arm for each projection is sin(elevation). Theta = azimuth.
-	         */
+            Iterable<GpsSatellite>satellites = mGpsStatus.getSatellites();
+            Iterator<GpsSatellite>sat = satellites.iterator();
+            mPaint.setColor(Color.WHITE);
+            mPaint.setStyle(Paint.Style.STROKE);
+    
+            /*
+             * Now draw a circle for each satellite, use simple projections of x = sin(theta), y = cos(theta)
+             * Arm for each projection is sin(elevation). Theta = azimuth.
+             */
             int i = 0;
-	        while (sat.hasNext()) {
-	            i++;
-	            GpsSatellite satellite = sat.next();
-	            if(satellite.usedInFix()) {
-	                mPaint.setColor(Color.GREEN);
-	            }
-	            else {
-	                mPaint.setColor(Color.RED);
-	            }
-	            
-	            double angle = Math.toRadians(satellite.getAzimuth());
-	            double e = Math.cos(Math.toRadians(satellite.getElevation())) * min / 2;
-	            canvas.drawCircle(
-	                    (float)(getWidth() / 2 + e * Math.sin(angle)), 
-	                    (float)(getHeight() / 2 - e * Math.cos(angle)),
-	                    (satellite.getSnr() / 100) * min / 16,
-	                    mPaint);
-	        }
-	        canvas.restore();
+            while (sat.hasNext()) {
+                i++;
+                GpsSatellite satellite = sat.next();
+                if(satellite.usedInFix()) {
+                    mPaint.setColor(Color.GREEN);
+                }
+                else {
+                    mPaint.setColor(Color.RED);
+                }
+                
+                double angle = Math.toRadians(satellite.getAzimuth());
+                double e = Math.cos(Math.toRadians(satellite.getElevation())) * min / 2;
+                canvas.drawCircle(
+                        (float)(getWidth() / 2 + e * Math.sin(angle)), 
+                        (float)(getHeight() / 2 - e * Math.cos(angle)),
+                        (satellite.getSnr() / 100) * min / 16,
+                        mPaint);
+            }
+            canvas.restore();
 
-	        /*
-	         * Now draw stats text
-	         */
-	        drawParamsText(canvas, Integer.toString(i),
-	        		Double.toString(mLongitude), Double.toString(mLatitude),
-	        		Integer.toString(mAltitude));
+            /*
+             * Now draw stats text
+             */
+            drawParamsText(canvas, Integer.toString(i),
+                    Double.toString(mLongitude), Double.toString(mLatitude),
+                    Integer.toString(mAltitude));
         }
         
         else {
-        	
+            
             canvas.restore();
             /*
              * Now draw stats text

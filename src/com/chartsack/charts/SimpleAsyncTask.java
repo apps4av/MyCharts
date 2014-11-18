@@ -22,53 +22,53 @@ import android.os.AsyncTask;
  */
 public class SimpleAsyncTask {
 
-	/**
-	 * 
-	 * @author zkhan
-	 *
-	 */
-	public interface Methods {
+    /**
+     * 
+     * @author zkhan
+     *
+     */
+    public interface Methods {
         public Object background(Object... vals);
         public void ui(Object ret);
     }
-	
+    
 
-	private static AsyncTask<Object, Object, Object> mTask = null;
-	private Methods mMethods;
-	
-	/**
-	 * 
-	 * @param methods
-	 */
-	public SimpleAsyncTask(Methods methods) {
-		
-		if(mTask != null) {
+    private static AsyncTask<Object, Object, Object> mTask = null;
+    private Methods mMethods;
+    
+    /**
+     * 
+     * @param methods
+     */
+    public SimpleAsyncTask(Methods methods) {
+        
+        if(mTask != null) {
             if(mTask.getStatus() != AsyncTask.Status.FINISHED) {
                 mTask.cancel(true);
             }
         }
-		
-		mMethods = methods;
-		
-	}
+        
+        mMethods = methods;
+        
+    }
 
-	/**
-	 * 
-	 * @param params
-	 */
-	public void run(Object... params) {
-	    mTask = new AsyncTask<Object, Object, Object>() {
+    /**
+     * 
+     * @param params
+     */
+    public void run(Object... params) {
+        mTask = new AsyncTask<Object, Object, Object>() {
 
-	        @Override
-	        protected Object doInBackground(Object... vals) {
-	        	return mMethods.background(vals);
-	        }
-	        
+            @Override
+            protected Object doInBackground(Object... vals) {
+                return mMethods.background(vals);
+            }
+            
             @Override
             protected void onPostExecute(Object result) {
-            	mMethods.ui(result);
+                mMethods.ui(result);
             }
-	    };
-	    mTask.execute(params);		
-	}
+        };
+        mTask.execute(params);      
+    }
 }

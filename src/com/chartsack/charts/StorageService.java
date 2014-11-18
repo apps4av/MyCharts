@@ -55,8 +55,8 @@ public class StorageService extends Service implements SimpleAsyncTask.Methods {
     private Scale                    mScale;
     private int                      mWidth;
     private int                      mHeight;
-    private ImageCallback			 mICallback;
-    private GpsParams				mGpsParams;
+    private ImageCallback            mICallback;
+    private GpsParams               mGpsParams;
     private String                  mChart;
     private double                  mGeoData[];
     private SimpleAsyncTask         mLoadTask;
@@ -231,14 +231,14 @@ public class StorageService extends Service implements SimpleAsyncTask.Methods {
      */
     @Override
     public void onDestroy() {
-    	
-    	try {
-    		mBitmap.recycle();
-    		mBitmap = null;
-    	}
-    	catch(Exception e) {
-    		
-    	}
+        
+        try {
+            mBitmap.recycle();
+            mBitmap = null;
+        }
+        catch(Exception e) {
+            
+        }
 
         if(mTimer != null) {
             mTimer.cancel();
@@ -301,11 +301,11 @@ public class StorageService extends Service implements SimpleAsyncTask.Methods {
      * 
      */
     public void loadBitmap(String file) {
-    	mLoadTask = new SimpleAsyncTask(this);
-    	mLoadTask.run(file);
+        mLoadTask = new SimpleAsyncTask(this);
+        mLoadTask.run(file);
     }
 
-    	
+        
     
     /**
      * 
@@ -320,7 +320,7 @@ public class StorageService extends Service implements SimpleAsyncTask.Methods {
      * @return
      */
     public Pan getPan() {
-    	return mPan;
+        return mPan;
     }
     
     /**
@@ -328,7 +328,7 @@ public class StorageService extends Service implements SimpleAsyncTask.Methods {
      * @return
      */
     public Scale getScale() {
-    	return mScale;
+        return mScale;
     }
 
     /**
@@ -336,10 +336,10 @@ public class StorageService extends Service implements SimpleAsyncTask.Methods {
      * @return
      */
     public void resetMap() {
-    	// Go to the default location
-    	mScale = new Scale();
-    	mPan = new Pan();
-    	loadBitmap(null);
+        // Go to the default location
+        mScale = new Scale();
+        mPan = new Pan();
+        loadBitmap(null);
     }
 
     /**
@@ -347,7 +347,7 @@ public class StorageService extends Service implements SimpleAsyncTask.Methods {
      * @return
      */
     public GpsParams getGpsParams() {
-    	return mGpsParams;
+        return mGpsParams;
     }
 
     /**
@@ -355,7 +355,7 @@ public class StorageService extends Service implements SimpleAsyncTask.Methods {
      * @return
      */
     public int getWidth() {
-    	return mWidth;
+        return mWidth;
     }
 
     /**
@@ -363,7 +363,7 @@ public class StorageService extends Service implements SimpleAsyncTask.Methods {
      * @return
      */
     public int getHeight() {
-    	return mHeight;
+        return mHeight;
     }
 
 
@@ -372,7 +372,7 @@ public class StorageService extends Service implements SimpleAsyncTask.Methods {
      * @param val
      */
     public void setWidth(int val) {
-    	mWidth = val;
+        mWidth = val;
     }
 
     /**
@@ -380,7 +380,7 @@ public class StorageService extends Service implements SimpleAsyncTask.Methods {
      * @param val
      */
     public void setHeight(int val) {
-    	mHeight = val;
+        mHeight = val;
     }
 
     /**
@@ -388,7 +388,7 @@ public class StorageService extends Service implements SimpleAsyncTask.Methods {
      * @param cb
      */
     public void setImageCallback(ImageCallback cb) {
-    	mICallback = cb;
+        mICallback = cb;
     }
     
     /**
@@ -421,7 +421,7 @@ public class StorageService extends Service implements SimpleAsyncTask.Methods {
      * @return
      */
     public String getChartName() {
-    	return mChart;
+        return mChart;
     }
 
     /**
@@ -429,7 +429,7 @@ public class StorageService extends Service implements SimpleAsyncTask.Methods {
      * @param name
      */
     public void setChartName(String name) {
-    	mChart = name;
+        mChart = name;
     }
 
     /**
@@ -438,31 +438,31 @@ public class StorageService extends Service implements SimpleAsyncTask.Methods {
      */
     public boolean setGeotagData(String name) {
 
-    	/*
-    	 * Set data for drawing location on map. Get from geotag data from user's geotag database, 
-    	 * then parse here
-    	 */
-		mGeoData[0] = 0;
-		mGeoData[1] = 0;
-		mGeoData[2] = 0;
-		mGeoData[3] = 0;
+        /*
+         * Set data for drawing location on map. Get from geotag data from user's geotag database, 
+         * then parse here
+         */
+        mGeoData[0] = 0;
+        mGeoData[1] = 0;
+        mGeoData[2] = 0;
+        mGeoData[3] = 0;
 
-    	String tokens[] = name.split(",");
-    	if(tokens.length != 4) {
-    		return false;
-    	}
-    	
-    	try {
-    		// dx, dy, lonl, latl
-    		mGeoData[0] = Double.parseDouble(tokens[0]);
-    		mGeoData[1] = Double.parseDouble(tokens[1]);
-    		mGeoData[2] = Double.parseDouble(tokens[2]);
-    		mGeoData[3] = Double.parseDouble(tokens[3]);
-    	}
-    	catch(Exception e) {
-    		return false;
-    	};
-    	return true;
+        String tokens[] = name.split(",");
+        if(tokens.length != 4) {
+            return false;
+        }
+        
+        try {
+            // dx, dy, lonl, latl
+            mGeoData[0] = Double.parseDouble(tokens[0]);
+            mGeoData[1] = Double.parseDouble(tokens[1]);
+            mGeoData[2] = Double.parseDouble(tokens[2]);
+            mGeoData[3] = Double.parseDouble(tokens[3]);
+        }
+        catch(Exception e) {
+            return false;
+        };
+        return true;
     }
 
     /**
@@ -470,63 +470,63 @@ public class StorageService extends Service implements SimpleAsyncTask.Methods {
      * @return
      */
     public double[] getGeotagData() {
-    	return mGeoData;
+        return mGeoData;
     }
 
     /**
      * This loads bitmap in background
      */
-	@Override
-	public Object background(Object... vals) {
-		
-		String file = (String)vals[0];
-		
+    @Override
+    public Object background(Object... vals) {
+        
+        String file = (String)vals[0];
+        
         /*
          * Invalid. Nothing to do
          */
         if(file == null && getBitmapHolder() == null) {
-        	return (Object)false;
+            return (Object)false;
         }
         
         if(file != null) {
-        	/*
-        	 * 
-        	 */
-        	if(getBitmapHolder() != null) {
-        		getBitmapHolder().recycle();
-        	}
+            /*
+             * 
+             */
+            if(getBitmapHolder() != null) {
+                getBitmapHolder().recycle();
+            }
             mBitmap = new BitmapHolder(file, getWidth(), getHeight());
             mScale = new Scale();
             mPan = new Pan();
         }
         
         if(getBitmapHolder() != null) {
-        	
-        	mBounds = new Bounds(mPan, mScale, mWidth, mHeight);
+            
+            mBounds = new Bounds(mPan, mScale, mWidth, mHeight);
             getBitmapHolder().decodeRegion(mBounds.getRect(), mScale.getScaleFactor());
         }
-		return (Object)true;
-	}
+        return (Object)true;
+    }
 
-	/**
-	 * This updates screen with newly loaded bitmap
-	 */
-	@Override
-	public void ui(Object ret) {
+    /**
+     * This updates screen with newly loaded bitmap
+     */
+    @Override
+    public void ui(Object ret) {
         getPan().endDrag();
         if((boolean)ret) {
-        	mBitmap.moveToFront();
-	        if(mICallback != null) {
-	        	mICallback.imageReady();
-	        }
+            mBitmap.moveToFront();
+            if(mICallback != null) {
+                mICallback.imageReady();
+            }
         }
-	}
+    }
 
-	/**
-	 * 
-	 * @return
-	 */
-	public Bounds getBounds() {
-		return mBounds;
-	}
+    /**
+     * 
+     * @return
+     */
+    public Bounds getBounds() {
+        return mBounds;
+    }
 }

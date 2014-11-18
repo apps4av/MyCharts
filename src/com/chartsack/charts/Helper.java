@@ -23,63 +23,63 @@ import java.util.ArrayList;
  */
 public class Helper {
 
-	/**
-	 * 
-	 * @param root
-	 * @return
-	 */
-	public static ArrayList<DirectoryItem> loadFileList(String root) {
-		
-		File path = new File(root);
-		ArrayList<DirectoryItem> fileList = new ArrayList<DirectoryItem>();
-		
-		// Checks whether path exists
-		if (path.exists()) {
-			FilenameFilter filter = new FilenameFilter() {
-				@Override
-				public boolean accept(File dir, String filename) {
-					File sel = new File(dir, filename);
-					// Filters based on whether the file is hidden or not and can be read
-					if(sel.isDirectory() && (!sel.isHidden()) && sel.canRead()) {
-						return true;
-					}
-					if(sel.isFile() && (!sel.isHidden()) && sel.canRead() && 
-							(
-							filename.toLowerCase().endsWith("jpeg") || 
-							filename.toLowerCase().endsWith("jpg")  ||
-							filename.toLowerCase().endsWith("gif")  ||
-							filename.toLowerCase().endsWith("bmp")  ||
-							filename.toLowerCase().endsWith("png")
-							)
-							) {
-						return true;
-					}
-					return false;
-				}
-			};
+    /**
+     * 
+     * @param root
+     * @return
+     */
+    public static ArrayList<DirectoryItem> loadFileList(String root) {
+        
+        File path = new File(root);
+        ArrayList<DirectoryItem> fileList = new ArrayList<DirectoryItem>();
+        
+        // Checks whether path exists
+        if (path.exists()) {
+            FilenameFilter filter = new FilenameFilter() {
+                @Override
+                public boolean accept(File dir, String filename) {
+                    File sel = new File(dir, filename);
+                    // Filters based on whether the file is hidden or not and can be read
+                    if(sel.isDirectory() && (!sel.isHidden()) && sel.canRead()) {
+                        return true;
+                    }
+                    if(sel.isFile() && (!sel.isHidden()) && sel.canRead() && 
+                            (
+                            filename.toLowerCase().endsWith("jpeg") || 
+                            filename.toLowerCase().endsWith("jpg")  ||
+                            filename.toLowerCase().endsWith("gif")  ||
+                            filename.toLowerCase().endsWith("bmp")  ||
+                            filename.toLowerCase().endsWith("png")
+                            )
+                            ) {
+                        return true;
+                    }
+                    return false;
+                }
+            };
 
-			String[] fList = path.list(filter);
-			/*
-			 * Add one up
-			 */
-			fileList.add(new DirectoryItem(true, ".."));
-			for (int i = 0; i < fList.length; i++) {
-				File sel = new File(path, fList[i]);
-				fileList.add(new DirectoryItem(sel.isDirectory(), fList[i]));
-			}
+            String[] fList = path.list(filter);
+            /*
+             * Add one up
+             */
+            fileList.add(new DirectoryItem(true, ".."));
+            for (int i = 0; i < fList.length; i++) {
+                File sel = new File(path, fList[i]);
+                fileList.add(new DirectoryItem(sel.isDirectory(), fList[i]));
+            }
 
-		}
+        }
 
-		return fileList;
-	}
-	
-	
-	/**
-	 * 
-	 * @param pixelPerLatitude
-	 * @return
-	 */
-	public static int findPixelsPerMile(double pixelPerLatitude) { 
-		 return (int) Math.round(Math.abs(pixelPerLatitude / 69)); 
-	}
+        return fileList;
+    }
+    
+    
+    /**
+     * 
+     * @param pixelPerLatitude
+     * @return
+     */
+    public static int findPixelsPerMile(double pixelPerLatitude) { 
+         return (int) Math.round(Math.abs(pixelPerLatitude / 69)); 
+    }
 }

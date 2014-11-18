@@ -44,17 +44,17 @@ public class MappingView extends View implements MultiTouchObjectCanvas<Object> 
     private PointInfo                    mCurrTouchPoint;
     private Paint                        mPaint;
     private StorageService               mService;
-    private ZoomControls 				 mZoomControls;
-    private ImageButton 				 mTopButton;
+    private ZoomControls                 mZoomControls;
+    private ImageButton                  mTopButton;
 
     /**
      * 
      * @param context
      */
-	public MappingView(Context context) {
-		super(context);
-		setup(context);
-	}
+    public MappingView(Context context) {
+        super(context);
+        setup(context);
+    }
 
     /**
      * 
@@ -94,12 +94,12 @@ public class MappingView extends View implements MultiTouchObjectCanvas<Object> 
      */
     private void startAnimation(boolean start) {
         if(null == mZoomControls) {
-        	return;
+            return;
         }
-    	mZoomControls.setVisibility(View.VISIBLE);
-    	// Show if animation is started
+        mZoomControls.setVisibility(View.VISIBLE);
+        // Show if animation is started
         if(start) {
-        	return;
+            return;
         }
         // Hide zoom controls after 5 seconds
         mHandler.removeMessages(0, null);
@@ -110,68 +110,68 @@ public class MappingView extends View implements MultiTouchObjectCanvas<Object> 
      * 
      */
     Handler mHandler = new Handler() {
-    	@Override
-   	    public void handleMessage(Message msg) {
+        @Override
+        public void handleMessage(Message msg) {
             // Hide after timeout if animation stopped
-            mZoomControls.setVisibility(View.INVISIBLE);    		
-    	}
+            mZoomControls.setVisibility(View.INVISIBLE);            
+        }
     };
     
     /**
      * Add zoom control for all map views
      */
     public void setZoomControls(ZoomControls zc) {
-    	mZoomControls = zc;
-    	
-    	/*
-    	 * Zoom IN
-    	 */
+        mZoomControls = zc;
+        
+        /*
+         * Zoom IN
+         */
         mZoomControls.setOnZoomInClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				// Want to scale at the center
-				Scale s = getService().getScale();
-				if(!s.canZoomIn()) {
-					return;
-				}
-				s.zoomIn();
-		    	startAnimation(false);
-				float x = getService().getPan().getMoveX() * Scale.SCALE_STEP;
-				float y = getService().getPan().getMoveY() * Scale.SCALE_STEP;
-				getService().getPan().setMove(x - getWidth() / 2, y - getHeight() / 2);
-				getService().loadBitmap(null); 	
-			}
-		});
+            public void onClick(View v) {
+                // Want to scale at the center
+                Scale s = getService().getScale();
+                if(!s.canZoomIn()) {
+                    return;
+                }
+                s.zoomIn();
+                startAnimation(false);
+                float x = getService().getPan().getMoveX() * Scale.SCALE_STEP;
+                float y = getService().getPan().getMoveY() * Scale.SCALE_STEP;
+                getService().getPan().setMove(x - getWidth() / 2, y - getHeight() / 2);
+                getService().loadBitmap(null);  
+            }
+        });
         
         /*
          *  Zoom OUT
          */
         mZoomControls.setOnZoomOutClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				Scale s = getService().getScale();
-				if(!s.canZoomOut()) {
-					return;
-				}
-				s.zoomOut();
-		    	startAnimation(false);
-				float x = getService().getPan().getMoveX() + getWidth() / 2;
-				float y = getService().getPan().getMoveY() + getHeight() / 2;
-				getService().getPan().setMove(x / Scale.SCALE_STEP, y / Scale.SCALE_STEP);
-				getService().loadBitmap(null); 	
-			}
-		});
+            public void onClick(View v) {
+                Scale s = getService().getScale();
+                if(!s.canZoomOut()) {
+                    return;
+                }
+                s.zoomOut();
+                startAnimation(false);
+                float x = getService().getPan().getMoveX() + getWidth() / 2;
+                float y = getService().getPan().getMoveY() + getHeight() / 2;
+                getService().getPan().setMove(x / Scale.SCALE_STEP, y / Scale.SCALE_STEP);
+                getService().loadBitmap(null);  
+            }
+        });
     }
     
     /**
      * Set home button for all map views
      */
     public void setHomeControls(ImageButton ib) {
-    	mTopButton = ib;
+        mTopButton = ib;
         mTopButton.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View arg0) {
-				getService().resetMap();
-			}
+            @Override
+            public void onClick(View arg0) {
+                getService().resetMap();
+            }
         });
     }
     
@@ -185,31 +185,31 @@ public class MappingView extends View implements MultiTouchObjectCanvas<Object> 
     public boolean onTouch(View view, MotionEvent e) {
 
     
-		if(mService == null) {
-			return false;
-		}
-		
-	    if(e.getAction() == MotionEvent.ACTION_DOWN) {
-	    	/*
-	    	 * Start the drag
-	    	 */
-	        mService.getPan().startDrag();
-	        /*
-	         * Show the zoom button
-	         */
-	        startAnimation(true);
-	    }
-	    else if(e.getAction() == MotionEvent.ACTION_UP) {
-	    	/*
-	    	 * Decode region of the image when we lift finger
-	    	 */
-	        startAnimation(false);	    	
-	      	mService.loadBitmap(null);
-	    }
-	    /*
-	     * This slows downs panning when zoomed in
-	     */
-	    return mMultiTouchC.onTouchEvent(e);
+        if(mService == null) {
+            return false;
+        }
+        
+        if(e.getAction() == MotionEvent.ACTION_DOWN) {
+            /*
+             * Start the drag
+             */
+            mService.getPan().startDrag();
+            /*
+             * Show the zoom button
+             */
+            startAnimation(true);
+        }
+        else if(e.getAction() == MotionEvent.ACTION_UP) {
+            /*
+             * Decode region of the image when we lift finger
+             */
+            startAnimation(false);          
+            mService.loadBitmap(null);
+        }
+        /*
+         * This slows downs panning when zoomed in
+         */
+        return mMultiTouchC.onTouchEvent(e);
     }
 
 
@@ -224,11 +224,11 @@ public class MappingView extends View implements MultiTouchObjectCanvas<Object> 
      * @see com.ds.avare.MultiTouchController.MultiTouchObjectCanvas#setPositionAndScale(java.lang.Object, com.ds.avare.MultiTouchController.PositionAndScale, com.ds.avare.MultiTouchController.PointInfo)
      */
     public boolean setPositionAndScale(Object obj,PositionAndScale newObjPosAndScale, PointInfo touchPoint) {
-    	
-    	if(mService == null || mService.getBitmapHolder() == null || mService.getBitmapHolder().getBitmap() == null) {
-    		return false;
-    	}
-    	
+        
+        if(mService == null || mService.getBitmapHolder() == null || mService.getBitmapHolder().getBitmap() == null) {
+            return false;
+        }
+        
         touchPointChanged(touchPoint);
         if(false == mCurrTouchPoint.isMultiTouch()) {
             /*
@@ -256,16 +256,16 @@ public class MappingView extends View implements MultiTouchObjectCanvas<Object> 
      * @see com.ds.avare.MultiTouchController.MultiTouchObjectCanvas#getDraggableObjectAtPoint(com.ds.avare.MultiTouchController.PointInfo)
      */
     public Object getDraggableObjectAtPoint(PointInfo pt) {
-    	return this;
+        return this;
     }
 
     /* (non-Javadoc)
      * @see com.ds.avare.MultiTouchController.MultiTouchObjectCanvas#getPositionAndScale(java.lang.Object, com.ds.avare.MultiTouchController.PositionAndScale)
      */
     public void getPositionAndScale(Object obj, PositionAndScale objPosAndScaleOut) {
-    	if(null == mService) {
-    		return;
-    	}
+        if(null == mService) {
+            return;
+        }
         objPosAndScaleOut.set(
                 mService.getPan().getMoveX(), mService.getPan().getMoveY(), true,
                 1, false, 0, 0, false, 0);
@@ -278,10 +278,10 @@ public class MappingView extends View implements MultiTouchObjectCanvas<Object> 
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         if(null != getService()) {
-	        // This will serve as map dimensions. Match with layout of map view
-	        // Note this will take effect when a new map is loaded
-	    	getService().setHeight(getHeight());
-	    	getService().setWidth(getWidth());
+            // This will serve as map dimensions. Match with layout of map view
+            // Note this will take effect when a new map is loaded
+            getService().setHeight(getHeight());
+            getService().setWidth(getWidth());
         }
     }
     
@@ -289,9 +289,9 @@ public class MappingView extends View implements MultiTouchObjectCanvas<Object> 
      * 
      */
     public void onDraw(Canvas canvas) {
-    	if(mService == null || mService.getBitmapHolder() == null || mService.getBitmapHolder().getBitmap() == null) {
-    		return;
-    	}
+        if(mService == null || mService.getBitmapHolder() == null || mService.getBitmapHolder().getBitmap() == null) {
+            return;
+        }
         /*
          * Draw the bitmap
          */
@@ -299,12 +299,12 @@ public class MappingView extends View implements MultiTouchObjectCanvas<Object> 
 
         canvas.drawBitmap(mService.getBitmapHolder().getBitmap(), mService.getBitmapHolder().getTransform(), mPaint);
         
-    	/*
-    	 * The cross in the middle
-    	 */
-    	getPaint().setColor(Color.RED);
-    	getPaint().setStyle(Style.STROKE);
-    	getPaint().setStrokeWidth(2);
+        /*
+         * The cross in the middle
+         */
+        getPaint().setColor(Color.RED);
+        getPaint().setStyle(Style.STROKE);
+        getPaint().setStrokeWidth(2);
         canvas.drawLine(getWidth() / 4, getHeight() / 2, (getWidth() * 3) / 4, getHeight() / 2, getPaint());
         canvas.drawLine(getWidth() / 2, getHeight() / 4, getWidth() / 2, (getHeight() * 3) / 4, getPaint());
         canvas.drawCircle(getWidth() / 2, getHeight() / 2, 4, getPaint());
@@ -316,21 +316,21 @@ public class MappingView extends View implements MultiTouchObjectCanvas<Object> 
      * 
      */
     public void setService(StorageService service) {
-    	mService = service;
+        mService = service;
     } 
 
     /**
      * 
      */
     public StorageService getService() {
-    	return mService;
+        return mService;
     } 
 
     /**
      * 
      */
     public Paint getPaint() {
-    	return mPaint;
+        return mPaint;
     }
     
 }

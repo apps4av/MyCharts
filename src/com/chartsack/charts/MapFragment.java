@@ -39,10 +39,10 @@ public class MapFragment extends FragmentWrapper implements SimpleAsyncTask.Meth
      *
      */
     private MapView mMapView;
-	private ImageButton mCenterButton;
-	private ImageButton mFindButton;
-	private AlertDialog mDialogSearch;
-	
+    private ImageButton mCenterButton;
+    private ImageButton mFindButton;
+    private AlertDialog mDialogSearch;
+    
     public MapFragment() {
     }
 
@@ -85,41 +85,41 @@ public class MapFragment extends FragmentWrapper implements SimpleAsyncTask.Meth
         mCenterButton = (ImageButton)rootView.findViewById(R.id.fragment_map_button_center);
         mCenterButton.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View arg0) {
-				/*
-				 * center on current position
-				 */
-				if(getService() == null) {
-					return;
-				}
+            @Override
+            public void onClick(View arg0) {
+                /*
+                 * center on current position
+                 */
+                if(getService() == null) {
+                    return;
+                }
 
-				GpsParams param = getService().getGpsParams();
-				Address a = new Address(Locale.getDefault());
-		        a.setLongitude(param.getLongitude());
-		        a.setLatitude(param.getLatitude());
-		        
-		        centerOnLocation(a);
-			}
+                GpsParams param = getService().getGpsParams();
+                Address a = new Address(Locale.getDefault());
+                a.setLongitude(param.getLongitude());
+                a.setLatitude(param.getLatitude());
+                
+                centerOnLocation(a);
+            }
         });
 
         mFindButton = (ImageButton)rootView.findViewById(R.id.fragment_map_button_find);
         mFindButton.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View arg0) {
-				/*
-				 * Make dialog
-				 */
-				ObserverAlertDialogBuilder alertDialogBuilder = new ObserverAlertDialogBuilder(getActivity(),
-						MapFragment.this, getString(R.string.search_address));
-				 
-				// create alert dialog
-				mDialogSearch = alertDialogBuilder.create();
+            @Override
+            public void onClick(View arg0) {
+                /*
+                 * Make dialog
+                 */
+                ObserverAlertDialogBuilder alertDialogBuilder = new ObserverAlertDialogBuilder(getActivity(),
+                        MapFragment.this, getString(R.string.search_address));
+                 
+                // create alert dialog
+                mDialogSearch = alertDialogBuilder.create();
 
-				// show it
-				mDialogSearch.show();
-			}
+                // show it
+                mDialogSearch.show();
+            }
         });
 
         /*
@@ -149,7 +149,7 @@ public class MapFragment extends FragmentWrapper implements SimpleAsyncTask.Meth
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-    	getService().unregisterGpsListener(mGpsInfc);
+        getService().unregisterGpsListener(mGpsInfc);
     }
 
     /**
@@ -157,9 +157,9 @@ public class MapFragment extends FragmentWrapper implements SimpleAsyncTask.Meth
      */
     @Override
     public void setService(StorageService service) {
-    	
-    	super.setService(service);
-    	
+        
+        super.setService(service);
+        
         getService().registerGpsListener(mGpsInfc);
         
         /**
@@ -167,59 +167,59 @@ public class MapFragment extends FragmentWrapper implements SimpleAsyncTask.Meth
          */
         getService().setImageCallback(new ImageCallback() {
 
-			@Override
-			public void imageReady() {
-				mMapView.invalidate();
-			}
+            @Override
+            public void imageReady() {
+                mMapView.invalidate();
+            }
         });
     }
 
 
-	/**
-	 * 
-	 * @param a
-	 */
-	private void centerOnLocation(Address a) {
-		if(!mMapView.centerOnChart(a.getLongitude(), a.getLatitude())) {
-			showHelp(getString(R.string.not_on_chart));
-		}
-	}
-	
+    /**
+     * 
+     * @param a
+     */
+    private void centerOnLocation(Address a) {
+        if(!mMapView.centerOnChart(a.getLongitude(), a.getLatitude())) {
+            showHelp(getString(R.string.not_on_chart));
+        }
+    }
+    
 
-	/**
-	 * 
-	 */
-	@Override
-	public Object background(Object... vals) {
-    	/*
-    	 * Save address for offline search
-    	 */
-		AddressData ad = new AddressData(getActivity());
-		ad.deleteAddress((Address)vals[0]);
-		ad.addAddress((Address)vals[0]);
-		return vals[0];
-	}
+    /**
+     * 
+     */
+    @Override
+    public Object background(Object... vals) {
+        /*
+         * Save address for offline search
+         */
+        AddressData ad = new AddressData(getActivity());
+        ad.deleteAddress((Address)vals[0]);
+        ad.addAddress((Address)vals[0]);
+        return vals[0];
+    }
 
-	/**
-	 * 
-	 */
-	@Override
-	public void ui(Object ret) {
-		/*
-		 * Update chart in handler
-		 */
-		centerOnLocation((Address)ret);
-	}
-	
-	@Override
-	public void onItemSelected(Address a) {
+    /**
+     * 
+     */
+    @Override
+    public void ui(Object ret) {
+        /*
+         * Update chart in handler
+         */
+        centerOnLocation((Address)ret);
+    }
+    
+    @Override
+    public void onItemSelected(Address a) {
         try {
-        	SimpleAsyncTask task = new SimpleAsyncTask(MapFragment.this);
-        	task.run(a);
-        	mDialogSearch.dismiss();
+            SimpleAsyncTask task = new SimpleAsyncTask(MapFragment.this);
+            task.run(a);
+            mDialogSearch.dismiss();
         }
         catch (Exception e) {
-        }		
-	}
+        }       
+    }
 
 }

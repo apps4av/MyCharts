@@ -19,9 +19,9 @@ package com.chartsack.charts;
  */
 public interface ImageCallback {
 
-	/**
-	 * 
-	 */
-	public void imageReady();
-	
+    /**
+     * 
+     */
+    public void imageReady();
+    
 }
