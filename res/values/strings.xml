@@ -4,6 +4,7 @@
     <string name="app_name">ChartSack</string>
     <string name="title_map">Navigate</string>
     <string name="title_tag">Tag Chart</string>
+    <string name="title_help">Help</string>
     <string name="title_load">Load Chart</string>
     <string name="title_gps">GPS Status</string>
     <string name="browse">Browse</string>

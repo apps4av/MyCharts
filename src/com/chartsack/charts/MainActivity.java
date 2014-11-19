@@ -74,7 +74,7 @@ public class MainActivity extends Activity implements
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
         Bundle args = new Bundle();
-        mFragments = new FragmentWrapper[4];
+        mFragments = new FragmentWrapper[5];
         mFragments[0] = new MapFragment();
         mFragments[0].setArguments(args);
         mFragments[1] = new LoadFragment();
@@ -83,6 +83,8 @@ public class MainActivity extends Activity implements
         mFragments[2].setArguments(args);
         mFragments[3] = new SatelliteFragment();
         mFragments[3].setArguments(args);
+        mFragments[4] = new HelpFragment();
+        mFragments[4].setArguments(args);
 
         // Set up the drop down list navigation in the action bar.
         actionBar.setListNavigationCallbacks(
@@ -94,6 +96,7 @@ public class MainActivity extends Activity implements
                 getString(R.string.title_load),
                 getString(R.string.title_tag),
                 getString(R.string.title_gps),
+                getString(R.string.title_help),
                 }), this);
                 
     }

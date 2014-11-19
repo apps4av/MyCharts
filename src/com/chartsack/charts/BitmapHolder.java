@@ -158,6 +158,9 @@ public class BitmapHolder {
      * 
      */
     public void moveToFront() {
+    	if(null == mBitmapFront || null == mBitmap) {
+    		return;
+    	}
         /*
          * Draw from working to front
          */
