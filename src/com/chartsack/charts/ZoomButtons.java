@@ -29,7 +29,7 @@ import android.widget.RelativeLayout;
  * A zoom view that looks like Android'd built in zoom control, but makes it simpler
  *
  */
-public class ZoomView extends RelativeLayout implements OnClickListener {
+public class ZoomButtons extends RelativeLayout implements OnClickListener {
 
 	private Button mZoomInButton;
 	private Button mZoomOutButton;
@@ -53,7 +53,7 @@ public class ZoomView extends RelativeLayout implements OnClickListener {
      * 
      * @param context
      */
-    public ZoomView(Context context) {
+    public ZoomButtons(Context context) {
         super(context);
         setup(context);
     }
@@ -62,7 +62,7 @@ public class ZoomView extends RelativeLayout implements OnClickListener {
      * 
      * @param context
      */
-    public ZoomView(Context context, AttributeSet set) {
+    public ZoomButtons(Context context, AttributeSet set) {
         super(context, set);
         setup(context);
     }
@@ -71,7 +71,7 @@ public class ZoomView extends RelativeLayout implements OnClickListener {
      * 
      * @param context
      */
-    public ZoomView(Context context, AttributeSet set, int arg) {
+    public ZoomButtons(Context context, AttributeSet set, int arg) {
         super(context, set, arg);
         setup(context);
     }

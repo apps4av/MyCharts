@@ -126,7 +126,7 @@ public class MapFragment extends FragmentWrapper implements SimpleAsyncTask.Meth
          */
         mMapView = (MapView)(rootView.findViewById(R.id.fragment_map_plateview));
         mMapView.setService(getService());
-        mMapView.setZoomControls((ZoomView)rootView.findViewById(R.id.fragment_map_zoom));
+        mMapView.setZoomControls((ZoomButtons)rootView.findViewById(R.id.fragment_map_zoom));
         mMapView.setHomeControls((ImageButton)rootView.findViewById(R.id.fragment_map_button_top));
 
         

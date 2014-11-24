@@ -12,7 +12,7 @@ Redistribution and use in source and binary forms, with or without modification,
 
 package com.chartsack.charts;
 
-import com.chartsack.charts.ZoomView.ZoomClick;
+import com.chartsack.charts.ZoomButtons.ZoomClick;
 import com.chartsack.charts.touch.MultiTouchController;
 import com.chartsack.charts.touch.MultiTouchController.MultiTouchObjectCanvas;
 import com.chartsack.charts.touch.MultiTouchController.PointInfo;
@@ -44,7 +44,7 @@ public class MappingView extends View implements MultiTouchObjectCanvas<Object> 
     private PointInfo                    mCurrTouchPoint;
     private Paint                        mPaint;
     private StorageService               mService;
-    private ZoomView                     mZoomControls;
+    private ZoomButtons                     mZoomControls;
     private ImageButton                  mTopButton;
 
     /**
@@ -120,7 +120,7 @@ public class MappingView extends View implements MultiTouchObjectCanvas<Object> 
     /**
      * Add zoom control for all map views
      */
-    public void setZoomControls(ZoomView zc) {
+    public void setZoomControls(ZoomButtons zc) {
         mZoomControls = zc;
         
         /*

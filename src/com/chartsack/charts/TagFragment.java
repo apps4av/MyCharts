@@ -74,7 +74,7 @@ public class TagFragment extends FragmentWrapper implements ObserverAlertDialogB
          */
         mTagView = (TagView)(rootView.findViewById(R.id.fragment_tag_plateview));
         mTagView.setService(getService());
-        mTagView.setZoomControls((ZoomView)rootView.findViewById(R.id.fragment_tag_zoom));
+        mTagView.setZoomControls((ZoomButtons)rootView.findViewById(R.id.fragment_tag_zoom));
         mTagView.setHomeControls((ImageButton)rootView.findViewById(R.id.fragment_tag_button_top));
         
 

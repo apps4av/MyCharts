@@ -42,7 +42,7 @@ Redistribution and use in source and binary forms, with or without modification,
         android:contentDescription="@string/find"
         android:layout_alignParentBottom="true"/>
     
-    <com.chartsack.charts.ZoomView 
+    <com.chartsack.charts.ZoomButtons 
         android:id="@+id/fragment_tag_zoom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
