@@ -38,8 +38,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.chartsack.charts.gps.Gps;
+
 import android.content.Context;
 import android.location.Address;
+import android.location.Location;
 import android.util.TypedValue;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -113,6 +116,18 @@ public class Util {
             for(int count = 0; count < adds.length; count++) {
                 hash.put(adds[count].getAddressLine(0), adds[count]);
             }
+        }
+        
+        /*
+         * Add current
+         */
+        Location l = Gps.getLastLocation(ctx);
+        if(null != l) {
+	        Address here = new Address(Locale.getDefault());
+	        here.setAddressLine(0, ctx.getString(R.string.current_position));
+	        here.setLatitude(l.getLatitude());
+	        here.setLongitude(l.getLongitude());
+	        hash.put(here.getAddressLine(0), here);
         }
         
         /*

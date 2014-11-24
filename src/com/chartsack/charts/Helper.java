@@ -47,8 +47,6 @@ public class Helper {
                             (
                             filename.toLowerCase().endsWith("jpeg") || 
                             filename.toLowerCase().endsWith("jpg")  ||
-                            filename.toLowerCase().endsWith("gif")  ||
-                            filename.toLowerCase().endsWith("bmp")  ||
                             filename.toLowerCase().endsWith("png")
                             )
                             ) {

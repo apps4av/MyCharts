@@ -32,6 +32,7 @@
     <string name="load_geostatus">Is it Geo. tagged?</string>
     <string name="not_on_chart">Your GPS location is beyond this chart dimensions</string>
     <string name="center">Center</string>
+    <string name="current_position">Current GPS Position</string>
     
 </resources>
  
