@@ -19,7 +19,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
+import android.widget.ZoomButton;
 
 
 /**
@@ -29,10 +30,10 @@ import android.widget.RelativeLayout;
  * A zoom view that looks like Android'd built in zoom control, but makes it simpler
  *
  */
-public class ZoomButtons extends RelativeLayout implements OnClickListener {
+public class ZoomButtons extends LinearLayout implements OnClickListener {
 
-	private Button mZoomInButton;
-	private Button mZoomOutButton;
+	private ZoomButton mZoomInButton;
+	private ZoomButton mZoomOutButton;
 	private ZoomClick mCallback;
     
 	/**
@@ -42,8 +43,8 @@ public class ZoomButtons extends RelativeLayout implements OnClickListener {
 		
 		LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View view = inflater.inflate(R.layout.zoom, this, true);
-        mZoomInButton = (Button)view.findViewById(R.id.zoom_in);
-        mZoomOutButton =(Button)view.findViewById(R.id.zoom_out);
+        mZoomInButton = (ZoomButton)view.findViewById(R.id.zoom_in);
+        mZoomOutButton =(ZoomButton)view.findViewById(R.id.zoom_out);
         mZoomInButton.setOnClickListener(this);
         mZoomOutButton.setOnClickListener(this);
 	}
