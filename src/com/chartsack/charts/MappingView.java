@@ -12,6 +12,7 @@ Redistribution and use in source and binary forms, with or without modification,
 
 package com.chartsack.charts;
 
+import com.chartsack.charts.ZoomView.ZoomClick;
 import com.chartsack.charts.touch.MultiTouchController;
 import com.chartsack.charts.touch.MultiTouchController.MultiTouchObjectCanvas;
 import com.chartsack.charts.touch.MultiTouchController.PointInfo;
@@ -28,7 +29,6 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ZoomControls;
 
 
 /**
@@ -44,7 +44,7 @@ public class MappingView extends View implements MultiTouchObjectCanvas<Object> 
     private PointInfo                    mCurrTouchPoint;
     private Paint                        mPaint;
     private StorageService               mService;
-    private ZoomControls                 mZoomControls;
+    private ZoomView                     mZoomControls;
     private ImageButton                  mTopButton;
 
     /**
@@ -120,45 +120,41 @@ public class MappingView extends View implements MultiTouchObjectCanvas<Object> 
     /**
      * Add zoom control for all map views
      */
-    public void setZoomControls(ZoomControls zc) {
+    public void setZoomControls(ZoomView zc) {
         mZoomControls = zc;
         
         /*
          * Zoom IN
          */
-        mZoomControls.setOnZoomInClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                // Want to scale at the center
+        mZoomControls.setZoomClickListerner(new ZoomClick() {
+
+			@Override
+			public void onZoom(boolean in) {
                 Scale s = getService().getScale();
-                if(!s.canZoomIn()) {
-                    return;
-                }
-                s.zoomIn();
-                startAnimation(false);
-                float x = getService().getPan().getMoveX() * Scale.SCALE_STEP;
-                float y = getService().getPan().getMoveY() * Scale.SCALE_STEP;
-                getService().getPan().setMove(x - getWidth() / 2, y - getHeight() / 2);
+				if(in) {
+	                if(!s.canZoomIn()) {
+	                    return;
+	                }
+	                s.zoomIn();
+	                startAnimation(false);
+	                float x = getService().getPan().getMoveX() * Scale.SCALE_STEP;
+	                float y = getService().getPan().getMoveY() * Scale.SCALE_STEP;
+	                getService().getPan().setMove(x - getWidth() / 2, y - getHeight() / 2);
+				}
+				else {
+	                if(!s.canZoomOut()) {
+	                    return;
+	                }
+	                s.zoomOut();
+	                startAnimation(false);
+	                float x = getService().getPan().getMoveX() + getWidth() / 2;
+	                float y = getService().getPan().getMoveY() + getHeight() / 2;
+	                getService().getPan().setMove(x / Scale.SCALE_STEP, y / Scale.SCALE_STEP);					
+				}
                 getService().loadBitmap(null);  
-            }
-        });
-        
-        /*
-         *  Zoom OUT
-         */
-        mZoomControls.setOnZoomOutClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                Scale s = getService().getScale();
-                if(!s.canZoomOut()) {
-                    return;
-                }
-                s.zoomOut();
-                startAnimation(false);
-                float x = getService().getPan().getMoveX() + getWidth() / 2;
-                float y = getService().getPan().getMoveY() + getHeight() / 2;
-                getService().getPan().setMove(x / Scale.SCALE_STEP, y / Scale.SCALE_STEP);
-                getService().loadBitmap(null);  
-            }
-        });
+				
+			}
+        });        
     }
     
     /**

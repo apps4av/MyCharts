@@ -514,7 +514,7 @@ public class StorageService extends Service implements SimpleAsyncTask.Methods {
     @Override
     public void ui(Object ret) {
         getPan().endDrag();
-        if((boolean)ret) {
+        if((Boolean)ret) {
             mBitmap.moveToFront();
             if(mICallback != null) {
                 mICallback.imageReady();

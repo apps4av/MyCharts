@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--  
 Copyright (c) 2012, Apps4Av Inc. (apps4av.com) 
 All rights reserved.
@@ -11,46 +12,20 @@ Redistribution and use in source and binary forms, with or without modification,
 -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    
-    <com.chartsack.charts.TagView
-        android:id="@+id/fragment_tag_plateview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" >
 
-    <ImageButton
-        android:id="@+id/fragment_tag_button_find"
+    <Button android:id="@+id/zoom_in"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:src="@+drawable/tag"
-        android:layout_margin="10dp"
-        android:background="#00000000"
-        android:contentDescription="@+string/tag"
-        android:layout_alignParentBottom="true"/>
+        android:textSize="25sp"
+        android:text="+"/>
     
-    <ImageButton
-        android:id="@+id/fragment_tag_button_top"
+    <Button android:id="@+id/zoom_out"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:layout_alignParentLeft="true"
-        android:src="@+drawable/top"
-        android:background="#00000000"
-        android:contentDescription="@string/find"
-        android:layout_alignParentBottom="true"/>
-    
-    <com.chartsack.charts.ZoomView 
-        android:id="@+id/fragment_tag_zoom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"
-        android:alpha="0.75"
-        android:layout_above="@+id/fragment_tag_button_find"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="20dp"
-        />
+        android:layout_below="@+id/zoom_in"
+        android:textSize="25sp"
+        android:text="-"/>
     
 </RelativeLayout>

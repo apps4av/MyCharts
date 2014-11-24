@@ -28,7 +28,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
-import android.widget.ZoomControls;
 
 /**
  * A fragment that shows the map
@@ -127,7 +126,7 @@ public class MapFragment extends FragmentWrapper implements SimpleAsyncTask.Meth
          */
         mMapView = (MapView)(rootView.findViewById(R.id.fragment_map_plateview));
         mMapView.setService(getService());
-        mMapView.setZoomControls((ZoomControls)rootView.findViewById(R.id.fragment_map_zoom));
+        mMapView.setZoomControls((ZoomView)rootView.findViewById(R.id.fragment_map_zoom));
         mMapView.setHomeControls((ImageButton)rootView.findViewById(R.id.fragment_map_button_top));
 
         

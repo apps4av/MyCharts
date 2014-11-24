@@ -22,7 +22,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
-import android.widget.ZoomControls;
 
 /**
  * A fragment that shows the map
@@ -75,7 +74,7 @@ public class TagFragment extends FragmentWrapper implements ObserverAlertDialogB
          */
         mTagView = (TagView)(rootView.findViewById(R.id.fragment_tag_plateview));
         mTagView.setService(getService());
-        mTagView.setZoomControls((ZoomControls)rootView.findViewById(R.id.fragment_tag_zoom));
+        mTagView.setZoomControls((ZoomView)rootView.findViewById(R.id.fragment_tag_zoom));
         mTagView.setHomeControls((ImageButton)rootView.findViewById(R.id.fragment_tag_button_top));
         
 
