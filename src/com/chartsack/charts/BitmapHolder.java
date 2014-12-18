@@ -133,7 +133,7 @@ public class BitmapHolder {
             mBitmapFront = Bitmap.createBitmap(width, height, conf);
             mBitmapFront.setDensity(Bitmap.DENSITY_NONE);
         }
-        catch(OutOfMemoryError e){
+        catch(Exception e){
         }
 
 

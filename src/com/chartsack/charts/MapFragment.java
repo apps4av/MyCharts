@@ -148,7 +148,12 @@ public class MapFragment extends FragmentWrapper implements SimpleAsyncTask.Meth
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        getService().unregisterGpsListener(mGpsInfc);
+        /*
+         * If service and GPS connected
+         */
+        if(getService() != null) {
+        	getService().unregisterGpsListener(mGpsInfc);
+        }
     }
 
     /**
