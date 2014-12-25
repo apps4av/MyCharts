@@ -24,7 +24,8 @@
     <string name="ok">OK</string>
     <string name="help">Help</string>
     <string name="tag_help_start">Put the cross hair on a known place of the loaded chart, then press the Tag button</string>
-    <string name="tag_help_point1">You have tagged a place on the chart, now repeat the process to tag one more place geographically well away from the first place</string>
+    <string name="tag_help_point1">You have tagged a place on the chart, now repeat the process to tag second place, geographically well away from the first place</string>
+    <string name="tag_help_point2">You have tagged a place on the chart, now repeat the process to tag last place, geographically well away from the first two places</string>
     <string name="tag_help_end">You have tagged the chart, and it is now ready for navigation</string>
     <string name="tag_help_fail">Tagging failed. Please repeat, making sure that the two tagged places are well apart geographically</string>
     <string name="map_help_tag">This chart is not Geo. tagged. Please Geo. tag it first from the Tag Chart screen, so your position on it can be shown</string>

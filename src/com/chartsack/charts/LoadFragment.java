@@ -199,11 +199,13 @@ public class LoadFragment extends FragmentWrapper {
         }
         TagData provider = new TagData(getActivity());
         String data = provider.getTag(getService().getChartName());
-        if(null == data || (!getService().setGeotagData(data))) {
+        Projection p = new Projection(data);
+        if(null == data || (!p.isValid())) {
             showHelp(getString(R.string.map_help_tag));
             mTextGeo.setText(getActivity().getString(R.string.no));
         }
         else {
+        	getService().setGeotagData(p);
             mTextGeo.setText(getActivity().getString(R.string.yes));                        
         }   
     }

@@ -36,6 +36,7 @@ public class TagFragment extends FragmentWrapper implements ObserverAlertDialogB
     private ImageButton mFindButton;
     private Address mNotifyAddress0;
     private Address mNotifyAddress1;
+    private Address mNotifyAddress2;
     private AlertDialog mDialogSearch;
 
 
@@ -81,7 +82,7 @@ public class TagFragment extends FragmentWrapper implements ObserverAlertDialogB
         /*
          * New search
          */
-        mNotifyAddress0 = mNotifyAddress1 = null;   
+        mNotifyAddress0 = mNotifyAddress1 = mNotifyAddress2 = null;   
         
         showHelp(getString(R.string.tag_help_start));
         
@@ -92,65 +93,28 @@ public class TagFragment extends FragmentWrapper implements ObserverAlertDialogB
      * Calculate tagging info and store in image.
      */
     private boolean calculateTag() {
-        double x0, x1, y0, y1, lon0, lon1, lat0, lat1;
-        String tokens0[];
-        String tokens1[];
-        lon0 = mNotifyAddress0.getLongitude();
-        lat0 = mNotifyAddress0.getLatitude();
-        lon1 = mNotifyAddress1.getLongitude();
-        lat1 = mNotifyAddress1.getLatitude();
-        tokens0 = mNotifyAddress0.getFeatureName().split(",");
-        tokens1 = mNotifyAddress1.getFeatureName().split(",");
         
-        try {
-            x0 = Double.parseDouble(tokens0[0]);
-            y0 = Double.parseDouble(tokens0[1]);
-            x1 = Double.parseDouble(tokens1[0]);
-            y1 = Double.parseDouble(tokens1[1]);
-        }
-        catch(Exception e) {
-            return false;
-        }
-        
-        double diffx = x0 - x1;
-        double diffy = y0 - y1;
-        double difflon = lon0 - lon1;
-        double difflat = lat0 - lat1;
-        if(difflon == 0 || difflat == 0 || diffx == 0 || diffy == 0) {
-            return false;
-        }
-        
-        double dx = diffx / difflon; 
-        double dy = diffy / difflat;
+        Projection p = new Projection(mNotifyAddress0, mNotifyAddress1, mNotifyAddress2);
 
-        if(dx == 0 || dy == 0) {
-            return false;
-        }
-        
-        double lonTopLeft = lon0 - x0 / dx;
-        double latTopLeft = lat0 - y0 / dy;
-        
-        /**
-         * Save data if sane
-         */
-        if(Util.isLongitudeSane(lonTopLeft) && Util.isLatitudeSane(latTopLeft)) {
+        if(p.isValid()) {
             /*
-             * Save in image dx + "," + dy + "," + lonTopLeft + "," + latTopLeft 
+             * Save in coords in image database 
              */
-            String tag =  dx + "," + dy + "," + lonTopLeft + "," + latTopLeft;
             TagData provider = new TagData(getActivity());
             // file name not full path
             String names[] = getService().getBitmapHolder().getName().split("/");
             String name = names[names.length - 1];
             // delete old tag
             provider.deleteTag(name);
-            provider.addTag(name, tag);
+            provider.addTag(name, p.getTag());
 
             // update in service
-            getService().setGeotagData(tag);
+            getService().setGeotagData(p);
+            mNotifyAddress0 = mNotifyAddress1 = mNotifyAddress2 = null;   
             return true;
         }
 
+        mNotifyAddress0 = mNotifyAddress1 = mNotifyAddress2 = null;   
         return false;
     }
     
@@ -187,21 +151,30 @@ public class TagFragment extends FragmentWrapper implements ObserverAlertDialogB
         try {
             mDialogSearch.dismiss();
             /*
-             * Get two points
+             * Get three points for a first degree multivariate
              */
             String data = getService().getBounds().getCenterX() + "," + getService().getBounds().getCenterY();
 
+            // Keep asking for points
             if(null == mNotifyAddress0) {
                 mNotifyAddress0 = a;
                 mNotifyAddress0.setFeatureName(data);
                 showHelp(getString(R.string.tag_help_point1));
+                return;
             }
             else if(null == mNotifyAddress1) {
                 mNotifyAddress1 = a;
                 mNotifyAddress1.setFeatureName(data);
+                showHelp(getString(R.string.tag_help_point2));
+                return;
             }
+            else if(null == mNotifyAddress2) {
+                mNotifyAddress2 = a;
+                mNotifyAddress2.setFeatureName(data);
+            }
+            
             /*
-             * Now two points done, calculate and store data
+             * Now three points done, calculate and store data
              */
             if(calculateTag()) {
                 showHelp(getString(R.string.tag_help_end));

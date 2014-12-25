@@ -31,6 +31,11 @@ import android.view.View.OnTouchListener;
  */
 public class MapView extends MappingView implements OnTouchListener {
 
+    Multivariate mLonInterp;
+    Multivariate mLatInterp;
+    Multivariate mXInterp;
+    Multivariate mYInterp;
+
     
     /**
      * 
@@ -72,19 +77,24 @@ public class MapView extends MappingView implements OnTouchListener {
      * @return
      */
     private double[] getOffset(double lon, double lat) {
-        double data[] = getService().getGeotagData();
-        double dx = data[0];
-        double dy = data[1];
-        double lonTopLeft = data[2];
-        double latTopLeft = data[3];
-
+    	
+    	/*
+    	 * Get x y coordinates from interpolation of lon/lat
+    	 */
+    	double coords[] = new double[4];
+    	Projection p = getService().getGeotagData();
         double scale = getService().getScale().getScaleFactor();
         
-        double coords[] = new double[4];
-        coords[0] = (lon - lonTopLeft) * dx / scale;
-        coords[1] = (lat - latTopLeft) * dy / scale;
-        coords[2] = dx;
-        coords[3] = dy;
+    	if(p != null && p.isValid()) {
+            coords[0] = getService().getGeotagData().getX(lon, lat) / scale;
+            coords[1] = getService().getGeotagData().getY(lon, lat) / scale;    		
+    	}
+    	else {
+    		coords[0] = coords[1] = 0;
+    	}
+        
+        coords[2] = 0;
+        coords[3] = 0;
         
         return coords;
     }
@@ -139,11 +149,12 @@ public class MapView extends MappingView implements OnTouchListener {
         /*
          * Edge tape
          */
+        /*
         EdgeDistanceTape.draw(canvas, getPaint(), getService().getScale(), Helper.findPixelsPerMile(coords[3]),
                 (int)(getService().getPan().getMoveX() - (float)coords[0]),
                 (int)(getService().getPan().getMoveY() - (float)coords[1]), 
                 0, getWidth(), getHeight());
-
+		*/
     }
     
     /**

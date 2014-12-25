@@ -58,9 +58,9 @@ public class StorageService extends Service implements SimpleAsyncTask.Methods {
     private ImageCallback            mICallback;
     private GpsParams               mGpsParams;
     private String                  mChart;
-    private double                  mGeoData[];
     private SimpleAsyncTask         mLoadTask;
     private Bounds                  mBounds;
+    private Projection              mProjection;
 
     private boolean mIsGpsOn;
     
@@ -123,7 +123,6 @@ public class StorageService extends Service implements SimpleAsyncTask.Methods {
         
         mPan = new Pan();
         mScale = new Scale();
-        mGeoData = new double[4];
         
         Location l = Gps.getLastLocation(getApplicationContext());
         mGpsParams = new GpsParams(l);
@@ -436,41 +435,16 @@ public class StorageService extends Service implements SimpleAsyncTask.Methods {
      * 
      * @param name
      */
-    public boolean setGeotagData(String name) {
-
-        /*
-         * Set data for drawing location on map. Get from geotag data from user's geotag database, 
-         * then parse here
-         */
-        mGeoData[0] = 0;
-        mGeoData[1] = 0;
-        mGeoData[2] = 0;
-        mGeoData[3] = 0;
-
-        String tokens[] = name.split(",");
-        if(tokens.length != 4) {
-            return false;
-        }
-        
-        try {
-            // dx, dy, lonl, latl
-            mGeoData[0] = Double.parseDouble(tokens[0]);
-            mGeoData[1] = Double.parseDouble(tokens[1]);
-            mGeoData[2] = Double.parseDouble(tokens[2]);
-            mGeoData[3] = Double.parseDouble(tokens[3]);
-        }
-        catch(Exception e) {
-            return false;
-        };
-        return true;
+    public void setGeotagData(Projection p) {
+    	mProjection = p;
     }
 
     /**
      * 
      * @return
      */
-    public double[] getGeotagData() {
-        return mGeoData;
+    public Projection getGeotagData() {
+        return mProjection;
     }
 
     /**
